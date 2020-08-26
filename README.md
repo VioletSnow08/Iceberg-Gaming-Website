@@ -1,2 +1,0 @@
-# 17th-bct-website
- 
