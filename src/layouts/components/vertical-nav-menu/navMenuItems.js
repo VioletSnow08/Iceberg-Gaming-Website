@@ -10,15 +10,9 @@
 
 export default [
   {
-    url: '/',
-    name: 'Home',
-    slug: 'home',
+    url: '/Dashboard',
+    name: 'Dashboard',
+    slug: 'dashboard',
     icon: 'HomeIcon'
-  },
-  {
-    url: '/page2',
-    name: 'Page 2',
-    slug: 'page2',
-    icon: 'FileIcon'
   }
 ]

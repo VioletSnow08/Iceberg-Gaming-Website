@@ -10,6 +10,7 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
+        <option value="JavaScript File" />
         <option value="Vue Single File Component" />
       </list>
     </option>
@@ -25,7 +26,21 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/store/modules" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.detected.package.tslint" value="true" />
+    <property name="node.js.path.for.package.eslint" value="project" />
+    <property name="node.js.path.for.package.tslint" value="project" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
+    <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
+    <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+  </component>
+  <component name="RecentsManager">
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Development\Websites\17th-bct-website\src\store\modules" />
+      <recent name="E:\Development\Websites\17th-bct-website\src\views" />
+    </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -35,7 +50,12 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1598405067703</updated>
-      <workItem from="1598405069686" duration="1037000" />
+      <workItem from="1598405069686" duration="5267000" />
+      <workItem from="1598454269621" duration="15927000" />
+      <workItem from="1598552919001" duration="600000" />
+      <workItem from="1598554075686" duration="14392000" />
+      <workItem from="1598576933093" duration="356000" />
+      <workItem from="1598622175480" duration="1195000" />
     </task>
     <servers />
   </component>
@@ -43,21 +63,29 @@
     <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="2539" height="401" key="GridCell.Tab.0.bottom" timestamp="1598405130685">
+    <state x="1038" y="570" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1598623332616">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.bottom/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598405130685" />
-    <state width="2539" height="401" key="GridCell.Tab.0.center" timestamp="1598405130685">
+    <state x="1038" y="570" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598623332616" />
+    <state width="2539" height="401" key="GridCell.Tab.0.bottom" timestamp="1598410347263">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.center/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598405130685" />
-    <state width="2539" height="401" key="GridCell.Tab.0.left" timestamp="1598405130685">
+    <state width="2539" height="401" key="GridCell.Tab.0.bottom/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
+    <state width="2539" height="401" key="GridCell.Tab.0.center" timestamp="1598410347263">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.left/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598405130685" />
-    <state width="2539" height="401" key="GridCell.Tab.0.right" timestamp="1598405130685">
+    <state width="2539" height="401" key="GridCell.Tab.0.center/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
+    <state width="2539" height="401" key="GridCell.Tab.0.left" timestamp="1598410347263">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state width="2539" height="401" key="GridCell.Tab.0.right/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598405130685" />
+    <state width="2539" height="401" key="GridCell.Tab.0.left/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
+    <state width="2539" height="401" key="GridCell.Tab.0.right" timestamp="1598410347263">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state width="2539" height="401" key="GridCell.Tab.0.right/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
+    <state x="987" y="299" width="585" height="801" key="find.popup" timestamp="1598623365411">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="987" y="299" width="585" height="801" key="find.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598623365411" />
   </component>
 </project>

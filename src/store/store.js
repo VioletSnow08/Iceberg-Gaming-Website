@@ -15,6 +15,9 @@ import state from './state'
 import getters from './getters'
 import mutations from './mutations'
 import actions from './actions'
+import user from "./modules/user";
+import authentication from "./modules/authentication"
+import application from "./modules/application";
 
 Vue.use(Vuex)
 
@@ -23,5 +26,11 @@ export default new Vuex.Store({
   mutations,
   state,
   actions,
+  modules: {
+    user,
+    authentication,
+    application,
+
+  },
   strict: process.env.NODE_ENV !== 'production'
 })

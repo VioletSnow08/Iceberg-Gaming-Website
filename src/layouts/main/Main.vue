@@ -13,7 +13,7 @@
 
     <v-nav-menu
       :navMenuItems = "navMenuItems"
-      title         = "Vuexy"
+      title         = "17th BCT"
       parent        = ".layout--main" />
 
     <div id="content-area" :class="[contentAreaClass, {'show-overlay': bodyOverlay}]">
