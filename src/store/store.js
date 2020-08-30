@@ -15,7 +15,10 @@ import state from './state'
 import getters from './getters'
 import mutations from './mutations'
 import actions from './actions'
+
+// Importing Modules...
 import user from "./modules/user";
+import member from "./modules/member";
 import authentication from "./modules/authentication"
 import application from "./modules/application";
 
@@ -28,6 +31,7 @@ export default new Vuex.Store({
   actions,
   modules: {
     user,
+    member,
     authentication,
     application,
 

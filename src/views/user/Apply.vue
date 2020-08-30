@@ -3,6 +3,9 @@
     <h4>Welcome to the 17th BCT Application Form!</h4>
     <h5>If you have any questions please feel free to talk to a recruiter in #entry-point-and-recruitment</h5>
     <hr>
+    <vs-alert v-if="age < 13 && age !== ''" title="Danger" active="true" color="danger">
+      In order to comply with COPPA, Steam, Discord, and any other laws we may be subject to, we require that all users are 13 or older. We are sorry, but this is out of our control.
+    </vs-alert>
     <form-wizard color="rgba(var(--vs-primary), 1)" :title="null" :subtitle="null" finishButtonText="Submit"
                  @on-complete="formSubmitted">
       <tab-content title="Step 1" class="mb-5">
@@ -18,6 +21,7 @@
           <div class="vx-col md:w-1/2 w-full mt-5">
             <vs-input type="text" label="Age" v-model="age" class="w-full"/>
           </div>
+
         </div>
       </tab-content>
 
@@ -97,6 +101,7 @@ export default {
   methods: {
     ...mapActions(["submitApplication"]),
     formSubmitted() {
+      if(this.age < 13) return alert("Invalid Age, unable to submit.");
       this.submitApplication([this.user.username, this.steamURL, this.age, this.timezone, this.arma3Hours, this.hobbies, this.whyjoin, this.attractmilsim, this.ranger, this.medic, this.sapper, this.pilot, this.tank_crew, this.idf, this.attendOps])
     }
   },

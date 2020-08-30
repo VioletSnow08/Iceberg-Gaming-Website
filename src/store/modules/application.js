@@ -4,10 +4,16 @@ import router from "@/router";
 
 const defaults = {}
 const state = {
-
+  application: null,
+  applications: null
 }
 const getters = {
-
+  application: state => {
+    return state.application;
+  },
+  applications: state => {
+    return state.applications;
+  }
 }
 
 const actions = {
@@ -51,16 +57,33 @@ const actions = {
         commit('setApplication', application)
         await router.push("/application");
       }).catch(error => {
-        if(error) throw error;
+        if (error) throw error;
       })
 
 
     }
+  },
+  async setApplication({commit}) {
+    await firebase.firestore().collection("applications").doc(firebase.auth().currentUser.uid).get().then(doc => {
+      if (doc.exists) {
+        commit('setApplication', doc.data());
+      }
+    }).catch(error => {
+      if (error) alert(error)
+    })
+  },
+
+  async setApplications({commit}) {
+    await firebase.firestore().collection("applications").get().then(docs => {
+      console.log(docs);
+    })
   }
 }
 
 const mutations = {
-
+  setApplication(state, application) {
+    state.application = application;
+  }
 }
 
 

@@ -51,7 +51,7 @@
                   <div class="flex flex-wrap justify-between my-5">
                       <router-link to="">Forgot Password? Please contact an NCO on Discord</router-link>
                   </div>
-                  <vs-button  type="border">Register</vs-button>
+                  <vs-button @click="$router.push('register')" type="border">Register</vs-button>
                   <vs-button @click="login" class="float-right">Login</vs-button>
               </div>
             </div>

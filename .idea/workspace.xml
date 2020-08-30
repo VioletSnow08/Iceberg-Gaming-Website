@@ -10,8 +10,8 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="JavaScript File" />
         <option value="Vue Single File Component" />
+        <option value="JavaScript File" />
       </list>
     </option>
   </component>
@@ -26,7 +26,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/store/modules" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/views/pages" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -35,9 +35,14 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Development\Websites\17th-bct-website\src\views\user" />
+    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Development\Websites\17th-bct-website\src\views\pages" />
       <recent name="E:\Development\Websites\17th-bct-website\src\store\modules" />
       <recent name="E:\Development\Websites\17th-bct-website\src\views" />
     </key>
@@ -55,7 +60,9 @@
       <workItem from="1598552919001" duration="600000" />
       <workItem from="1598554075686" duration="14392000" />
       <workItem from="1598576933093" duration="356000" />
-      <workItem from="1598622175480" duration="1195000" />
+      <workItem from="1598622175480" duration="13651000" />
+      <workItem from="1598711995653" duration="11139000" />
+      <workItem from="1598734167979" duration="6970000" />
     </task>
     <servers />
   </component>
@@ -63,10 +70,18 @@
     <option name="version" value="3" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1598753997104">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598753997104" />
     <state x="1038" y="570" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1598623332616">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1038" y="570" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598623332616" />
+    <state x="1060" y="455" key="FileChooserDialogImpl" timestamp="1598753904589">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="1060" y="455" key="FileChooserDialogImpl/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598753904589" />
     <state width="2539" height="401" key="GridCell.Tab.0.bottom" timestamp="1598410347263">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -83,9 +98,17 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2539" height="401" key="GridCell.Tab.0.right/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
-    <state x="987" y="299" width="585" height="801" key="find.popup" timestamp="1598623365411">
+    <state x="781" y="345" key="SettingsEditor" timestamp="1598726754110">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="987" y="299" width="585" height="801" key="find.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598623365411" />
+    <state x="781" y="345" key="SettingsEditor/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598726754110" />
+    <state x="987" y="299" width="585" height="801" key="find.popup" timestamp="1598753973583">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="987" y="299" width="585" height="801" key="find.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598753973583" />
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1598725919540">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598725919540" />
   </component>
 </project>

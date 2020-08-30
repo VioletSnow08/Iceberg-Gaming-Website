@@ -17,15 +17,15 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  scrollBehavior () {
-    return { x: 0, y: 0 }
+  scrollBehavior() {
+    return {x: 0, y: 0}
   },
   routes: [
 
     {
-    // =============================================================================
-    // MAIN LAYOUT ROUTES
-    // =============================================================================
+      // =============================================================================
+      // MAIN LAYOUT ROUTES
+      // =============================================================================
       path: '',
       component: () => import('./layouts/main/Main.vue'),
       children: [
@@ -35,28 +35,46 @@ const router = new Router({
         {
           path: '/dashboard',
           name: 'dashboard',
-          component: () => import('./views/Dashboard.vue'),
+          component: () => import('./views/user/Dashboard.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["user", "admin"]
+            roles: ["member"]
           }
         },
         {
           path: '/apply',
           name: 'apply',
-          component: () => import('./views/Apply.vue'),
+          component: () => import('./views/user/Apply.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["user"]
+            roles: ["applicant"]
           }
         },
         {
           path: '/application',
           name: 'application',
-          component: () => import('./views/Application.vue'),
+          component: () => import('./views/user/Application.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["user", "member", "admin"]
+            roles: ["member"]
+          }
+        },
+        {
+          path: '/profile',
+          name: 'profile',
+          component: () => import('./views/user/Profile.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ["member"]
+          }
+        },
+        {
+          path: '/admin/applications',
+          name: 'applications',
+          component: () => import('./views/admin/Applications.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ["Recruiter", "Alpha Company HQ", "Owner"]
           }
         },
 
@@ -86,6 +104,11 @@ const router = new Router({
           component: () => import('@/views/pages/Error404.vue')
         },
         {
+          path: '/pages/perms',
+          name: 'perms',
+          component: () => import('@/views/pages/perms.vue')
+        },
+        {
           path: '/pages/register',
           name: 'register',
           component: () => import('@/views/pages/Register.vue'),
@@ -93,12 +116,13 @@ const router = new Router({
             requiresGuest: true
           }
         },
-        {
-          path: '/',
-          name: 'home',
-          component: () => import('@/views/Home.vue')
-        },
+
       ]
+    },
+    {
+      path: '/',
+      name: 'home',
+      component: () => import('@/views/Home.vue')
     },
     // Redirect to 404 page, if no match found
     {
@@ -109,35 +133,64 @@ const router = new Router({
 })
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
-    if (!firebase.auth().currentUser) {
+    if (!firebase.auth().currentUser) { // If the user is not signed in
       next({
-        path: '/pages/error-404',
+        path: '/pages/perms',
         query: {
           redirect: to.fullPath
         }
       })
     } else {
-      await firebase
-        .firestore()
-        .collection("users")
-        .doc(firebase.auth().currentUser.uid).get().then(doc => {
-          if(to.meta.roles.includes(doc.data().role)) { // Checks if the array of roles and the user's actual/current role match up
-            next(); // If so, then continue
+      if (to.meta.roles.includes("applicant")) {
+        await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(doc => {
+          if(doc.data().role === "applicant") {
+            next();
           } else {
             next({
-              path: '/pages/error-404',
+              path: '/pages/perms',
               query: {
                 redirect: to.fullPath
               }
             })
           }
         })
+      } else {
+        await firebase
+          .firestore()
+          .collection("users")
+          .doc(firebase.auth().currentUser.uid).get().then(async doc => {
+
+            if (doc.data().application_status === "Accepted") { // If they are a member
+              await firebase.firestore().collection("members").doc(firebase.auth().currentUser.uid).get().then(document => {
+                if (to.meta.roles.some(role => document.data().roles.includes(role))) {
+                  next();
+                } else {
+                  next({
+                    path: '/pages/perms',
+                    query: {
+                      redirect: to.fullPath
+                    }
+                  })
+                }
+              })
+
+            } else { // If they are not a member
+              next({
+                path: '/pages/perms',
+                query: {
+                  redirect: to.fullPath
+                }
+              })
+            }
+
+          })
+      }
     }
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (firebase.auth().currentUser) {
       next({
 
-        path: '/pages/error-404',
+        path: '/pages/perms',
         query: {
           redirect: to.fullPath
         }

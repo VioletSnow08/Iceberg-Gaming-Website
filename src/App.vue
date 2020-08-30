@@ -45,7 +45,7 @@ export default {
         if (document.body.className.match('theme-semi-dark')) document.body.classList.remove('theme-semi-dark')
       }
     },
-    ...mapActions(["setLogin"]),
+    ...mapActions(["setState"]),
     setAppClasses (classesStr) {
       this.vueAppClasses.push(classesStr)
     },
@@ -60,7 +60,7 @@ export default {
     }
   },
   mounted () {
-    this.setLogin();
+    this.setState();
     this.toggleClassInBody(themeConfig.theme)
     this.$store.commit('UPDATE_WINDOW_WIDTH', window.innerWidth)
 

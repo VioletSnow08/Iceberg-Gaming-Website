@@ -29,11 +29,13 @@
 
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="router.push(log>
+            @click="$router.push('login')">
             <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Logout</span>
           </li>
         </ul>
+        <li v-if="this.$store.state.theme === 'dark'" @click="$store.state.theme = 'light'" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"><feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" /><span class="ml-2">Light Mode</span></li>
+        <li v-else class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white" @click="$store.state.theme = 'dark'"><feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" /><span class="ml-2">Dark Mode</span></li>
       </vs-dropdown-menu>
     </vs-dropdown>
     <li
