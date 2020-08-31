@@ -11,6 +11,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 import firebase from "firebase";
+import store from "./store/store";
 
 Vue.use(Router)
 
@@ -131,7 +132,9 @@ const router = new Router({
     }
   ]
 })
+
 router.beforeEach(async (to, from, next) => {
+  await store.dispatch("setState")
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!firebase.auth().currentUser) { // If the user is not signed in
       next({
@@ -143,7 +146,7 @@ router.beforeEach(async (to, from, next) => {
     } else {
       if (to.meta.roles.includes("applicant")) {
         await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(doc => {
-          if(doc.data().role === "applicant") {
+          if (doc.data().role === "applicant") {
             next();
           } else {
             next({
@@ -202,6 +205,7 @@ router.beforeEach(async (to, from, next) => {
     next();
   }
 })
+
 
 router.afterEach(() => {
   // Remove initial loading

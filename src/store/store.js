@@ -21,6 +21,7 @@ import user from "./modules/user";
 import member from "./modules/member";
 import authentication from "./modules/authentication"
 import application from "./modules/application";
+import stats from "./modules/stats";
 
 Vue.use(Vuex)
 
@@ -34,6 +35,7 @@ export default new Vuex.Store({
     member,
     authentication,
     application,
+    stats,
 
   },
   strict: process.env.NODE_ENV !== 'production'

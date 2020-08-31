@@ -4,8 +4,8 @@ import router from "@/router";
 
 const defaults = {}
 const state = {
-  application: null,
-  applications: null
+  application: {},
+  applications: {}
 }
 const getters = {
   application: state => {
@@ -74,15 +74,19 @@ const actions = {
   },
 
   async setApplications({commit}) {
-    await firebase.firestore().collection("applications").get().then(docs => {
-      console.log(docs);
-    })
+    const snapshot = await firebase.firestore().collection("applications").get()
+    snapshot.docs.map(doc => console.log(doc));
+    commit("setApplications", snapshot.docs.map(doc => doc.data()));
+
   }
 }
 
 const mutations = {
   setApplication(state, application) {
     state.application = application;
+  },
+  setApplications(state, applications) {
+    state.applications = applications;
   }
 }
 

@@ -26,7 +26,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/views/pages" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -63,6 +63,9 @@
       <workItem from="1598622175480" duration="13651000" />
       <workItem from="1598711995653" duration="11139000" />
       <workItem from="1598734167979" duration="6970000" />
+      <workItem from="1598815940000" duration="9340000" />
+      <workItem from="1598904318759" duration="1344000" />
+      <workItem from="1598906940406" duration="7139000" />
     </task>
     <servers />
   </component>
@@ -78,10 +81,10 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1038" y="570" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598623332616" />
-    <state x="1060" y="455" key="FileChooserDialogImpl" timestamp="1598753904589">
+    <state x="1060" y="455" key="FileChooserDialogImpl" timestamp="1598905637676">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
-    <state x="1060" y="455" key="FileChooserDialogImpl/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598753904589" />
+    <state x="1060" y="455" key="FileChooserDialogImpl/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598905637676" />
     <state width="2539" height="401" key="GridCell.Tab.0.bottom" timestamp="1598410347263">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

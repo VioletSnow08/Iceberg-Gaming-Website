@@ -11,6 +11,25 @@
 import Vue from 'vue'
 import App from './App.vue'
 
+import firebase from "firebase";
+import "firebase/firestore";
+
+// INITIALIZING FIREBASE
+
+var firebaseConfig = {
+  apiKey: "AIzaSyA8e8TdgtWnNYl86HV3joSTOy-19h3Y3TQ",
+  authDomain: "seventeenth-bct.firebaseapp.com",
+  databaseURL: "https://seventeenth-bct.firebaseio.com",
+  projectId: "seventeenth-bct",
+  storageBucket: "seventeenth-bct.appspot.com",
+  messagingSenderId: "682700854607",
+  appId: "1:682700854607:web:ca34e54af9128afb82e13a",
+  measurementId: "G-XS6SPLLTV2"
+};
+// Initialize Firebase
+firebase.initializeApp(firebaseConfig);
+firebase.analytics();
+
 // Vuesax Component Framework
 import Vuesax from 'vuesax'
 import 'material-icons/iconfont/material-icons.css' //Material Icons
@@ -63,24 +82,6 @@ import 'prismjs/themes/prism-tomorrow.css'
 // Feather font icon
 require('./assets/css/iconfont.css')
 
-import firebase from "firebase";
-import "firebase/firestore";
-
-// INITIALIZING FIREBASE
-
-var firebaseConfig = {
-  apiKey: "AIzaSyA8e8TdgtWnNYl86HV3joSTOy-19h3Y3TQ",
-  authDomain: "seventeenth-bct.firebaseapp.com",
-  databaseURL: "https://seventeenth-bct.firebaseio.com",
-  projectId: "seventeenth-bct",
-  storageBucket: "seventeenth-bct.appspot.com",
-  messagingSenderId: "682700854607",
-  appId: "1:682700854607:web:ca34e54af9128afb82e13a",
-  measurementId: "G-XS6SPLLTV2"
-};
-// Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
 
 
 

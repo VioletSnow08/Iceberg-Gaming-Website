@@ -49,6 +49,7 @@ const actions = {
       if (firebase.auth().currentUser) {
         await this.dispatch('setUser');
         await this.dispatch('setMember');
+        await this.dispatch('setStats');
       }
     })
   }

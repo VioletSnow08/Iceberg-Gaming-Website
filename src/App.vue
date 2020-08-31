@@ -16,7 +16,6 @@
 
 <script>
 import themeConfig from '@/../themeConfig.js'
-import {mapActions} from "vuex";
 
 export default {
   data () {
@@ -45,7 +44,6 @@ export default {
         if (document.body.className.match('theme-semi-dark')) document.body.classList.remove('theme-semi-dark')
       }
     },
-    ...mapActions(["setState"]),
     setAppClasses (classesStr) {
       this.vueAppClasses.push(classesStr)
     },
@@ -60,7 +58,7 @@ export default {
     }
   },
   mounted () {
-    this.setState();
+
     this.toggleClassInBody(themeConfig.theme)
     this.$store.commit('UPDATE_WINDOW_WIDTH', window.innerWidth)
 
@@ -74,6 +72,9 @@ export default {
 
     window.addEventListener('resize', this.handleWindowResize)
     window.addEventListener('scroll', this.handleScroll)
+
+
+
   },
   destroyed () {
     window.removeEventListener('resize', this.handleWindowResize)

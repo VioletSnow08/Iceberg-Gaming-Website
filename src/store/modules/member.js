@@ -1,7 +1,7 @@
 import * as firebase from "firebase";
 
 const state = {
-  member: null
+  member: {}
 
 }
 const getters = {
