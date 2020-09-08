@@ -1,15 +1,15 @@
 <template>
-  <div class="the-navbar__user-meta flex items-center" v-if="user.username">
+  <div class="the-navbar__user-meta flex items-center" v-if="currentUser.username">
 
     <div class="text-right leading-tight hidden sm:block">
-      <p class="font-semibold">{{ user.username }}</p>
-      <small>{{ user.status }}</small>
+      <p class="font-semibold">{{ currentUser.username }}</p>
+      <small>{{ currentUser.status }}</small>
     </div>
 
     <vs-dropdown vs-custom-content vs-trigger-click class="cursor-pointer">
 
       <div class="con-img ml-3">
-        <img key="onlineImg" :src="user.photoURL" alt="user-img" width="40" height="40" class="rounded-full shadow-md cursor-pointer block" />
+        <img key="onlineImg" :src="currentUser.photoURL" alt="user-img" width="40" height="40" class="rounded-full shadow-md cursor-pointer block" />
       </div>
 
       <vs-dropdown-menu class="vx-navbar-dropdown">
@@ -20,7 +20,7 @@
             <span class="ml-2">Profile</span>
           </li>
 
-          <li @click="$router.push('application')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+          <li @click="$router.push('/user/application')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">View Application</span>
           </li >
@@ -29,7 +29,7 @@
 
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="$router.push('login')">
+            @click="$router.push('/pages/login')">
             <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Logout</span>
           </li>
@@ -48,14 +48,14 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
   methods: {
-    ...mapActions(["logoutUser"])
+    ...mapActions(['logoutUser'])
   },
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(['currentUser'])
   }
 }
 </script>

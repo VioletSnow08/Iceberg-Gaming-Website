@@ -8,14 +8,14 @@
 
 </template>
 <script>
-import StatisticsCardLine from "@/components/statistics-cards/StatisticsCardLine";
-import {mapGetters} from "vuex";
+import StatisticsCardLine from '@/components/statistics-cards/StatisticsCardLine'
+import {mapGetters} from 'vuex'
 
 export default {
   components: {StatisticsCardLine},
 
   computed: {
-    ...mapGetters(["pointsSeries", "member"])
+    ...mapGetters(['pointsSeries', 'member'])
   }
 }
 </script>

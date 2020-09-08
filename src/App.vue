@@ -57,7 +57,7 @@ export default {
       this.$store.commit('UPDATE_WINDOW_SCROLL_Y', window.scrollY)
     }
   },
-  mounted () {
+  async mounted () {
 
     this.toggleClassInBody(themeConfig.theme)
     this.$store.commit('UPDATE_WINDOW_WIDTH', window.innerWidth)
@@ -72,9 +72,10 @@ export default {
 
     window.addEventListener('resize', this.handleWindowResize)
     window.addEventListener('scroll', this.handleScroll)
-
-
-
+    await this.$store.dispatch('setUser')
+    await this.$store.dispatch('setMember')
+    await this.$store.dispatch('setApplication')
+    await this.$store.dispatch('setStats')
   },
   destroyed () {
     window.removeEventListener('resize', this.handleWindowResize)

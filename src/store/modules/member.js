@@ -1,4 +1,4 @@
-import * as firebase from "firebase";
+import * as firebase from 'firebase'
 
 const state = {
   member: {}
@@ -6,23 +6,25 @@ const state = {
 }
 const getters = {
   member: state => {
-    return state.member;
+    return state.member
   },
   pointsSeries: state => {
-    return [{
-      name: 'Points',
-      data: [state.member.points3, state.member.points2, state.member.points]
-    }]
+    return [
+      {
+        name: 'Points',
+        data: [state.member.points3, state.member.points2, state.member.points]
+      }
+    ]
   }
 }
 const actions = {
-  async setMember({commit}) {
+  async setMember ({commit}) {
     await firebase
       .firestore()
-      .collection("members")
+      .collection('members')
       .doc(firebase.auth().currentUser.uid).get().then(async doc => {
         if (doc.exists) {
-          commit("setMember", doc.data());
+          commit('setMember', doc.data())
         }
       }).catch(error => {
         if (error) alert(error)
@@ -31,8 +33,8 @@ const actions = {
 }
 
 const mutations = {
-  setMember(state, member) {
-    state.member = member;
+  setMember (state, member) {
+    state.member = member
   }
 }
 

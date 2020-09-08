@@ -64,9 +64,9 @@
 </template>
 
 <script>
-import {mapActions} from "vuex";
+import {mapActions} from 'vuex'
 
-export default{
+export default {
   data () {
     return {
       email: '',
@@ -74,8 +74,8 @@ export default{
     }
   },
   methods: {
-    ...mapActions(["loginUser"]),
-    login() {
+    ...mapActions(['loginUser']),
+    login () {
       this.loginUser([this.email, this.password])
     }
   }

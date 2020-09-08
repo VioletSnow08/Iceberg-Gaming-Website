@@ -1,6 +1,6 @@
-import * as firebase from "firebase/app";
-import "firebase/auth";
-import router from "@/router";
+import * as firebase from 'firebase/app'
+import 'firebase/auth'
+import router from '@/router'
 
 const state = {
 
@@ -10,56 +10,46 @@ const getters = {
 }
 
 const actions = {
-  async registerUser({commit}, [username, email, password, discord_id]) {
+  async registerUser ([username, email, password, discord_id]) {
     firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
       const user = {
         username,
         discord_id,
         email,
-        status: "Available",
-        photoURL: "https://image.flaticon.com/icons/svg/2919/2919600.svg",
-        role: "applicant",
-        application_status: "Not Filed"
+        status: 'Available',
+        photoURL: 'https://image.flaticon.com/icons/svg/2919/2919600.svg',
+        role: 'applicant',
+        application_status: 'Not Filed'
       }
 
-      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).set(user)
-      await router.push("/pages/login");
+      await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set(user)
+      await router.push('/pages/login')
     }).catch(error => {
-      if (error) alert(error);
+      if (error) alert(error)
     })
   },
 
-  async loginUser({commit}, [email, password]) {
+  async loginUser ([email, password]) {
     firebase.auth().signInWithEmailAndPassword(email, password).then(async () => {
-    await this.dispatch('setUser');
-    await this.dispatch('setMember');
-    await router.push("/dashboard");
+      await router.push('/dashboard')
     }).catch(error => {
-      if (error) alert(error);
+      if (error) alert(error)
     })
   },
-  async logoutUser({commit}) {
+  async logoutUser ({commit}) {
     firebase.auth().signOut().then(() => {
-      commit("logoutUser");
-      router.push('/pages/login');
-    })
-  },
-  async setState() {
-    firebase.auth().onAuthStateChanged(async () => {
-      if (firebase.auth().currentUser) {
-        await this.dispatch('setUser');
-        await this.dispatch('setMember');
-        await this.dispatch('setStats');
-      }
+      commit('logoutUser')
+      router.push('/pages/login')
     })
   }
 }
 
+
 const mutations = {
-  logoutUser(state) {
+  logoutUser (state) {
     state.user = null
-    state.member = null;
-  },
+    state.member = null
+  }
 
 }
 

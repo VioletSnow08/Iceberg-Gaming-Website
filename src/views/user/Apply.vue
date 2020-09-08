@@ -77,36 +77,36 @@
 <script>
 import {FormWizard, TabContent} from 'vue-form-wizard'
 import 'vue-form-wizard/dist/vue-form-wizard.min.css'
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
-  data() {
+  data () {
     return {
-      steamURL: "",
-      age: "",
-      timezone: "",
-      arma3Hours: "",
-      hobbies: "",
-      whyjoin: "",
-      attractmilsim: "",
-      ranger: "",
-      medic: "",
-      sapper: "",
-      pilot: "",
-      tank_crew: "",
-      idf: "",
-      attendOps: ""
+      steamURL: '',
+      age: '',
+      timezone: '',
+      arma3Hours: '',
+      hobbies: '',
+      whyjoin: '',
+      attractmilsim: '',
+      ranger: '',
+      medic: '',
+      sapper: '',
+      pilot: '',
+      tank_crew: '',
+      idf: '',
+      attendOps: ''
     }
   },
   methods: {
-    ...mapActions(["submitApplication"]),
-    formSubmitted() {
-      if(this.age < 13) return alert("Invalid Age, unable to submit.");
-      this.submitApplication([this.user.username, this.steamURL, this.age, this.timezone, this.arma3Hours, this.hobbies, this.whyjoin, this.attractmilsim, this.ranger, this.medic, this.sapper, this.pilot, this.tank_crew, this.idf, this.attendOps])
+    ...mapActions(['submitApplication']),
+    formSubmitted () {
+      if (this.age < 13) return alert('Invalid Age, unable to submit.')
+      this.submitApplication([this.steamURL, this.age, this.timezone, this.arma3Hours, this.hobbies, this.whyjoin, this.attractmilsim, this.ranger, this.medic, this.sapper, this.pilot, this.tank_crew, this.idf, this.attendOps])
     }
   },
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(['user'])
   },
   components: {
     FormWizard,

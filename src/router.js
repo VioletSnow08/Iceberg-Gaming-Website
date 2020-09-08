@@ -10,15 +10,14 @@
 
 import Vue from 'vue'
 import Router from 'vue-router'
-import firebase from "firebase";
-import store from "./store/store";
+import firebase from 'firebase'
 
 Vue.use(Router)
 
 const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  scrollBehavior() {
+  scrollBehavior () {
     return {x: 0, y: 0}
   },
   routes: [
@@ -34,39 +33,39 @@ const router = new Router({
         // Theme Routes
         // =============================================================================
         {
-          path: '/dashboard',
+          path: '/user/dashboard',
           name: 'dashboard',
           component: () => import('./views/user/Dashboard.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["member"]
+            roles: ['member']
           }
         },
         {
-          path: '/apply',
+          path: '/user/apply',
           name: 'apply',
           component: () => import('./views/user/Apply.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["applicant"]
+            roles: ['applicant']
           }
         },
         {
-          path: '/application',
+          path: '/user/application',
           name: 'application',
           component: () => import('./views/user/Application.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["member"]
+            roles: ['member']
           }
         },
         {
-          path: '/profile',
+          path: '/user/profile',
           name: 'profile',
           component: () => import('./views/user/Profile.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["member"]
+            roles: ['member']
           }
         },
         {
@@ -75,9 +74,28 @@ const router = new Router({
           component: () => import('./views/admin/Applications.vue'),
           meta: {
             requiresAuth: true,
-            roles: ["Recruiter", "Alpha Company HQ", "Owner"]
+            roles: ['Recruiter', 'Alpha Company HQ', 'Owner']
           }
         },
+        {
+          path: '/admin/applications/view/:id',
+          name: 'viewApplication',
+          component: () => import('./views/admin/Application.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['Recruiter', 'Alpha Company HQ', 'Owner']
+          },
+          props: true
+        },
+        {
+          path: '/user/loa',
+          name: 'Loa',
+          component: () => import('./views/user/Loa.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['member']
+          }
+        }
 
       ]
     },
@@ -116,7 +134,7 @@ const router = new Router({
           meta: {
             requiresGuest: true
           }
-        },
+        }
 
       ]
     },
@@ -134,7 +152,6 @@ const router = new Router({
 })
 
 router.beforeEach(async (to, from, next) => {
-  await store.dispatch("setState")
   if (to.matched.some(record => record.meta.requiresAuth)) {
     if (!firebase.auth().currentUser) { // If the user is not signed in
       next({
@@ -143,12 +160,40 @@ router.beforeEach(async (to, from, next) => {
           redirect: to.fullPath
         }
       })
+    } else if (to.meta.roles.includes('applicant')) {
+      await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then(doc => {
+        if (doc.data().role === 'applicant') {
+          next()
+        } else {
+          next({
+            path: '/pages/perms',
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        }
+      })
     } else {
-      if (to.meta.roles.includes("applicant")) {
-        await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(doc => {
-          if (doc.data().role === "applicant") {
-            next();
-          } else {
+      await firebase
+        .firestore()
+        .collection('users')
+        .doc(firebase.auth().currentUser.uid).get().then(async doc => {
+
+          if (doc.data().application_status === 'Accepted') { // If they are a member
+            await firebase.firestore().collection('members').doc(firebase.auth().currentUser.uid).get().then(document => {
+              if (to.meta.roles.some(role => document.data().roles.includes(role))) {
+                next()
+              } else {
+                next({
+                  path: '/pages/perms',
+                  query: {
+                    redirect: to.fullPath
+                  }
+                })
+              }
+            })
+
+          } else { // If they are not a member
             next({
               path: '/pages/perms',
               query: {
@@ -156,38 +201,8 @@ router.beforeEach(async (to, from, next) => {
               }
             })
           }
+
         })
-      } else {
-        await firebase
-          .firestore()
-          .collection("users")
-          .doc(firebase.auth().currentUser.uid).get().then(async doc => {
-
-            if (doc.data().application_status === "Accepted") { // If they are a member
-              await firebase.firestore().collection("members").doc(firebase.auth().currentUser.uid).get().then(document => {
-                if (to.meta.roles.some(role => document.data().roles.includes(role))) {
-                  next();
-                } else {
-                  next({
-                    path: '/pages/perms',
-                    query: {
-                      redirect: to.fullPath
-                    }
-                  })
-                }
-              })
-
-            } else { // If they are not a member
-              next({
-                path: '/pages/perms',
-                query: {
-                  redirect: to.fullPath
-                }
-              })
-            }
-
-          })
-      }
     }
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (firebase.auth().currentUser) {
@@ -199,10 +214,10 @@ router.beforeEach(async (to, from, next) => {
         }
       })
     } else {
-      next();
+      next()
     }
   } else {
-    next();
+    next()
   }
 })
 

@@ -9,7 +9,6 @@
 
 import navbarSearchAndPinList from '@/layouts/components/navbar/navbarSearchAndPinList'
 import themeConfig from '@/../themeConfig.js'
-import * as firebase from "firebase";
 
 // /////////////////////////////////////////////
 // Helper

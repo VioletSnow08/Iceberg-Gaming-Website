@@ -10,18 +10,16 @@
 
     <!--    </vs-list>-->
     <div class="vx-row">
-      <div v-for="app in applications" class="vx-col w-full lg:w-1/3 sm:w-1/2 mb-base">
+      <div v-for="app in applications" v-bind:key="app.id" class="vx-col w-full lg:w-1/3 sm:w-1/2 mb-base">
         <vx-card class="p-2">
           <div class="text-center">
-            <h4>{{ app.username }}</h4>
+            <h4>{{ user(app.id).username }}</h4>
             <vs-chip v-if="app.status.toLowerCase() === 'accepted'" color="success">{{app.status}}</vs-chip>
             <vs-chip v-if="app.status.toLowerCase() === 'waiting'" color="warning">{{app.status}}</vs-chip>
             <vs-chip v-if="app.status.toLowerCase() === 'declined'" color="danger">{{app.status}}</vs-chip>
           </div>
-          <vs-avatar class="mx-auto my-6 block" size="80px"/>
-          <vs-button type="gradient" class="w-full mt-6" color="#7367F0" gradient-color-secondary="#CE9FFC">View
-            Application
-          </vs-button>
+          <vs-avatar :src="user(app.id).photoURL" class="mx-auto my-6 block" size="80px"/>
+          <vs-button @click="viewApplication(app.id)" type="gradient" class="w-full mt-6" color="#7367F0" gradient-color-secondary="#CE9FFC">View Application</vs-button>
         </vx-card>
       </div>
     </div>
@@ -29,18 +27,23 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapGetters} from 'vuex'
 
 export default {
-  name: "Applications",
+  name: 'Applications',
   methods: {
-    ...mapActions(["setApplications"])
-  },
-  created() {
-    this.setApplications();
+    viewApplication (id) {
+      this.$router.push({name: 'viewApplication', params: {id}})
+    }
   },
   computed: {
-    ...mapGetters(["applications"])
+    ...mapGetters(['applications', 'currentUser', 'user'])
+  },
+  async created () {
+    await Promise.all([
+      this.$store.dispatch('setApplications'),
+      this.$store.dispatch('setUsers')
+    ])
   }
 }
 </script>

@@ -54,13 +54,12 @@
                    @ps-scroll-y="psSectionScroll" @scroll="psSectionScroll" :key="$vs.rtl">
 
 
-          <v-nav-menu-item v-if="user.role === 'member'" to="/dashboard" icon="HomeIcon">
+          <v-nav-menu-item v-if="currentUser.role === 'member'" to="/user/dashboard" icon="HomeIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Dashboard</span>
           </v-nav-menu-item>
 
           <v-nav-menu-item v-if="member.roles.includes('Recruiter')" to="/admin/applications" icon="HomeIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Applications</span>
-            <vs-chip class="ml-auto" color="warning">{{ stats.new_applications }}</vs-chip>
             <!-- v-if="(isMouseEnter || !reduce)" -->
           </v-nav-menu-item>
         </component>
@@ -84,7 +83,7 @@ import VNavMenuGroup from './VerticalNavMenuGroup.vue'
 import VNavMenuItem from './VerticalNavMenuItem.vue'
 
 import Logo from '../Logo.vue'
-import {mapGetters} from "vuex";
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'v-nav-menu',
@@ -115,7 +114,7 @@ export default {
     showShadowBottom: false
   }),
   computed: {
-    isGroupActive() {
+    isGroupActive () {
       return (item) => {
         const path = this.$route.fullPath
         const routeParent = this.$route.meta ? this.$route.meta.parent : undefined
@@ -136,8 +135,8 @@ export default {
         return open
       }
     },
-    ...mapGetters(["user", "member", "stats"]),
-    menuItemsUpdated() {
+    ...mapGetters(['currentUser', 'member', 'stats']),
+    menuItemsUpdated () {
       const clone = this.navMenuItems.slice()
 
       for (const [index, item] of this.navMenuItems.entries()) {
@@ -152,42 +151,42 @@ export default {
       return clone
     },
     isVerticalNavMenuActive: {
-      get() {
+      get () {
         return this.$store.state.isVerticalNavMenuActive
       },
-      set(val) {
+      set (val) {
         this.$store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', val)
       }
     },
-    layoutType() {
+    layoutType () {
       return this.$store.state.mainLayoutType
     },
     reduceButton: {
-      get() {
+      get () {
         return this.$store.state.reduceButton
       },
-      set(val) {
+      set (val) {
         this.$store.commit('TOGGLE_REDUCE_BUTTON', val)
       }
     },
-    isVerticalNavMenuReduced() {
+    isVerticalNavMenuReduced () {
       return Boolean(this.reduce && this.reduceButton)
     },
-    verticalNavMenuItemsMin() {
+    verticalNavMenuItemsMin () {
       return this.$store.state.verticalNavMenuItemsMin
     },
-    scrollbarTag() {
+    scrollbarTag () {
       return this.$store.getters.scrollbarTag
     },
-    windowWidth() {
+    windowWidth () {
       return this.$store.state.windowWidth
     }
   },
   watch: {
-    '$route'() {
+    '$route' () {
       if (this.isVerticalNavMenuActive && this.showCloseButton) this.$store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', false)
     },
-    reduce(val) {
+    reduce (val) {
       const verticalNavMenuWidth = val ? 'reduced' : this.$store.state.windowWidth < 1200 ? 'no-nav-menu' : 'default'
       this.$store.dispatch('updateVerticalNavMenuWidth', verticalNavMenuWidth)
 
@@ -195,18 +194,18 @@ export default {
         window.dispatchEvent(new Event('resize'))
       }, 100)
     },
-    layoutType() {
+    layoutType () {
       this.setVerticalNavMenuWidth()
     },
-    reduceButton() {
+    reduceButton () {
       this.setVerticalNavMenuWidth()
     },
-    windowWidth() {
+    windowWidth () {
       this.setVerticalNavMenuWidth()
     }
   },
   methods: {
-    onMenuSwipe(event) {
+    onMenuSwipe (event) {
       if (event.direction === 4 && this.$vs.rtl) {
 
         // Swipe Right
@@ -218,7 +217,7 @@ export default {
         if (this.isVerticalNavMenuActive && this.showCloseButton) this.isVerticalNavMenuActive = false
       }
     },
-    onSwipeAreaSwipe(event) {
+    onSwipeAreaSwipe (event) {
 
       if (event.direction === 4 && !this.$vs.rtl) {
 
@@ -230,19 +229,19 @@ export default {
         if (!this.isVerticalNavMenuActive && this.showCloseButton) this.isVerticalNavMenuActive = true
       }
     },
-    psSectionScroll() {
+    psSectionScroll () {
       const scroll_el = this.$refs.verticalNavMenuPs.$el || this.$refs.verticalNavMenuPs
       this.showShadowBottom = scroll_el.scrollTop > 0
     },
-    mouseEnter() {
+    mouseEnter () {
       if (this.reduce) this.$store.commit('UPDATE_VERTICAL_NAV_MENU_ITEMS_MIN', false)
       this.isMouseEnter = true
     },
-    mouseLeave() {
+    mouseLeave () {
       if (this.reduce) this.$store.commit('UPDATE_VERTICAL_NAV_MENU_ITEMS_MIN', true)
       this.isMouseEnter = false
     },
-    setVerticalNavMenuWidth() {
+    setVerticalNavMenuWidth () {
 
       if (this.windowWidth > 1200) {
         if (this.layoutType === 'vertical') {
@@ -324,12 +323,12 @@ export default {
       //   this.$store.dispatch('updateVerticalNavMenuWidth', verticalNavMenuWidth)
       // }
     },
-    toggleReduce(val) {
+    toggleReduce (val) {
       this.reduceButton = val
       this.setVerticalNavMenuWidth()
     }
   },
-  mounted() {
+  mounted () {
     this.setVerticalNavMenuWidth()
   }
 }

@@ -11,24 +11,24 @@
 import Vue from 'vue'
 import App from './App.vue'
 
-import firebase from "firebase";
-import "firebase/firestore";
+import firebase from 'firebase'
+import 'firebase/firestore'
 
 // INITIALIZING FIREBASE
 
-var firebaseConfig = {
-  apiKey: "AIzaSyA8e8TdgtWnNYl86HV3joSTOy-19h3Y3TQ",
-  authDomain: "seventeenth-bct.firebaseapp.com",
-  databaseURL: "https://seventeenth-bct.firebaseio.com",
-  projectId: "seventeenth-bct",
-  storageBucket: "seventeenth-bct.appspot.com",
-  messagingSenderId: "682700854607",
-  appId: "1:682700854607:web:ca34e54af9128afb82e13a",
-  measurementId: "G-XS6SPLLTV2"
-};
+const firebaseConfig = {
+  apiKey: 'AIzaSyA8e8TdgtWnNYl86HV3joSTOy-19h3Y3TQ',
+  authDomain: 'seventeenth-bct.firebaseapp.com',
+  databaseURL: 'https://seventeenth-bct.firebaseio.com',
+  projectId: 'seventeenth-bct',
+  storageBucket: 'seventeenth-bct.appspot.com',
+  messagingSenderId: '682700854607',
+  appId: '1:682700854607:web:ca34e54af9128afb82e13a',
+  measurementId: 'G-XS6SPLLTV2'
+}
 // Initialize Firebase
-firebase.initializeApp(firebaseConfig);
-firebase.analytics();
+firebase.initializeApp(firebaseConfig)
+firebase.analytics()
 
 // Vuesax Component Framework
 import Vuesax from 'vuesax'
@@ -83,8 +83,6 @@ import 'prismjs/themes/prism-tomorrow.css'
 require('./assets/css/iconfont.css')
 
 
-
-
 // Vue select css
 // Note: In latest version you have to add it separately
 // import 'vue-select/dist/vue-select.css';
@@ -92,7 +90,7 @@ require('./assets/css/iconfont.css')
 
 Vue.config.productionTip = false
 
-let app;
+let app
 firebase.auth().onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({

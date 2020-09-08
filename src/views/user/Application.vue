@@ -20,6 +20,11 @@
         <h4 v-if="application.attendOps">Can you attend weekly Saturday Operations at 7:00pm CST? Yes</h4>
         <h4 v-else>Can you attend weekly Saturday Operations at 7:00pm CST? No</h4>
       </div>
+      <br>
+      <br>
+      <h3>Comments</h3>
+      <p>{{application.comment}}</p>
+      <h3>Status: {{application.status}}</h3>
     </div>
     <h1 v-else-if="!application">Sorry, but you haven't applied yet!</h1>
 
@@ -28,18 +33,18 @@
 </template>
 
 <script>
-import {mapActions, mapGetters} from "vuex";
+import {mapActions, mapGetters} from 'vuex'
 
 export default {
-  name: "Application",
+  name: 'Application',
   methods: {
-    ...mapActions(["setApplication"])
+    ...mapActions(['setApplication'])
   },
-  created() {
-    this.setApplication();
+  created () {
+    this.setApplication()
   },
   computed: {
-    ...mapGetters(["application"])
+    ...mapGetters(['application'])
   }
 }
 

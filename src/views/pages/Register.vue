@@ -24,7 +24,7 @@
                   <p>Fill the below form to create a new account.</p>
                   <div class="vx-row mb-6">
                     <div class="vx-col w-full">
-                      <vs-input type='text' class="w-full" icon-pack="feather" icon="icon-user" icon-no-border label="Username" v-model="username" />
+                      <vs-input type="text" class="w-full" icon-pack="feather" icon="icon-user" icon-no-border label="Username" v-model="username" />
                     </div>
                   </div>
                   <div class="vx-row mb-6">
@@ -69,7 +69,7 @@
 <script>
 
 
-import {mapActions} from "vuex";
+import {mapActions} from 'vuex'
 
 export default {
   data () {
@@ -82,10 +82,10 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["registerUser"]),
-    register() {
-      if(this.password !== this.password2) {
-        alert("Passwords do not match!");
+    ...mapActions(['registerUser']),
+    register () {
+      if (this.password !== this.password2) {
+        alert('Passwords do not match!')
       } else {
         this.registerUser([this.username, this.email, this.password, this.discord_id])
       }

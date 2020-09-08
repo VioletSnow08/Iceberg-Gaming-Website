@@ -10,8 +10,9 @@
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
       <list>
-        <option value="Vue Single File Component" />
         <option value="JavaScript File" />
+        <option value="package.json" />
+        <option value="Vue Single File Component" />
       </list>
     </option>
   </component>
@@ -26,7 +27,7 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="WebServerToolWindowFactoryState" value="false" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/src/views/admin" />
     <property name="node.js.detected.package.eslint" value="true" />
     <property name="node.js.detected.package.tslint" value="true" />
     <property name="node.js.path.for.package.eslint" value="project" />
@@ -38,13 +39,14 @@
     <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\Development\Websites\17th-bct-website\src\views\user" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="E:\Development\Websites\17th-bct-website\src\views\admin" />
       <recent name="E:\Development\Websites\17th-bct-website\src\views\pages" />
       <recent name="E:\Development\Websites\17th-bct-website\src\store\modules" />
       <recent name="E:\Development\Websites\17th-bct-website\src\views" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Development\Websites\17th-bct-website\src\views\user" />
     </key>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
@@ -65,7 +67,13 @@
       <workItem from="1598734167979" duration="6970000" />
       <workItem from="1598815940000" duration="9340000" />
       <workItem from="1598904318759" duration="1344000" />
-      <workItem from="1598906940406" duration="7139000" />
+      <workItem from="1598906940406" duration="9454000" />
+      <workItem from="1599005508248" duration="629000" />
+      <workItem from="1599441806954" duration="6653000" />
+      <workItem from="1599496736861" duration="1737000" />
+      <workItem from="1599505904162" duration="2720000" />
+      <workItem from="1599508639717" duration="2311000" />
+      <workItem from="1599516590079" duration="7492000" />
     </task>
     <servers />
   </component>
@@ -85,22 +93,26 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1060" y="455" key="FileChooserDialogImpl/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598905637676" />
-    <state width="2539" height="401" key="GridCell.Tab.0.bottom" timestamp="1598410347263">
+    <state width="2539" height="401" key="GridCell.Tab.0.bottom" timestamp="1599507050578">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2539" height="401" key="GridCell.Tab.0.bottom/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
-    <state width="2539" height="401" key="GridCell.Tab.0.center" timestamp="1598410347263">
+    <state width="2539" height="401" key="GridCell.Tab.0.bottom/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1599507050578" />
+    <state width="2539" height="401" key="GridCell.Tab.0.center" timestamp="1599507050578">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2539" height="401" key="GridCell.Tab.0.center/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
-    <state width="2539" height="401" key="GridCell.Tab.0.left" timestamp="1598410347263">
+    <state width="2539" height="401" key="GridCell.Tab.0.center/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1599507050578" />
+    <state width="2539" height="401" key="GridCell.Tab.0.left" timestamp="1599507050577">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2539" height="401" key="GridCell.Tab.0.left/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
-    <state width="2539" height="401" key="GridCell.Tab.0.right" timestamp="1598410347263">
+    <state width="2539" height="401" key="GridCell.Tab.0.left/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1599507050577" />
+    <state width="2539" height="401" key="GridCell.Tab.0.right" timestamp="1599507050578">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2539" height="401" key="GridCell.Tab.0.right/-1280.14.1280.984/2560.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1598410347263" />
+    <state width="2539" height="401" key="GridCell.Tab.0.right/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1599507050578" />
     <state x="781" y="345" key="SettingsEditor" timestamp="1598726754110">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -109,6 +121,10 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="987" y="299" width="585" height="801" key="find.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598753973583" />
+    <state x="936" y="330" key="run.anything.popup" timestamp="1599518794648">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="936" y="330" key="run.anything.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1599518794648" />
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1598725919540">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>

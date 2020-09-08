@@ -83,7 +83,7 @@
 </template>
 
 <script>
-export default{
+export default {
   name: 'vx-tour',
   props: {
     steps: {

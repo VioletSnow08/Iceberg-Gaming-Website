@@ -17,11 +17,12 @@ import mutations from './mutations'
 import actions from './actions'
 
 // Importing Modules...
-import user from "./modules/user";
-import member from "./modules/member";
-import authentication from "./modules/authentication"
-import application from "./modules/application";
-import stats from "./modules/stats";
+import user from './modules/user'
+import member from './modules/member'
+import authentication from './modules/authentication'
+import application from './modules/application'
+import stats from './modules/stats'
+import serverStatus from './modules/serverStatus'
 
 Vue.use(Vuex)
 
@@ -36,6 +37,7 @@ export default new Vuex.Store({
     authentication,
     application,
     stats,
+    serverStatus
 
   },
   strict: process.env.NODE_ENV !== 'production'
