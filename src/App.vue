@@ -16,6 +16,7 @@
 
 <script>
 import themeConfig from '@/../themeConfig.js'
+import '@/assets/scss/vuexy/extraComponents/agGridStyleOverride.scss'
 
 export default {
   data () {
@@ -73,9 +74,6 @@ export default {
     window.addEventListener('resize', this.handleWindowResize)
     window.addEventListener('scroll', this.handleScroll)
     await this.$store.dispatch('setUser')
-    await this.$store.dispatch('setMember')
-    await this.$store.dispatch('setApplication')
-    await this.$store.dispatch('setStats')
   },
   destroyed () {
     window.removeEventListener('resize', this.handleWindowResize)
@@ -84,3 +82,4 @@ export default {
 }
 
 </script>
+

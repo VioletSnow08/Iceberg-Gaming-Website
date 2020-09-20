@@ -17,68 +17,17 @@ Vue.use(Router)
 const router = new Router({
   mode: 'history',
   base: process.env.BASE_URL,
-  scrollBehavior () {
+  scrollBehavior() {
     return {x: 0, y: 0}
   },
   routes: [
-
+    // Administrative Pages
     {
-      // =============================================================================
-      // MAIN LAYOUT ROUTES
-      // =============================================================================
       path: '',
       component: () => import('./layouts/main/Main.vue'),
       children: [
-        // =============================================================================
-        // Theme Routes
-        // =============================================================================
         {
-          path: '/user/dashboard',
-          name: 'dashboard',
-          component: () => import('./views/user/Dashboard.vue'),
-          meta: {
-            requiresAuth: true,
-            roles: ['member']
-          }
-        },
-        {
-          path: '/user/apply',
-          name: 'apply',
-          component: () => import('./views/user/Apply.vue'),
-          meta: {
-            requiresAuth: true,
-            roles: ['applicant']
-          }
-        },
-        {
-          path: '/user/application',
-          name: 'application',
-          component: () => import('./views/user/Application.vue'),
-          meta: {
-            requiresAuth: true,
-            roles: ['member']
-          }
-        },
-        {
-          path: '/user/profile',
-          name: 'profile',
-          component: () => import('./views/user/Profile.vue'),
-          meta: {
-            requiresAuth: true,
-            roles: ['member']
-          }
-        },
-        {
-          path: '/admin/applications',
-          name: 'applications',
-          component: () => import('./views/admin/Applications.vue'),
-          meta: {
-            requiresAuth: true,
-            roles: ['Recruiter', 'Alpha Company HQ', 'Owner']
-          }
-        },
-        {
-          path: '/admin/applications/view/:id',
+          path: '/admin/applications/view/:userID/:applicationID',
           name: 'viewApplication',
           component: () => import('./views/admin/Application.vue'),
           meta: {
@@ -88,27 +37,74 @@ const router = new Router({
           props: true
         },
         {
-          path: '/user/loa',
-          name: 'Loa',
-          component: () => import('./views/user/Loa.vue'),
+          path: '/admin/applications',
+          name: 'applications',
+          component: () => import('./views/admin/Applications.vue'),
           meta: {
             requiresAuth: true,
-            roles: ['member']
-          }
+            roles: ['Recruiter', 'Alpha Company HQ', 'Owner']
+          },
+        },
+        {
+          path: '/admin/users',
+          name: 'users',
+          component: () => import('./views/admin/Users.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['Recruiter', 'Alpha Company HQ', 'Owner']
+          },
         }
-
       ]
     },
-    // =============================================================================
-    // FULL PAGE LAYOUTS
-    // =============================================================================
+    // User Pages
+    {
+      path: '',
+      component: () => import('./layouts/main/Main.vue'),
+      children: [
+        {
+          path: '/user/hub',
+          name: 'hub',
+          component: () => import('./views/user/Hub.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['isIceberg']
+          },
+        },
+
+        {
+          path: '/user/application',
+          name: 'myApplication',
+          component: () => import('./views/user/MyApplication.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['isApplicant', 'isIceberg']
+          },
+        },
+        {
+          path: '/user/apply17th',
+          name: 'apply17th',
+          component: () => import('./views/user/Apply17th.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['isApplicant']
+          },
+        },
+        {
+          path: '/user/settings',
+          name: 'settings',
+          component: () => import('./views/user/Settings.vue'),
+          meta: {
+            requiresAuth: true,
+            roles: ['isIceberg']
+          },
+        },
+      ]
+    },
+    // Full Content Pages
     {
       path: '',
       component: () => import('@/layouts/full-page/FullPage.vue'),
       children: [
-        // =============================================================================
-        // PAGES
-        // =============================================================================
         {
           path: '/pages/login',
           name: 'page-login',
@@ -134,16 +130,18 @@ const router = new Router({
           meta: {
             requiresGuest: true
           }
-        }
+        },
+
+        {
+          path: '/',
+          name: 'home',
+          component: () => import('@/views/pages/Home.vue')
+        },
 
       ]
     },
-    {
-      path: '/',
-      name: 'home',
-      component: () => import('@/views/Home.vue')
-    },
-    // Redirect to 404 page, if no match found
+
+
     {
       path: '*',
       redirect: '/pages/error-404'
@@ -151,20 +149,53 @@ const router = new Router({
   ]
 })
 
+// Navigation Guards - They work by providing the *lowest* role/rank that can access it, then by listing any other roles.
+
 router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
+
     if (!firebase.auth().currentUser) { // If the user is not signed in
+      await attemptAtAuth(to.path, from.path)
       next({
         path: '/pages/perms',
         query: {
           redirect: to.fullPath
         }
       })
-    } else if (to.meta.roles.includes('applicant')) {
-      await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then(doc => {
-        if (doc.data().role === 'applicant') {
+    } else if (to.meta.roles.includes("isIceberg")) { // If they are logged in, require authentication, and is NOT requiring applicant.
+      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => {
+        if (doc.data().isIceberg) {
           next()
         } else {
+          await attemptAtAuth(to.path, from.path)
+          next({
+            path: '/pages/perms',
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        }
+      })
+    } else if (to.meta.roles.includes('isApplicant')) { // If they are logged in, require authentication, and IS requiring applicant.
+      await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).get().then(async doc => {
+        if (doc.data().isApplicant) {
+          next()
+        } else {
+          await attemptAtAuth(to.path, from.path)
+          next({
+            path: '/pages/perms',
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        }
+      })
+    } else if (to.meta.roles.includes("is17th")) { // If they are logged in, require authentication, is NOT requiring applicant, and is requiring the 17th member role.
+      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => {
+        if (doc.data().is17th) {
+          next();
+        } else {
+          await attemptAtAuth(to.path, from.path)
           next({
             path: '/pages/perms',
             query: {
@@ -174,40 +205,25 @@ router.beforeEach(async (to, from, next) => {
         }
       })
     } else {
-      await firebase
-        .firestore()
-        .collection('users')
-        .doc(firebase.auth().currentUser.uid).get().then(async doc => {
-
-          if (doc.data().application_status === 'Accepted') { // If they are a member
-            await firebase.firestore().collection('members').doc(firebase.auth().currentUser.uid).get().then(document => {
-              if (to.meta.roles.some(role => document.data().roles.includes(role))) {
-                next()
-              } else {
-                next({
-                  path: '/pages/perms',
-                  query: {
-                    redirect: to.fullPath
-                  }
-                })
-              }
-            })
-
-          } else { // If they are not a member
-            next({
-              path: '/pages/perms',
-              query: {
-                redirect: to.fullPath
-              }
-            })
-          }
-
-        })
+      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => { // Else check to see if they have the proper roles.
+        if (to.meta.roles.some(role => doc.data().roles.includes(role))) {
+          next();
+        } else {
+          await attemptAtAuth(to.path, from.path)
+          next({
+            path: '/pages/perms',
+            query: {
+              redirect: to.fullPath
+            }
+          })
+        }
+      })
     }
+
+
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (firebase.auth().currentUser) {
       next({
-
         path: '/pages/perms',
         query: {
           redirect: to.fullPath
@@ -229,5 +245,20 @@ router.afterEach(() => {
     appLoading.style.display = 'none'
   }
 })
+
+async function attemptAtAuth(to, from) {
+  let ip;
+  await fetch('https://api.ipify.org?format=json')
+    .then(async x => x.json())
+    .then(async ({ip}) => {
+      await firebase.firestore().collection("logs").doc().set({
+        ip,
+        to,
+        from,
+      }).catch(error => {
+        if (error) throw error;
+      })
+    });
+}
 
 export default router

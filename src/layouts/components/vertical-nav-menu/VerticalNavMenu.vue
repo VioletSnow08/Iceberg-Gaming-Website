@@ -31,7 +31,7 @@
 
           <!-- Logo -->
           <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/">
-            <logo class="w-10 mr-4 fill-current text-primary"/>
+<!--            <logo class="w-10 mr-4 fill-current text-primary"/>-->
             <span class="vx-logo-text text-primary" v-show="isMouseEnter || !reduce" v-if="title">{{ title }}</span>
           </router-link>
           <!-- /Logo -->
@@ -43,6 +43,14 @@
               <feather-icon icon="XIcon" class="m-0 cursor-pointer"
                             @click="$store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', false)"/>
             </template>
+            <template v-else-if="!showCloseButton && !verticalNavMenuItemsMin">
+              <feather-icon
+                id="btnVNavMenuMinToggler"
+                class="mr-0 cursor-pointer"
+                :icon="reduce ? 'CircleIcon' : 'DiscIcon'"
+                svg-classes="stroke-current text-primary"
+                @click="toggleReduce(!reduce)" />
+            </template>
           </div>
         </div>
         <!-- Header -->
@@ -53,15 +61,21 @@
         <component :is="scrollbarTag" ref="verticalNavMenuPs" class="scroll-area-v-nav-menu pt-2" :settings="settings"
                    @ps-scroll-y="psSectionScroll" @scroll="psSectionScroll" :key="$vs.rtl">
 
-
-          <v-nav-menu-item v-if="currentUser.role === 'member'" to="/user/dashboard" icon="HomeIcon">
-            <span v-show="!verticalNavMenuItemsMin" class="truncate">Dashboard</span>
+          <v-nav-menu-item v-if="currentUser.isIceberg" to="/user/hub" icon="HomeIcon">
+            <span v-show="!verticalNavMenuItemsMin" class="truncate">The Hub</span>
+          </v-nav-menu-item>
+          <v-nav-menu-item v-if="currentUser.isApplicant || (currentUser.isIceberg && !currentUser.is17th)" to="/user/apply17th" icon="FilePlusIcon">
+            <span v-show="!verticalNavMenuItemsMin" class="truncate">Application - 17th BCT</span>
           </v-nav-menu-item>
 
-          <v-nav-menu-item v-if="member.roles.includes('Recruiter')" to="/admin/applications" icon="HomeIcon">
+          <v-nav-menu-item v-if="currentUser.is17th && currentUser.roles.includes('Recruiter' || 'Alpha Company HQ' || 'Administrator')" to="/admin/applications" icon="FileIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Applications</span>
-            <!-- v-if="(isMouseEnter || !reduce)" -->
           </v-nav-menu-item>
+          <v-nav-menu-item v-if="currentUser.is17th && currentUser.roles.includes('Recruiter' || 'Alpha Company HQ' || 'Administrator')" to="/admin/users" icon="SettingsIcon">
+            <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
+          </v-nav-menu-item>
+          <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE"><span v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
+
         </component>
         <!-- /Menu Items -->
       </div>
@@ -135,7 +149,7 @@ export default {
         return open
       }
     },
-    ...mapGetters(['currentUser', 'member', 'stats']),
+    ...mapGetters(['currentUser', 'stats']),
     menuItemsUpdated () {
       const clone = this.navMenuItems.slice()
 

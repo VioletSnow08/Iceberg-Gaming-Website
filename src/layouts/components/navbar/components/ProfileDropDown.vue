@@ -15,10 +15,6 @@
       <vs-dropdown-menu class="vx-navbar-dropdown">
         <ul style="min-width: 9rem">
 
-          <li class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
-            <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">Profile</span>
-          </li>
 
           <li @click="$router.push('/user/application')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4" />
@@ -26,16 +22,17 @@
           </li >
 
           <vs-divider class="m-1" />
-
+          <li v-if="currentUser.isIceberg" @click="$router.push('/user/settings')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+            <feather-icon icon="SettingsIcon" svgClasses="w-4 h-4" />
+            <span class="ml-2">Settings</span>
+          </li>
           <li
             class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"
-            @click="$router.push('/pages/login')">
+            @click="logoutUser">
             <feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Logout</span>
           </li>
         </ul>
-        <li v-if="this.$store.state.theme === 'dark'" @click="$store.state.theme = 'light'" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white"><feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" /><span class="ml-2">Light Mode</span></li>
-        <li v-else class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white" @click="$store.state.theme = 'dark'"><feather-icon icon="LogOutIcon" svgClasses="w-4 h-4" /><span class="ml-2">Dark Mode</span></li>
       </vs-dropdown-menu>
     </vs-dropdown>
     <li
