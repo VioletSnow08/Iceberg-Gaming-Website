@@ -1,7 +1,7 @@
 <template>
   <div>
     <h1 class="text-center">Settings</h1>
-    <p class="text-center">Customize your My 17th BCT Account</p>
+    <h2 class="text-center">Customize your Iceberg Gaming Account</h2>
     <br>
     <!--    <div class="vx-row">-->
     <!--      &lt;!&ndash;      Starts the first VX ROW&ndash;&gt;-->

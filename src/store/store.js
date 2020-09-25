@@ -21,6 +21,8 @@ import user from './modules/user'
 import application from './modules/application'
 import serverStatus from './modules/serverStatus'
 import loa from "./modules/settings";
+import userManagement from "@/store/modules/userManagement";
+import calendar from "@/store/modules/calendar"
 
 Vue.use(Vuex)
 
@@ -33,7 +35,8 @@ export default new Vuex.Store({
     user,
     application,
     serverStatus,
-    loa
+    loa,
+    calendar,
 
   },
   strict: process.env.NODE_ENV !== 'production'

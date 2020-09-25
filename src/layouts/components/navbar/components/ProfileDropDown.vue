@@ -1,5 +1,5 @@
 <template>
-  <div class="the-navbar__user-meta flex items-center" v-if="currentUser.username">
+  <div class="the-navbar__user-meta flex items-center" v-if="currentUser">
 
     <div class="text-right leading-tight hidden sm:block">
       <p class="font-semibold">{{ currentUser.username }}</p>
@@ -16,13 +16,13 @@
         <ul style="min-width: 9rem">
 
 
-          <li @click="$router.push('/user/application')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+          <li @click="$router.push('/user/applications')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">View Application</span>
+            <span class="ml-2">View Applications</span>
           </li >
 
           <vs-divider class="m-1" />
-          <li v-if="currentUser.isIceberg" @click="$router.push('/user/settings')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+          <li v-if="currentUser.roles.includes('[ICE] Member')" @click="$router.push('/user/settings')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="SettingsIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Settings</span>
           </li>

@@ -7,7 +7,7 @@
 
     <br>
     <!--    Row 2 - Iceberg Gaming Related-->
-    <div v-if="currentUser.isIceberg" class="vx-row">
+    <div v-if="currentUser.roles.includes('[ICE] Member')" class="vx-row">
       <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
         <statistics-card-line
           hideChart
@@ -31,7 +31,7 @@
     </div>
 
     <!--    Row 2 - 17th Brigade Combat Team Related-->
-    <div v-if="currentUser.is17th" class="vx-row">
+    <div v-if="currentUser.roles.includes('[17th] Member')" class="vx-row">
       <div class="vx-col w-1/2 md:w-1/3 xl:w-1/6">
         <statistics-card-line
           hideChart

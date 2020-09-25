@@ -31,7 +31,7 @@
 
           <!-- Logo -->
           <router-link tag="div" class="vx-logo cursor-pointer flex items-center" to="/">
-<!--            <logo class="w-10 mr-4 fill-current text-primary"/>-->
+            <!--            <logo class="w-10 mr-4 fill-current text-primary"/>-->
             <span class="vx-logo-text text-primary" v-show="isMouseEnter || !reduce" v-if="title">{{ title }}</span>
           </router-link>
           <!-- /Logo -->
@@ -49,7 +49,7 @@
                 class="mr-0 cursor-pointer"
                 :icon="reduce ? 'CircleIcon' : 'DiscIcon'"
                 svg-classes="stroke-current text-primary"
-                @click="toggleReduce(!reduce)" />
+                @click="toggleReduce(!reduce)"/>
             </template>
           </div>
         </div>
@@ -58,23 +58,42 @@
         <div class="shadow-bottom" v-show="showShadowBottom"/>
 
         <!-- Menu Items -->
-        <component :is="scrollbarTag" ref="verticalNavMenuPs" class="scroll-area-v-nav-menu pt-2" :settings="settings"
+        <component v-if="currentUser" :is="scrollbarTag" ref="verticalNavMenuPs"
+                   class="scroll-area-v-nav-menu pt-2" :settings="settings"
                    @ps-scroll-y="psSectionScroll" @scroll="psSectionScroll" :key="$vs.rtl">
 
-          <v-nav-menu-item v-if="currentUser.isIceberg" to="/user/hub" icon="HomeIcon">
+
+          <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Iceberg Gaming</span>
+
+          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/user/hub" icon="HomeIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">The Hub</span>
           </v-nav-menu-item>
-          <v-nav-menu-item v-if="currentUser.isApplicant || (currentUser.isIceberg && !currentUser.is17th)" to="/user/apply17th" icon="FilePlusIcon">
-            <span v-show="!verticalNavMenuItemsMin" class="truncate">Application - 17th BCT</span>
-          </v-nav-menu-item>
-
-          <v-nav-menu-item v-if="currentUser.is17th && currentUser.roles.includes('Recruiter' || 'Alpha Company HQ' || 'Administrator')" to="/admin/applications" icon="FileIcon">
+          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Recruiter')" to="/admin/applications"
+                           icon="FileIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Applications</span>
           </v-nav-menu-item>
-          <v-nav-menu-item v-if="currentUser.is17th && currentUser.roles.includes('Recruiter' || 'Alpha Company HQ' || 'Administrator')" to="/admin/users" icon="SettingsIcon">
+          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/user/iceberg/calendar"
+                           icon="CalendarIcon">
+            <span v-show="!verticalNavMenuItemsMin" class="truncate">Calendar</span>
+          </v-nav-menu-item>
+
+          <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE"><span
+            v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
+
+
+          <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">17th Brigade Combat Team</span>
+
+          <v-nav-menu-item v-if="currentUser.roles.includes('[17th] Applicant')" to="/user/17th/apply"
+                           icon="FilePlusIcon">
+            <span v-show="!verticalNavMenuItemsMin" class="truncate">Application - 17th BCT</span>
+          </v-nav-menu-item>
+          <v-nav-menu-item
+            v-if="currentUser.roles.some(role => ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ'].includes(role))"
+            to="/admin/17th/users" icon="SettingsIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
           </v-nav-menu-item>
-          <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE"><span v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
+
+
 
         </component>
         <!-- /Menu Items -->
@@ -125,10 +144,16 @@ export default {
       wheelSpeed: 1,
       swipeEasing: true
     },
-    showShadowBottom: false
+    showShadowBottom: false,
+    submenus: [      {
+      url: '/dashboard/analytics',
+      name: 'Analytics',
+      slug: 'dashboard-analytics',
+      i18n: 'Analytics'
+    },]
   }),
   computed: {
-    isGroupActive () {
+    isGroupActive() {
       return (item) => {
         const path = this.$route.fullPath
         const routeParent = this.$route.meta ? this.$route.meta.parent : undefined
@@ -149,8 +174,8 @@ export default {
         return open
       }
     },
-    ...mapGetters(['currentUser', 'stats']),
-    menuItemsUpdated () {
+    ...mapGetters(['currentUser']),
+    menuItemsUpdated() {
       const clone = this.navMenuItems.slice()
 
       for (const [index, item] of this.navMenuItems.entries()) {
@@ -165,42 +190,42 @@ export default {
       return clone
     },
     isVerticalNavMenuActive: {
-      get () {
+      get() {
         return this.$store.state.isVerticalNavMenuActive
       },
-      set (val) {
+      set(val) {
         this.$store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', val)
       }
     },
-    layoutType () {
+    layoutType() {
       return this.$store.state.mainLayoutType
     },
     reduceButton: {
-      get () {
+      get() {
         return this.$store.state.reduceButton
       },
-      set (val) {
+      set(val) {
         this.$store.commit('TOGGLE_REDUCE_BUTTON', val)
       }
     },
-    isVerticalNavMenuReduced () {
+    isVerticalNavMenuReduced() {
       return Boolean(this.reduce && this.reduceButton)
     },
-    verticalNavMenuItemsMin () {
+    verticalNavMenuItemsMin() {
       return this.$store.state.verticalNavMenuItemsMin
     },
-    scrollbarTag () {
+    scrollbarTag() {
       return this.$store.getters.scrollbarTag
     },
-    windowWidth () {
+    windowWidth() {
       return this.$store.state.windowWidth
     }
   },
   watch: {
-    '$route' () {
+    '$route'() {
       if (this.isVerticalNavMenuActive && this.showCloseButton) this.$store.commit('TOGGLE_IS_VERTICAL_NAV_MENU_ACTIVE', false)
     },
-    reduce (val) {
+    reduce(val) {
       const verticalNavMenuWidth = val ? 'reduced' : this.$store.state.windowWidth < 1200 ? 'no-nav-menu' : 'default'
       this.$store.dispatch('updateVerticalNavMenuWidth', verticalNavMenuWidth)
 
@@ -208,18 +233,18 @@ export default {
         window.dispatchEvent(new Event('resize'))
       }, 100)
     },
-    layoutType () {
+    layoutType() {
       this.setVerticalNavMenuWidth()
     },
-    reduceButton () {
+    reduceButton() {
       this.setVerticalNavMenuWidth()
     },
-    windowWidth () {
+    windowWidth() {
       this.setVerticalNavMenuWidth()
     }
   },
   methods: {
-    onMenuSwipe (event) {
+    onMenuSwipe(event) {
       if (event.direction === 4 && this.$vs.rtl) {
 
         // Swipe Right
@@ -231,7 +256,7 @@ export default {
         if (this.isVerticalNavMenuActive && this.showCloseButton) this.isVerticalNavMenuActive = false
       }
     },
-    onSwipeAreaSwipe (event) {
+    onSwipeAreaSwipe(event) {
 
       if (event.direction === 4 && !this.$vs.rtl) {
 
@@ -243,19 +268,19 @@ export default {
         if (!this.isVerticalNavMenuActive && this.showCloseButton) this.isVerticalNavMenuActive = true
       }
     },
-    psSectionScroll () {
+    psSectionScroll() {
       const scroll_el = this.$refs.verticalNavMenuPs.$el || this.$refs.verticalNavMenuPs
       this.showShadowBottom = scroll_el.scrollTop > 0
     },
-    mouseEnter () {
+    mouseEnter() {
       if (this.reduce) this.$store.commit('UPDATE_VERTICAL_NAV_MENU_ITEMS_MIN', false)
       this.isMouseEnter = true
     },
-    mouseLeave () {
+    mouseLeave() {
       if (this.reduce) this.$store.commit('UPDATE_VERTICAL_NAV_MENU_ITEMS_MIN', true)
       this.isMouseEnter = false
     },
-    setVerticalNavMenuWidth () {
+    setVerticalNavMenuWidth() {
 
       if (this.windowWidth > 1200) {
         if (this.layoutType === 'vertical') {
@@ -337,12 +362,12 @@ export default {
       //   this.$store.dispatch('updateVerticalNavMenuWidth', verticalNavMenuWidth)
       // }
     },
-    toggleReduce (val) {
+    toggleReduce(val) {
       this.reduceButton = val
       this.setVerticalNavMenuWidth()
     }
   },
-  mounted () {
+  mounted() {
     this.setVerticalNavMenuWidth()
   }
 }

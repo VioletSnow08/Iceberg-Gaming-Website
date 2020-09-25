@@ -9,11 +9,11 @@
 
 // MAIN COLORS - VUESAX THEME COLORS
 export const colors = {
-  primary : '#7367F0',
-  success : '#28C76F',
-  danger  : '#EA5455',
-  warning : '#FF9F43',
-  dark    : '#1E1E1E'
+  primary: '#5b3cc4',
+  success: 'rgb(23, 201, 100)',
+  danger: 'rgb(242, 19, 93)',
+  warning: 'rgb(255, 130, 0)',
+  dark: 'rgb(36, 33, 69)'
 }
 
 // CONFIGS
@@ -25,7 +25,7 @@ const themeConfig = {
   mainLayoutType    : 'vertical',  // options[String]  : vertical(default) / horizontal
   navbarColor       : '#fff',      // options[String]  : HEX color / rgb / rgba / Valid HTML Color name - (default: #fff)
   navbarType        : 'floating',  // options[String]  : floating(default) / static / sticky / hidden
-  routerTransition  : 'zoom-fade', // options[String]  : zoom-fade / slide-fade / fade-bottom / fade / zoom-out / none(default)
+  routerTransition  : 'slide-fade', // options[String]  : zoom-fade / slide-fade / fade-bottom / fade / zoom-out / none(default)
   rtl               : false,       // options[Boolean] : true, false(default)
   sidebarCollapsed  : false,       // options[Boolean] : true, false(default)
   theme             : 'dark',     // options[String]  : "light"(default), "dark", "semi-dark"

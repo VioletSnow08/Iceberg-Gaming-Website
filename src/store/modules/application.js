@@ -1,25 +1,33 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
-import router from '@/router'
+import router from '@/router/router'
 
 const state = {
-  application: null,
   applications: null
 }
 const getters = {
-  currentApplication: state => {
-    return state.application
-  },
-  applications: state => {
-    return state.applications
-  },
   application: (state) => (userID, applicationID) => {
-    return state.applications.find(application => (application.user_id === userID) && application.id === applicationID)
+    return state.applications.find(application => (application.user_id === userID) && (application.id === applicationID))
+  },
+  applications: (state) => {
+    return state.applications;
+  },
+  applicationsFromUser: (state) => (userID) => {
+    let applications = [];
+    state.applications.forEach(application => {
+      if(application.user_id === userID) {
+        applications.push(application);
+      }
+    })
+    return applications;
+  },
+  applicationsFromUserFromUnit: (state) => (userID, unit) => {
+    return state.applications.find(application => (application.user_id === userID) && (application.unit === unit))
   }
 }
 
 const actions = {
-  async submitApplication({commit}, [steamURL, age, timezone, arma3Hours, hobbies, whyjoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
+  async submit17thApplication({commit}, [steamURL, age, timezone, arma3Hours, hobbies, whyjoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
     if (firebase.auth().currentUser) {
       const interestedRoles = []
       if (ranger) {
@@ -57,26 +65,13 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
-        commit('setCurrentApplication', application)
-        await router.push('/user/application')
+        await router.push('/user/17th/application')
       }).catch(error => {
         if (error) throw error
       })
 
 
     }
-  },
-  async setCurrentApplication({commit}) {
-    if (firebase.auth().currentUser) {
-      await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection('applications').orderBy("date", "desc").get().then(snapshot => {
-        if(!snapshot.docs[0]) return;
-        const object = {...snapshot.docs[0].data(), id: snapshot.docs[0].id}
-        commit('setCurrentApplication', object)
-      }).catch(error => {
-        if (error) alert(error)
-      })
-    }
-
   },
 
   async setApplications({commit}) {
@@ -125,12 +120,9 @@ const actions = {
 }
 
 const mutations = {
-  setCurrentApplication(state, application) {
-    state.application = application
-  },
   setApplications(state, applications) {
     state.applications = applications
-  }
+  },
 }
 
 

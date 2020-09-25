@@ -1,9 +1,9 @@
 import * as firebase from 'firebase'
-import router from "@/router";
+import router from "@/router/router";
 
 const state = {
-  user: {},
-  users: {}
+  user: null,
+  users: null
 
 }
 
@@ -24,7 +24,8 @@ const actions = {
         .collection('users')
         .doc(firebase.auth().currentUser.uid).get().then(doc => {
           if (doc.exists) {
-            commit('setUser', doc.data())
+            const object = {...doc.data(), id: doc.id}
+            commit('setUser', object)
           }
         }).catch(error => {
           if (error) alert(error)
@@ -51,16 +52,13 @@ const actions = {
         isIceberg: true,
         isApplicant: false,
         status: "You can now change your status!",
-        roles: ["[ICEBERG] Member"]
+        roles: ["[ICE] Member"]
       })
     } else {
       await firebase.firestore().collection("users").doc(userID).update({
-        isIceberg: true,
-        is17th: true,
-        isApplicant: false,
         bct_rank: "RCT",
         status: "You can now change your status!",
-        roles: ["[ICEBERG] Member", "[17th] Member", "Recruit"]
+        roles: ["[ICE] Member", "[17th] Member", "[17th] Recruit"]
       })
     }
   },
@@ -73,15 +71,12 @@ const actions = {
         bct_eligibleForPromotion: false,
         email,
         bct_events_attended: 0,
-        is17th: false,
-        isIceberg: false,
-        isApplicant: true,
         onLOA: false,
         photoURL: "https://image.flaticon.com/icons/svg/2919/2919600.svg",
         bct_points: 0,
-        bct_rank: "Applicant",
-        roles: ["Applicant"],
-        status: "Applicant",
+        bct_rank: "",
+        roles: ["[ICE] Member"],
+        status: "Iceberg Member",
         username
       }
 

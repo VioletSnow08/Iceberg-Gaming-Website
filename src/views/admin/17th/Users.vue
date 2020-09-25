@@ -1,7 +1,10 @@
 <template>
   <div>
-    <h1>User Management</h1>
-    <h2>The place to ban all the kids you'd like.</h2>
+    <div class="text-center">
+      <h1>User Management</h1>
+      <h2>Manage the 17th Brigade Combat Team members here</h2>
+    </div>
+
     <br>
     <div id="page-user-list">
       <div class="vx-card p-6">
