@@ -4,7 +4,6 @@
       <h1>Welcome to the Iceberg Gaming Hub!</h1>
       <h2>Enjoy your stay!</h2>
     </div>
-
     <br>
     <!--    Row 2 - Iceberg Gaming Related-->
     <div v-if="currentUser.roles.includes('[ICE] Member')" class="vx-row">

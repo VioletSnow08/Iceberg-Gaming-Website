@@ -58,5 +58,14 @@ export default [{
         roles: ['[ICE] Member']
       },
     },
+    {
+      path: '/user/profile',
+      name: 'MyProfile',
+      component: () => import('@/views/user/MyProfile'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+    },
   ]
 }]

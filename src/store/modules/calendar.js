@@ -46,17 +46,23 @@ const actions = {
     let list = [];
     await firebase.firestore().collection('events').get().then(async events => {
       for (const event of events.docs) {
-        const object = {...event.data(), id: event.id, startDate: formatDate(event.data().startDate.toDate()), endDate: formatDate(event.data().endDate.toDate())}
+        const object = {...event.data(), id: event.id}
         list.push(object);
       }
     })
     commit("setEvents", list);
+  },
+  async addEvent({commit}, event) {
+    await firebase.firestore().collection('events').doc().set(event).catch(error => {if(error) throw error;})
+    commit("addEvent", event);
   }
-
 }
 const mutations = {
   setEvents(state, events) {
     state.events = events;
+  },
+  addEvent(state, event) {
+    state.events.push(event);
   }
 }
 export default {

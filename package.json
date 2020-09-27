@@ -22,6 +22,7 @@
     "firebase": "^7.20.0",
     "instantsearch.css": "^7.3.1",
     "jsonwebtoken": "^8.5.1",
+    "luxon": "^1.25.0",
     "material-icons": "^0.3.1",
     "perfect-scrollbar": "^1.4.0",
     "postcss-rtl": "^1.5.0",
@@ -35,6 +36,7 @@
     "vue-chartjs": "^3.4.2",
     "vue-clipboard2": "^0.3.0",
     "vue-context": "4.0.0",
+    "vue-datetime": "^1.0.0-beta.14",
     "vue-echarts": "^4.0.3",
     "vue-feather-icons": "^5.0.0",
     "vue-flatpickr-component": "^8.1.2",
@@ -58,8 +60,10 @@
     "vue2-hammer": "^2.1.2",
     "vuedraggable": "^2.21.0",
     "vuejs-datepicker": "^1.5.4",
+    "vuejs-datetimepicker": "^1.1.13",
     "vuesax": "^3.11.17",
     "vuex": "^3.1.1",
+    "weekstart": "^1.0.1",
     "xlsx": "^0.15.0"
   },
   "devDependencies": {
