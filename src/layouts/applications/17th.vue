@@ -58,9 +58,9 @@
         <vs-checkbox disabled v-model="application.interestedRoles.includes('Medic')">Medic</vs-checkbox>
         <vs-checkbox disabled v-model="application.interestedRoles.includes('Sapper')">Sapper</vs-checkbox>
         <vs-checkbox disabled v-model="application.interestedRoles.includes('Pilot')">Pilot</vs-checkbox>
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('Tank_Crew')">Tank Crew
+        <vs-checkbox disabled v-model="application.interestedRoles.includes('Tank Crew')">Tank Crew
         </vs-checkbox>
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('IDF')">IDF Support</vs-checkbox>
+        <vs-checkbox disabled v-model="application.interestedRoles.includes('IDF Support')">IDF Support</vs-checkbox>
       </div>
     </div>
   </div>
