@@ -83,7 +83,7 @@
 
           <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">17th Brigade Combat Team</span>
 
-          <v-nav-menu-item v-if="currentUser.roles.includes('[17th] Applicant')" to="/user/17th/apply"
+          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/user/17th/apply"
                            icon="FilePlusIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Application - 17th BCT</span>
           </v-nav-menu-item>
