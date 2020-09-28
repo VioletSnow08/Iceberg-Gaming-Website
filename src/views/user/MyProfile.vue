@@ -1,10 +1,12 @@
 <template>
 <div>
-  <div class="text-center">
-    <h1>My Profile</h1>
-    <h2>Welcome to your Profile!</h2>
+  <div class="text-left">
+    <h1><strong>{{currentUser.username}}</strong> - 
+      <span v-if="currentUser.roles.includes('[17th] Member')">17th Brigade</span>
+      <span v-else>Iceberg Member</span>    
+    </h1>
   </div>
-<!--  CONTENT AND OTHER STUFF GOES HERE-->
+  <p>{{currentUser}}</p>
 </div>
 </template>
 
