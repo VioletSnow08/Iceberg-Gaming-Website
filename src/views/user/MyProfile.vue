@@ -9,6 +9,20 @@
       <span v-if="currentUser.roles.includes('[17th] Member')">[{{currentUser.bct_rank}}]</span>
     </h1>
     <h2 id="status">{{currentUser.status}}</h2>
+    <vs-row vs-justify="center">
+      <vs-col vs-w="4" class="info-card">
+        <vx-card :title="`${currentUser.username}'s Info`">
+            <vx-list :list="[`Email: ${currentUser.email}`,`Discord: ${currentUser.discord_id}`]" />
+        </vx-card>
+      </vs-col>
+      <vs-col vs-w="4" class="info-card">
+        <span v-if="currentUser.roles.includes('[17th] Member')">
+          <vx-card title="17th Brigade Dossier Card">
+            Test
+          </vx-card>
+        </span>
+      </vs-col>
+    </vs-row>
   </div>
   <p>{{currentUser}}</p>
 </div>
@@ -26,6 +40,11 @@ export default {
 </script>
 
 <style scoped>
+  .info-card{
+    margin-top: 20px;
+    padding: 20px;
+  }
+  
   #username{
     font-weight: bold;
   }
