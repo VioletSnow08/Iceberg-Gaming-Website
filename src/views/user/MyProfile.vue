@@ -22,9 +22,7 @@
       <vs-col v-if="currentUser.roles.includes('[17th] Member')" vs-w="4" class="info-card">
           <vx-card>
             <h3 class="card-title">17th Brigade Unit Card</h3>
-            <span v-if="currentUser.onLOA">
-              <h3 style="color: red">On Leave of Absence</h3>
-            </span>
+            <h3 v-if="currentUser.onLOA" style="color: red">On Leave of Absence</h3>
             <vx-tooltip text="In the future this will dictate 7th Rangers or 32nd. Ranger will be green, 32nd will be yellow">
                 <h3 style="color: green">[HoverOverMe]</h3>
               </vx-tooltip>
