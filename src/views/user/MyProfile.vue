@@ -23,9 +23,9 @@
       <vs-col v-if="currentUser.roles.includes('[17th] Member')" vs-w="4" class="info-card">
           <vx-card>
             <h3 class="card-title">17th Brigade Unit Card</h3>
-            <vx-tooltip text="In the future this will dictate 7th Rangers or 32nd. Ranger will be green, 32nd will be yellow">
-                <h3 style="color: green">[HoverOverMe]</h3>
-              </vx-tooltip>
+            <h3 v-if="currentUser.roles.includes('[17th] 7th Ranger')" style="color: green">7th Ranger</h3>
+            <h3 v-else-if="currentUser.roles.includes('[17th] 32nd LSG')" style="color: yellow">32nd LSG</h3>
+            <h3 v-else>Unassigned</h3>
             <p>
               <span v-if="currentUser.roles.includes('[ICE] Recruiter')" class="brigade-position">Recruiter</span>
               <span v-if="currentUser.roles.includes('[17th] NCO') && currentUser.roles.includes('[ICE] Recruiter')" class="brigade-position"> | NCO</span>
