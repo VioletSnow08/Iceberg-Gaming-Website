@@ -67,19 +67,19 @@
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
-    <key name="MoveFile.RECENT_KEYS">
-      <recent name="E:\Development\Websites\17th-bct-website\src\views\user" />
-      <recent name="E:\Development\Websites\17th-bct-website\src\views" />
-      <recent name="E:\Development\Websites\17th-bct-website\src\views\user\Iceberg" />
-      <recent name="E:\Development\Websites\17th-bct-website\src\router\modules" />
-      <recent name="E:\Development\Websites\17th-bct-website\src\router" />
-    </key>
     <key name="CopyFile.RECENT_KEYS">
       <recent name="E:\Development\Websites\17th-bct-website\src\views\admin\cell-renderer" />
       <recent name="E:\Development\Websites\17th-bct-website\src\views\admin" />
       <recent name="E:\Development\Websites\17th-bct-website\src\views\pages" />
       <recent name="E:\Development\Websites\17th-bct-website\src\store\modules" />
       <recent name="E:\Development\Websites\17th-bct-website\src\views" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="E:\Development\Websites\17th-bct-website\src\views" />
+      <recent name="E:\Development\Websites\17th-bct-website\src\views\user" />
+      <recent name="E:\Development\Websites\17th-bct-website\src\views\user\Iceberg" />
+      <recent name="E:\Development\Websites\17th-bct-website\src\router\modules" />
+      <recent name="E:\Development\Websites\17th-bct-website\src\router" />
     </key>
   </component>
   <component name="RunManager">
@@ -163,7 +163,11 @@
       <workItem from="1601233816891" duration="529000" />
       <workItem from="1601238638392" duration="1795000" />
       <workItem from="1601241562704" duration="259000" />
-      <workItem from="1601249194873" duration="1641000" />
+      <workItem from="1601249194873" duration="2073000" />
+      <workItem from="1601305199007" duration="21000" />
+      <workItem from="1601305233682" duration="1395000" />
+      <workItem from="1601409641001" duration="64000" />
+      <workItem from="1601588486153" duration="297000" />
     </task>
     <servers />
   </component>

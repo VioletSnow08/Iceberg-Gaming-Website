@@ -10,7 +10,7 @@
         <p>Current Status: {{ application(currentUser.id, $route.params.applicationID).status }}</p>
         <p>Division: {{ application(currentUser.id, $route.params.applicationID).division }}</p>
       </div>
-      <vs-button @click="$router.push('/user/applications')">Back</vs-button>
+      <vs-button @click="$router.push('/applications')">Back</vs-button>
       <ApplicationBP17th v-if="application(currentUser.id, $route.params.applicationID).division === '17th'" v-bind:application="application(currentUser.id, $route.params.applicationID)"/>
     </div>
 
@@ -23,7 +23,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import ApplicationBP17th from "../../layouts/applications/17th.vue";
+import ApplicationBP17th from "../layouts/applications/17th.vue";
 
 export default {
   name: 'Application',

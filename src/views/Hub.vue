@@ -17,7 +17,6 @@
           statistic="Current Status"/>
       </div>
       <div class="vx-col w-full sm:w-1/2 md:w-1/2 lg:w-1/4 xl:w-1/4">
-        <vx-tooltip text="Click to Toggle Loa Status">
           <statistics-card-line
             hideChart
             class="mb-base"
@@ -25,7 +24,6 @@
             icon-right
             :statistic="currentUser.onLOA ? 'On LOA' : 'Not on LOA'"
             statisticTitle="LOA Status"/>
-        </vx-tooltip>
       </div>
     </div>
 
