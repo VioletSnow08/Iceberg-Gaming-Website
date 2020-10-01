@@ -47,7 +47,7 @@
 import {mapGetters} from "vuex";
 
 export default {
-  name: 'MyProfile',
+  name: 'Profile',
   computed: {
     ...mapGetters(["currentUser"]) // Reference the currentUser object to see what you can use.
   }

@@ -60,8 +60,8 @@ export default [{
     },
     {
       path: '/user/profile',
-      name: 'MyProfile',
-      component: () => import('@/views/user/MyProfile'),
+      name: 'Profile',
+      component: () => import('@/views/user/Profile'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
