@@ -52,7 +52,16 @@ export default [{
     {
       path: '/iceberg/calendar',
       name: 'Calendar',
-      component: () => import('@/views/Iceberg/Calendar.vue'),
+      component: () => import('@/views/Iceberg/Calendar/Calendar.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+    },
+    {
+      path: '/iceberg/calendar/view/:eventID',
+      name: 'ViewEvent',
+      component: () => import('@/views/Iceberg/Calendar/ViewEvent.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
@@ -61,7 +70,7 @@ export default [{
     {
       path: '/profile',
       name: 'Profile',
-      component: () => import('@/views/MyProfile'),
+      component: () => import('@/views/user/MyProfile'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
