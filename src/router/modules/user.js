@@ -66,6 +66,7 @@ export default [{
         requiresAuth: true,
         roles: ['[ICE] Member']
       },
+      props: true
     },
     {
       path: '/profile',
