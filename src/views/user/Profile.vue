@@ -44,12 +44,20 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: 'Profile',
   computed: {
-    ...mapGetters(["user"])
+    ...mapGetters(["user"]),
+  },
+  methods: {
+    ...mapActions(["setUsers"])
+  },
+    async created() {
+    await Promise.all([
+      this.setUsers()
+    ])
   }
 }
 </script>
