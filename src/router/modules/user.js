@@ -59,13 +59,14 @@ export default [{
       },
     },
     {
-      path: '/user/profile',
+      path: '/user/profile/:userID',
       name: 'Profile',
       component: () => import('@/views/user/Profile'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
       },
+      props: true
     },
   ]
 }]
