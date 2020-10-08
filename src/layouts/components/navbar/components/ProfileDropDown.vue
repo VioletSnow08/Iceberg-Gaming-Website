@@ -15,19 +15,19 @@
       <vs-dropdown-menu class="vx-navbar-dropdown">
         <ul style="min-width: 9rem">
 
-          <li @click="$router.push('/user/profile')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+          <li @click="$router.push('/profile')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">My Profile</span>
           </li>
 
-          <li @click="$router.push('/user/applications')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+          <li @click="$router.push('/applications')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">View Applications</span>
           </li>
 
 
           <vs-divider class="m-1" />
-          <li v-if="currentUser.roles.includes('[ICE] Member')" @click="$router.push('/user/settings')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+          <li v-if="currentUser.roles.includes('[ICE] Member')" @click="$router.push('/settings')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="SettingsIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Settings</span>
           </li>

@@ -3,18 +3,18 @@ export default [{
   component: () => import('@/layouts/main/Main.vue'),
   children: [
     {
-      path: '/user/hub',
+      path: '/hub',
       name: 'hub',
-      component: () => import('@/views/user/Hub.vue'),
+      component: () => import('@/views/Hub.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
       },
     },
     {
-      path: '/user/applications',
+      path: '/applications',
       name: 'Applications',
-      component: () => import('@/views/user/Applications.vue'),
+      component: () => import('@/views/Applications.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member', '[ICE] Applicant']
@@ -22,9 +22,9 @@ export default [{
     },
 
     {
-      path: '/user/applications/view/:applicationID',
+      path: '/applications/view/:applicationID',
       name: 'Application',
-      component: () => import('@/views/user/Application.vue'),
+      component: () => import('@/views/Application.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[17th] Applicant', '[ICE] Member']
@@ -32,36 +32,46 @@ export default [{
       props: true
     },
     {
-      path: '/user/17th/apply',
+      path: '/17th/apply',
       name: '17thApply',
-      component: () => import('@/views/user/17th/Apply.vue'),
+      component: () => import('@/views/17th/Apply.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
       },
     },
     {
-      path: '/user/settings',
+      path: '/settings',
       name: 'Settings',
-      component: () => import('@/views/user/Settings.vue'),
+      component: () => import('@/views/Settings.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
       },
     },
     {
-      path: '/user/iceberg/calendar',
+      path: '/iceberg/calendar',
       name: 'Calendar',
-      component: () => import('@/views/user/Iceberg/Calendar.vue'),
+      component: () => import('@/views/Iceberg/Calendar/Calendar.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
       },
     },
     {
-      path: '/user/profile/:userID',
+      path: '/iceberg/calendar/view/:eventID',
+      name: 'ViewEvent',
+      component: () => import('@/views/Iceberg/Calendar/ViewEvent.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+      props: true
+    },
+    {
+      path: '/profile',
       name: 'Profile',
-      component: () => import('@/views/user/Profile'),
+      component: () => import('@/views/user/MyProfile'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']

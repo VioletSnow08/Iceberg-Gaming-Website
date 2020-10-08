@@ -65,14 +65,14 @@
 
           <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Iceberg Gaming</span>
 
-          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/user/hub" icon="HomeIcon">
+          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/hub" icon="HomeIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">The Hub</span>
           </v-nav-menu-item>
           <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Recruiter')" to="/admin/applications"
                            icon="FileIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Applications</span>
           </v-nav-menu-item>
-          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/user/iceberg/calendar"
+          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/iceberg/calendar"
                            icon="CalendarIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Calendar</span>
           </v-nav-menu-item>
@@ -83,7 +83,7 @@
 
           <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">17th Brigade Combat Team</span>
 
-          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member') && !currentUser.roles.includes('[17th] Member')" to="/user/17th/apply"
+          <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member') && !currentUser.roles.includes('[17th] Member')" to="/17th/apply"
                            icon="FilePlusIcon">
             <span v-show="!verticalNavMenuItemsMin" class="truncate">Application - 17th BCT</span>
           </v-nav-menu-item>

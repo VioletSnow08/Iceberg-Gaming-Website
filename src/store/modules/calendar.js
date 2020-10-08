@@ -39,7 +39,10 @@ const getters = {
   },
   events: (state) => {
     return state.events;
-  }
+  },
+  IcebergEvent: (state) => (eventID) => {
+    return state.events.filter(event => event.divison === "Iceberg" && event.id === eventID);
+  },
 }
 const actions = {
   async fetchEvents({commit}) {
