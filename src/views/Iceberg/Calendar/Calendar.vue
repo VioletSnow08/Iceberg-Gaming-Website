@@ -18,6 +18,7 @@
 
       <calendar-view
         :show-date="showDate"
+        @click-event="viewEvent"
         :events="IcebergEvents">
         <calendar-view-header
           slot="header"
@@ -104,6 +105,9 @@ export default {
   methods: {
     setShowDate(d) {
       this.showDate = d;
+    },
+    viewEvent(event) {
+      console.log(event);
     },
     ...mapActions(["addEvent"]),
     addNewEvent() {
