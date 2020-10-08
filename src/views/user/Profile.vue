@@ -1,6 +1,10 @@
 <template>
 <div>
-  <div class="text-center">
+        <div v-if="!users">
+        <h1>{{ this.$vs.loading({type: "radius", text: "Loading User..."}) }}</h1>
+      </div>
+  <div v-else-if="user($route.params.userID)" class="text-center">
+    {{ this.$vs.loading.close() }}
     <img :src="user($route.params.userID).photoURL" :alt="user($route.params.userID).username" width=150 height=150>
     <h1>
       <span id="username">{{user($route.params.userID).username}}</span> - 
@@ -40,6 +44,10 @@
       </vs-col>
     </vs-row>
   </div>
+  <div v-else>
+    {{ this.$vs.loading.close() }}
+    <vs-alert color="danger">Error: User not found!</vs-alert>
+  </div>
 </div>
 </template>
 
@@ -49,7 +57,7 @@ import {mapActions, mapGetters} from "vuex";
 export default {
   name: 'Profile',
   computed: {
-    ...mapGetters(["user"]),
+    ...mapGetters(["user", "users"]),
   },
   methods: {
     ...mapActions(["setUsers"])

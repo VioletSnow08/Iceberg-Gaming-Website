@@ -69,7 +69,7 @@ export default [{
       props: true
     },
     {
-      path: '/profile',
+      path: '/profile/:userID',
       name: 'Profile',
       component: () => import('@/views/user/Profile'),
       meta: {
