@@ -1,4 +1,4 @@
-# 17th-bct-website
+# Iceberg Gaming Website
 
 Made with Vue.js using the Vuexy Vue.js Template.
 
