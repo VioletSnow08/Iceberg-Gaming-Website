@@ -41,7 +41,7 @@ const getters = {
     return state.events;
   },
   IcebergEvent: (state) => (eventID) => {
-    return state.events.filter(event => event.divison === "Iceberg" && event.id === eventID);
+    return state.events.find(event => event.division === "Iceberg" && event.id === eventID);
   },
 }
 const actions = {
@@ -56,6 +56,7 @@ const actions = {
     commit("setEvents", list);
   },
   async addEvent({commit}, event) {
+    event.creatorID = firebase.auth().currentUser.uid;
     await firebase.firestore().collection('events').doc().set(event).catch(error => {if(error) throw error;})
     commit("addEvent", event);
   }

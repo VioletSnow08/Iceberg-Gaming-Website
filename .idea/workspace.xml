@@ -24,8 +24,13 @@
   <component name="ChangeListManager">
     <list default="true" id="0b13aba1-2647-4490-a738-b437fdc3d86a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/calendar.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/user.js" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/admin/Application.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin/Application.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/admin/Applications.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin/Applications.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/user/Profile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/user/Profile.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -174,6 +179,7 @@
       <workItem from="1601588486153" duration="297000" />
       <workItem from="1602178596851" duration="114000" />
       <workItem from="1602178720729" duration="671000" />
+      <workItem from="1602441524526" duration="832000" />
     </task>
     <servers />
   </component>

@@ -35,7 +35,7 @@ const actions = {
         })
     }
   },
-  async setUsers ({commit}) {
+  async fetchUsers ({commit}) {
     const users = []
     await firebase
       .firestore()
