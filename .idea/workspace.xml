@@ -25,12 +25,7 @@
     <list default="true" id="0b13aba1-2647-4490-a738-b437fdc3d86a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/store/modules/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/calendar.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/store/modules/user.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/user.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/admin/Application.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin/Application.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/admin/Applications.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/admin/Applications.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/user/Profile.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/user/Profile.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -180,6 +175,8 @@
       <workItem from="1602178596851" duration="114000" />
       <workItem from="1602178720729" duration="671000" />
       <workItem from="1602441524526" duration="832000" />
+      <workItem from="1602460090820" duration="57000" />
+      <workItem from="1602460435901" duration="2958000" />
     </task>
     <servers />
   </component>
@@ -199,6 +196,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="496" y="490" key="#Web_Browsers" timestamp="1602463362188">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="496" y="490" key="#Web_Browsers/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602463362188" />
     <state x="734" y="355" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600698557473">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -298,13 +299,13 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2517" height="232" key="GridCell.Tab.3.right/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1601118329125" />
-    <state x="781" y="345" key="SettingsEditor" timestamp="1602178897428">
+    <state x="1114" y="379" key="SettingsEditor" timestamp="1602460620140">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="781" y="345" key="SettingsEditor/-1680.0.1680.1010/0.0.2560.1400/2560.0.1920.1040@0.0.2560.1400" timestamp="1600219993982" />
     <state x="781" y="345" key="SettingsEditor/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1600699341231" />
     <state x="781" y="345" key="SettingsEditor/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598726754110" />
-    <state x="781" y="345" key="SettingsEditor/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602178897428" />
+    <state x="1114" y="379" key="SettingsEditor/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602460620140" />
     <state x="987" y="299" width="585" height="801" key="find.popup" timestamp="1600807389077">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
