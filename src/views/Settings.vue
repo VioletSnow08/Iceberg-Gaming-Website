@@ -6,12 +6,26 @@
 
     <vs-tabs position="left" class="tabs-shadow-none" id="profile-tabs">
 
-      <!-- GENERAL -->
-      <vs-tab icon-pack="feather" icon="icon-user" label="General">
+      <!-- User Info change -->
+      <vs-tab icon-pack="feather" icon="icon-user" label="User Info">
         <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
-          <h1>General</h1>
+          <h1>User Info</h1>
+          <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
+            <vs-textarea
+              :placeholder="currentUser.status"
+              width="500px"
+              height="75px"
+              label="Status"
+              counter="75"
+              :counter-danger.sync="counterDanger" 
+              v-model="textarea"
+              style="resize: none"
+            />
+            <vs-button color="success" type="relief">Change Status</vs-button>
+          </div>
         </div>
       </vs-tab>
+      <!-- End user info change -->
       <vs-tab icon-pack="feather" icon="icon-file-plus" label="Leave of Absence">
         <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
           <h1>Leave of Absence(LOA)</h1>
@@ -48,7 +62,7 @@
       <vs-tab icon-pack="feather" icon="icon-info" label="Info">
         <div class="tab-info md:ml-4 md:mt-0 mt-4 ml-0">
           <h1>Credits and Info</h1>
-          <p>This website was designed by: CPL Vincent Lauro</p>
+          <p>This website was designed by: CPL Vincent Lauro (Lead) and Zachary Zahradka/2_Z_Zach</p>
           <p>The Discord Bot was designed by: SSG Eagle Trooper</p>
           <p style="color: lightcoral;">Content on this website may *only* be redistributed to the Iceberg Gaming
             official platforms. Violation of this will result in immediate removal from the community.</p>
@@ -79,6 +93,8 @@ export default {
       reasonAlert: false,
       statusPopup: false,
       newStatus: "",
+      textarea: "",
+      counterDanger: false
     }
   },
   components: {
