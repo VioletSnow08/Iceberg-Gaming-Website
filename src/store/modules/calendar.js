@@ -1,4 +1,5 @@
 import * as firebase from "firebase";
+import {remove} from "vue-i18n/src/util";
 function formatDate(date) {
   let d = new Date(date),
     month = '' + (d.getMonth() + 1),
@@ -59,6 +60,43 @@ const actions = {
     event.creatorID = firebase.auth().currentUser.uid;
     await firebase.firestore().collection('events').doc().set(event).catch(error => {if(error) throw error;})
     commit("addEvent", event);
+  },
+  async setAttendance({commit}, [eventID, attendance]) {
+    await firebase.firestore().collection('events').doc().get(eventID).then(async event => {
+      if(event.data()) {
+        for(let i = 0; i < event.data().going.length; i++) {
+          if(event.data().going[i] === firebase.auth().currentUser.uid) {
+            event.going = event.going.splice(i, 1);
+            await firebase.firestore().collection('events').doc(eventID).set(event).catch(removeAttendanceError => {
+              if(removeAttendanceError) throw removeAttendanceError;
+            })
+          }
+        }
+        for(let i = 0; i < event.data().maybe.length; i++) {
+          if(event.data().maybe[i] === firebase.auth().currentUser.uid) {
+            event.maybe = event.maybe.splice(i, 1);
+            await firebase.firestore().collection('events').doc(eventID).set(event).catch(removeAttendanceError => {
+              if(removeAttendanceError) throw removeAttendanceError;
+            })
+          }
+        }
+        for(let i = 0; i < event.data().declined.length; i++) {
+          if(event.data().declined[i] === firebase.auth().currentUser.uid) {
+            event.declined = event.declined.splice(i, 1);
+            await firebase.firestore().collection('events').doc(eventID).set(event).catch(removeAttendanceError => {
+              if(removeAttendanceError) throw removeAttendanceError;
+            })
+          }
+        }
+        if(attendance === "going") {
+          event.going.push(firebase.auth().currentUser.uid);
+        } else if(attendance === "maybe") {
+          event.maybe.push(firebase.auth().currentUser.uid);
+        } else if(attendance === "declined") {
+          event.declined.push(firebase.auth().currentUser.uid);
+        }
+      }
+    })
   }
 }
 const mutations = {
