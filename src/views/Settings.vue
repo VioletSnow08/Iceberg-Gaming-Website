@@ -10,6 +10,7 @@
       <vs-tab icon-pack="feather" icon="icon-user" label="User Info">
         <div>
           <h1>User Info</h1>
+          <vs-alert v-if="!isDiscordValid" color="danger">Invalid Discord ID!</vs-alert>
             <vs-input
               :placeholder="currentUser.status"
               class="input-spacing"
@@ -19,7 +20,7 @@
               v-model="newStatus"
               name="status"
             />
-            
+
             <vs-input
               class="input-spacing"
               label="Change Discord ID"
@@ -27,8 +28,8 @@
               v-model="newDiscordID"
               style="width: 200px !important"
             />
-            <vs-alert v-if="!isDiscordValid" color="danger">Invalid Discord ID!</vs-alert>
-            <vs-switch class="input-spacing" v-model="emailPublic">
+
+            <vs-switch class="input-spacing" v-model="isEmailPublic">
               <span slot="on" color="success">Show Email</span>
               <span slot="off" color="danger">Hide Email</span>
             </vs-switch>
@@ -91,7 +92,7 @@ import Datepicker from 'vuejs-datepicker';
 export default {
   name: "Settings",
   computed: {
-    ...mapGetters(["currentUser"])
+    ...mapGetters(["currentUser"]),
   },
   data() {
     return {
@@ -101,11 +102,9 @@ export default {
       confirmLOAPopup: false,
       endDateAlert: false,
       reasonAlert: false,
-      statusPopup: false,
+      LOAStatusPopup: false,
       newStatus: "",
-      newProfileStatus: "",
       newDiscordID: "",
-      emailPublic: false,
       isDiscordValid: true
     }
   },
@@ -113,7 +112,7 @@ export default {
     Datepicker
   },
   methods: {
-    ...mapActions(["submitLOA", "endLOA", "getDiscordUsername", "getDiscordProfilePicture", "changeStatus"]),
+    ...mapActions(["submitLOA", "endLOA", "getDiscordUsername", "getDiscordProfilePicture", "changeLOAStatus"]),
     submit() {
       if (!this.date) {
         this.endDateAlert = true;
@@ -131,11 +130,11 @@ export default {
       this.confirmLOAPopup = false;
       this.endLOA();
     },
-    submitStatus(newStatus) {
-      this.changeStatus(newStatus);
-      this.statusPopup = false;
+    submitLOAStatus(newStatus) {
+      this.changeLOAStatus(newStatus);
+      this.LOAStatusPopup = false;
     }
-  }
+  },
 }
 </script>
 

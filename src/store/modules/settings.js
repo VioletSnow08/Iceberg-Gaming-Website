@@ -26,15 +26,15 @@ const actions = {
     })
     await context.dispatch("setUser");
   },
-  async changeStatus(context, newStatus) {
+  async changeLOAStatus(context, newStatus) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({status: newStatus}).catch(error => {
       if(error) throw error;
     })
-    context.commit("changeStatus", newStatus);
+    context.commit("changeLOAStatus", newStatus);
   }
 }
 const mutations = {
-  changeStatus(state, newStatus) {
+  changeLOAStatus(state, newStatus) {
     console.log(state); // Is only calling this local state
     state.user.status = newStatus;
   }

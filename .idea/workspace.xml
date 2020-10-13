@@ -24,8 +24,8 @@
   <component name="ChangeListManager">
     <list default="true" id="0b13aba1-2647-4490-a738-b437fdc3d86a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/settings.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/settings.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/views/Settings.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Settings.vue" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
