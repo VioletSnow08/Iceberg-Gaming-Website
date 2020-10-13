@@ -8,21 +8,27 @@
 
       <!-- User Info change -->
       <vs-tab icon-pack="feather" icon="icon-user" label="User Info">
-        <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
+        <div>
           <h1>User Info</h1>
-          <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
-            <vs-textarea
-              :placeholder="currentUser.status"
-              width="500px"
-              height="75px"
-              label="Status"
-              counter="75"
-              :counter-danger.sync="counterDanger" 
-              v-model="textarea"
-              style="resize: none"
-            />
-            <vs-button color="success" type="relief">Change Status</vs-button>
-          </div>
+          <vs-textarea
+            :placeholder="currentUser.status"
+            class="input-spacing"
+            width="500px"
+            height="75px"
+            label="Change Status"
+            counter="75"
+            :counter-danger.sync="counterDanger" 
+            v-model="textarea"
+            style="resize: none"
+          />
+          <vs-input
+            class="input-spaceing"
+            label="Change Discord ID"
+            :placeholder="currentUser.discord_id"
+            v-model="value1"
+          />
+          <vs-checkbox class="input-spacing" v-model="currentUser.isEmailPublic">Email publicly viewable</vs-checkbox>
+          <vs-button class="input-spacing" color="success" type="relief">Save Changes</vs-button>
         </div>
       </vs-tab>
       <!-- End user info change -->
@@ -94,7 +100,9 @@ export default {
       statusPopup: false,
       newStatus: "",
       textarea: "",
-      counterDanger: false
+      counterDanger: false,
+      value1: "",
+      //checkBox1: currentUser.isEmailPublic
     }
   },
   components: {
@@ -130,5 +138,8 @@ export default {
 <style scoped>
 .row-right {
   margin-right: 5px !important;
+}
+.input-spacing{
+  margin-top: 20px;
 }
 </style>

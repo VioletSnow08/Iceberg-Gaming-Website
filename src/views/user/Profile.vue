@@ -18,8 +18,11 @@
         <vx-card>
             <h3 class="card-title">{{user($route.params.userID).username}}'s Contact Info</h3>
             <h3 v-if="user($route.params.userID).onLOA" style="color: red">On Leave of Absence</h3>
-            <vx-list :list="[
-              `Email: ${user($route.params.userID).email}`,
+            <vx-list v-if="user($route.params.userID).isEmailPublic" :list="[
+            `Email: ${user($route.params.userID).email}`,
+            `Discord: ${user($route.params.userID).discord_id}`
+            ]"/>  
+            <vx-list v-else :list="[
               `Discord: ${user($route.params.userID).discord_id}`
             ]"/>
         </vx-card>
