@@ -10,25 +10,29 @@
       <vs-tab icon-pack="feather" icon="icon-user" label="User Info">
         <div>
           <h1>User Info</h1>
-          <vs-textarea
-            :placeholder="currentUser.status"
-            class="input-spacing"
-            width="500px"
-            height="75px"
-            label="Change Status"
-            counter="75"
-            :counter-danger.sync="counterDanger" 
-            v-model="textarea"
-            style="resize: none"
-          />
-          <vs-input
-            class="input-spaceing"
-            label="Change Discord ID"
-            :placeholder="currentUser.discord_id"
-            v-model="value1"
-          />
-          <vs-checkbox class="input-spacing" v-model="currentUser.isEmailPublic">Email publicly viewable</vs-checkbox>
-          <vs-button class="input-spacing" color="success" type="relief">Save Changes</vs-button>
+            <vs-input
+              :placeholder="currentUser.status"
+              class="input-spacing"
+              style="resize: none; width: 550px !important"
+              label="Change Status"
+              maxlength="75"
+              v-model="newStatus"
+              name="status"
+            />
+            
+            <vs-input
+              class="input-spacing"
+              label="Change Discord ID"
+              :placeholder="currentUser.discord_id"
+              v-model="newDiscordID"
+              style="width: 200px !important"
+            />
+            <vs-alert v-if="!isDiscordValid" color="danger">Invalid Discord ID!</vs-alert>
+            <vs-switch class="input-spacing" v-model="emailPublic">
+              <span slot="on" color="success">Show Email</span>
+              <span slot="off" color="danger">Hide Email</span>
+            </vs-switch>
+            <vs-button class="input-spacing" color="success" type="relief">Save Changes</vs-button>
         </div>
       </vs-tab>
       <!-- End user info change -->
@@ -99,10 +103,10 @@ export default {
       reasonAlert: false,
       statusPopup: false,
       newStatus: "",
-      textarea: "",
-      counterDanger: false,
-      value1: "",
-      //checkBox1: currentUser.isEmailPublic
+      newProfileStatus: "",
+      newDiscordID: "",
+      emailPublic: false,
+      isDiscordValid: true
     }
   },
   components: {
