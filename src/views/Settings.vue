@@ -14,7 +14,8 @@
 
           <h1>User Info</h1>
           <br>
-          <vs-alert closable :active.sync="showConfirmationAlert_UserInfo" color="success">Settings saved!</vs-alert>
+          <vs-alert :active.sync="isDiscord_Invalid" color="danger">Invalid Discord ID!</vs-alert>
+          <vs-alert :active.sync="showConfirmationAlert_UserInfo" color="success">Settings saved!</vs-alert>
           <vs-input
             :placeholder="currentUser.status"
             class="input-spacing"
@@ -116,6 +117,7 @@ export default {
       newIsEmailPublic: null,
       newStatus: "",
       newDiscordID: "",
+      isDiscord_Invalid: false,
       showConfirmationAlert_UserInfo: false
     }
   },
@@ -137,14 +139,19 @@ export default {
       }
     },
     saveChanges_UserInfo() {
-      if (this.newDiscordID !== "") {
-        this.changeDiscordID(this.newDiscordID);
+      this.showConfirmationAlert_UserInfo = false;
+      const regex = /\b(.*[^\s\\\#])#([0-9]{4})\b/;
+
+      if(!regex.test(this.newDiscordID) && this.newDiscordID != ""){
+        this.isDiscord_Invalid = true;
       }
-      if (this.newStatus !== "") {
-        this.changeStatus(this.newStatus);
+      else{
+        if(this.newDiscordID != ""){this.changeDiscordID(this.newDiscordID)}
+        if(this.newStatus != ""){this.changeStatus(this.newStatus)}
+        this.changeIsEmailPublic(this.newIsEmailPublic);
+        this.showConfirmationAlert_UserInfo = true;
+        this.isDiscord_Invalid = false;
       }
-      this.changeIsEmailPublic(this.newIsEmailPublic);
-      this.showConfirmationAlert_UserInfo = true;
     },
     confirmEndLOA() {
       this.confirmLOAPopup = false;
