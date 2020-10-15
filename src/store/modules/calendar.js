@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import {remove} from "vue-i18n/src/util";
+
 function formatDate(date) {
   let d = new Date(date),
     month = '' + (d.getMonth() + 1),
@@ -15,7 +15,6 @@ function formatDate(date) {
 }
 
 
-
 const state = {
   events: null
 }
@@ -23,7 +22,7 @@ const getters = {
   IcebergEvents: (state) => {
     let events = [];
     state.events.forEach(event => {
-      if(event.division === "Iceberg") {
+      if (event.division === "Iceberg") {
         events.push(event);
       }
     })
@@ -32,7 +31,7 @@ const getters = {
   BCTEvents: (state) => {
     let events = [];
     state.events.forEach(event => {
-      if(event.division === "17th") {
+      if (event.division === "17th") {
         events.push(event);
       }
     })
@@ -41,7 +40,7 @@ const getters = {
   events: (state) => {
     return state.events;
   },
-  IcebergEvent: (state) => (eventID) => {
+  event: (state) => (eventID) => {
     return state.events.find(event => event.division === "Iceberg" && event.id === eventID);
   },
 }
@@ -58,44 +57,49 @@ const actions = {
   },
   async addEvent({commit}, event) {
     event.creatorID = firebase.auth().currentUser.uid;
-    await firebase.firestore().collection('events').doc().set(event).catch(error => {if(error) throw error;})
+    await firebase.firestore().collection('events').doc().set(event).catch(error => {
+      if (error) throw error;
+    })
     commit("addEvent", event);
   },
   async setAttendance({commit}, [eventID, attendance]) {
-    await firebase.firestore().collection('events').doc().get(eventID).then(async event => {
+    await firebase.firestore().collection('events').doc(eventID).get().then(async event => {
+      if (event.data()) {
+        await firebase.firestore().collection('events').doc(eventID).update({
+          going: event.data().going.filter(person => person !== firebase.auth().currentUser.uid),
+          maybe: event.data().maybe.filter(person => person !== firebase.auth().currentUser.uid),
+          declined: event.data().declined.filter(person => person !== firebase.auth().currentUser.uid)
+        }).catch(update => {
+          if (update) throw update
+        })
+      }
+    }).catch(error => {
+      if (error) throw error;
+    })
+
+    await firebase.firestore().collection('events').doc(eventID).get().then(async event => {
       if(event.data()) {
-        for(let i = 0; i < event.data().going.length; i++) {
-          if(event.data().going[i] === firebase.auth().currentUser.uid) {
-            event.going = event.going.splice(i, 1);
-            await firebase.firestore().collection('events').doc(eventID).set(event).catch(removeAttendanceError => {
-              if(removeAttendanceError) throw removeAttendanceError;
-            })
-          }
-        }
-        for(let i = 0; i < event.data().maybe.length; i++) {
-          if(event.data().maybe[i] === firebase.auth().currentUser.uid) {
-            event.maybe = event.maybe.splice(i, 1);
-            await firebase.firestore().collection('events').doc(eventID).set(event).catch(removeAttendanceError => {
-              if(removeAttendanceError) throw removeAttendanceError;
-            })
-          }
-        }
-        for(let i = 0; i < event.data().declined.length; i++) {
-          if(event.data().declined[i] === firebase.auth().currentUser.uid) {
-            event.declined = event.declined.splice(i, 1);
-            await firebase.firestore().collection('events').doc(eventID).set(event).catch(removeAttendanceError => {
-              if(removeAttendanceError) throw removeAttendanceError;
-            })
-          }
-        }
         if(attendance === "going") {
-          event.going.push(firebase.auth().currentUser.uid);
+          await firebase.firestore().collection('events').doc(eventID).update({
+            going: event.data().going.push(firebase.auth().currentUser.uid)
+          }).catch(error => {
+            if(error) throw error;
+          })
         } else if(attendance === "maybe") {
-          event.maybe.push(firebase.auth().currentUser.uid);
+          await firebase.firestore().collection('events').doc(eventID).update({
+            maybe: event.data().maybe.push(firebase.auth().currentUser.uid)
+          }).catch(error => {
+            if(error) throw error;
+          })
         } else if(attendance === "declined") {
-          event.declined.push(firebase.auth().currentUser.uid);
+          await firebase.firestore().collection('events').doc(eventID).update({
+            declined: event.data().declined.push(firebase.auth().currentUser.uid)
+          }).catch(error => {
+            if(error) throw error;
+          })
         }
       }
+
     })
   }
 }
@@ -105,7 +109,7 @@ const mutations = {
   },
   addEvent(state, event) {
     state.events.push(event);
-  }
+  },
 }
 export default {
   state, getters, actions, mutations
