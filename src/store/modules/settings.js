@@ -22,22 +22,38 @@ const actions = {
   },
   async endLOA(context) {
     await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({onLOA: false}).catch(error => {
-      if(error) throw error;
+      if (error) throw error;
     })
     await context.dispatch("setUser");
   },
-  async changeLOAStatus(context, newStatus) {
-    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({status: newStatus}).catch(error => {
-      if(error) throw error;
+  async changeDiscordID(context, newID) {
+    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
+      discord_id: newID
+    }).catch(error => {
+      if (error) throw error;
     })
-    context.commit("changeLOAStatus", newStatus);
-  }
+    await context.dispatch("setUser");
+  },
+  async changeStatus(context, newStatus) {
+    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
+      status: newStatus
+    }).catch(error => {
+      if (error) throw error;
+    })
+    await context.dispatch("setUser");
+  },
+
+  async changeIsEmailPublic(context, newIsEmailPublic) {
+    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
+      isEmailPublic: newIsEmailPublic
+    }).catch(error => {
+      if (error) throw error;
+    })
+    await context.dispatch("setUser");
+  },
 }
 const mutations = {
-  changeLOAStatus(state, newStatus) {
-    console.log(state); // Is only calling this local state
-    state.user.status = newStatus;
-  }
+
 }
 
 export default {

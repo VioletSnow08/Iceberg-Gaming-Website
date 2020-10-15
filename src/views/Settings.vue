@@ -7,35 +7,42 @@
     <vs-tabs position="left" class="tabs-shadow-none" id="profile-tabs">
 
       <!-- User Info change -->
+
       <vs-tab icon-pack="feather" icon="icon-user" label="User Info">
+
         <div>
+
           <h1>User Info</h1>
-          <vs-alert v-if="!isDiscordValid" color="danger">Invalid Discord ID!</vs-alert>
-            <vs-input
-              :placeholder="currentUser.status"
-              class="input-spacing"
-              style="resize: none; width: 550px !important"
-              label="Change Status"
-              maxlength="75"
-              v-model="newStatus"
-              name="status"
-            />
+          <br>
+          <vs-alert closable :active.sync="showConfirmationAlert_UserInfo" color="success">Settings saved!</vs-alert>
+          <vs-input
+            :placeholder="currentUser.status"
+            class="input-spacing"
+            style="resize: none; width: 550px !important"
+            label="Change Status"
+            maxlength="75"
+            v-model="newStatus"
+            name="status"
+          />
 
-            <vs-input
-              class="input-spacing"
-              label="Change Discord ID"
-              :placeholder="currentUser.discord_id"
-              v-model="newDiscordID"
-              style="width: 200px !important"
-            />
+          <vs-input
+            class="input-spacing"
+            label="Change Discord ID"
+            :placeholder="currentUser.discord_id"
+            v-model="newDiscordID"
+            style="width: 200px !important"
+          />
 
-            <vs-switch class="input-spacing" v-model="isEmailPublic">
-              <span slot="on" color="success">Show Email</span>
-              <span slot="off" color="danger">Hide Email</span>
-            </vs-switch>
-            <vs-button class="input-spacing" color="success" type="relief">Save Changes</vs-button>
+          <vs-switch class="input-spacing" v-model="newIsEmailPublic">
+            <span slot="on" color="success">Show Email</span>
+            <span slot="off" color="danger">Hide Email</span>
+          </vs-switch>
+          <vs-button @click="saveChanges_UserInfo()" class="input-spacing" color="success" type="relief">Save Changes
+          </vs-button>
         </div>
       </vs-tab>
+
+
       <!-- End user info change -->
       <vs-tab icon-pack="feather" icon="icon-file-plus" label="Leave of Absence">
         <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
@@ -60,7 +67,7 @@
             <datepicker :inline="true" placeholder="Select End Date" v-model="date"></datepicker>
             <br>
             <vs-textarea class="inputx mb-3" placeholder="Reason" v-model="reason"/>
-            <vs-button @click="submit()" :color="date && reason ? 'success' : 'danger'">Submit LOA</vs-button>
+            <vs-button @click="verifyLOA()" :color="date && reason ? 'success' : 'danger'">Submit LOA</vs-button>
           </div>
 
         </div>
@@ -94,6 +101,9 @@ export default {
   computed: {
     ...mapGetters(["currentUser"]),
   },
+  mounted() {
+    this.newIsEmailPublic = this.currentUser.isEmailPublic;
+  },
   data() {
     return {
       date: "",
@@ -103,17 +113,18 @@ export default {
       endDateAlert: false,
       reasonAlert: false,
       LOAStatusPopup: false,
+      newIsEmailPublic: null,
       newStatus: "",
       newDiscordID: "",
-      isDiscordValid: true
+      showConfirmationAlert_UserInfo: false
     }
   },
   components: {
     Datepicker
   },
   methods: {
-    ...mapActions(["submitLOA", "endLOA", "getDiscordUsername", "getDiscordProfilePicture", "changeLOAStatus"]),
-    submit() {
+    ...mapActions(["submitLOA", "endLOA", "changeDiscordID", "changeStatus", "changeIsEmailPublic"]),
+    verifyLOA() {
       if (!this.date) {
         this.endDateAlert = true;
       } else if (!this.reason) {
@@ -124,16 +135,21 @@ export default {
         this.reasonAlert = false;
         this.popupActive = false;
       }
-
+    },
+    saveChanges_UserInfo() {
+      if (this.newDiscordID !== "") {
+        this.changeDiscordID(this.newDiscordID);
+      }
+      if (this.newStatus !== "") {
+        this.changeStatus(this.newStatus);
+      }
+      this.changeIsEmailPublic(this.newIsEmailPublic);
+      this.showConfirmationAlert_UserInfo = true;
     },
     confirmEndLOA() {
       this.confirmLOAPopup = false;
       this.endLOA();
     },
-    submitLOAStatus(newStatus) {
-      this.changeLOAStatus(newStatus);
-      this.LOAStatusPopup = false;
-    }
   },
 }
 </script>
@@ -142,7 +158,8 @@ export default {
 .row-right {
   margin-right: 5px !important;
 }
-.input-spacing{
+
+.input-spacing {
   margin-top: 20px;
 }
 </style>
