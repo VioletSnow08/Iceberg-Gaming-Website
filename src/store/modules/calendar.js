@@ -78,28 +78,28 @@ const actions = {
     })
 
     await firebase.firestore().collection('events').doc(eventID).get().then(async event => {
-      if(event.data()) {
-        if(attendance === "going") {
+      if (event.data()) {
+        if (attendance === "going") {
+          let newArray = event.data().going;
+          newArray.push(firebase.auth().currentUser.uid);
           await firebase.firestore().collection('events').doc(eventID).update({
-            going: event.data().going.push(firebase.auth().currentUser.uid)
-          }).catch(error => {
-            if(error) throw error;
+            going: newArray
           })
-        } else if(attendance === "maybe") {
+        } else if (attendance === "maybe") {
+          let newArray = event.data().maybe;
+          newArray.push(firebase.auth().currentUser.uid);
           await firebase.firestore().collection('events').doc(eventID).update({
-            maybe: event.data().maybe.push(firebase.auth().currentUser.uid)
-          }).catch(error => {
-            if(error) throw error;
+            maybe: newArray
           })
-        } else if(attendance === "declined") {
+        } else if (attendance === "declined") {
+          let newArray = event.data().declined;
+          newArray.push(firebase.auth().currentUser.uid);
           await firebase.firestore().collection('events').doc(eventID).update({
-            declined: event.data().declined.push(firebase.auth().currentUser.uid)
-          }).catch(error => {
-            if(error) throw error;
+            declined: newArray
           })
         }
       }
-
+      await this.dispatch("fetchEvents");
     })
   }
 }
