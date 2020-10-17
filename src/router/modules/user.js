@@ -43,7 +43,7 @@ export default [{
     {
       path: '/settings',
       name: 'Settings',
-      component: () => import('@/views/Settings.vue'),
+      component: () => import('@/views/user/Settings.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']

@@ -6,12 +6,46 @@
 
     <vs-tabs position="left" class="tabs-shadow-none" id="profile-tabs">
 
-      <!-- GENERAL -->
-      <vs-tab icon-pack="feather" icon="icon-user" label="General">
-        <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
-          <h1>General</h1>
+      <!-- User Info change -->
+
+      <vs-tab icon-pack="feather" icon="icon-user" label="User Info">
+
+        <div>
+
+          <h1>User Info</h1>
+          <br>
+          <vs-alert :active.sync="isDiscord_Invalid" color="danger">Invalid Discord Username & Tag!</vs-alert>
+          <vs-alert :active.sync="showConfirmationAlert_UserInfo" color="success">Settings saved!</vs-alert>
+          <vs-input
+            :placeholder="currentUser.status"
+            class="input-spacing"
+            style="resize: none; width: 550px !important"
+            label="Change Status"
+            maxlength="75"
+            v-model="newStatus"
+            name="status"
+          />
+
+          <vs-input
+            class="input-spacing"
+            label="Change Discord Username & Tag"
+            style="resize: none; width: 350px !important"
+            :placeholder="currentUser.discord_id"
+            v-model="newDiscordID"
+
+          />
+
+          <vs-switch class="input-spacing" v-model="newIsEmailPublic">
+            <span slot="on" color="success">Show Email</span>
+            <span slot="off" color="danger">Hide Email</span>
+          </vs-switch>
+          <vs-button @click="saveChanges_UserInfo()" class="input-spacing" color="success" type="relief">Save Changes
+          </vs-button>
         </div>
       </vs-tab>
+
+
+      <!-- End user info change -->
       <vs-tab icon-pack="feather" icon="icon-file-plus" label="Leave of Absence">
         <div class="tab-general md:ml-4 md:mt-0 mt-4 ml-0">
           <h1>Leave of Absence(LOA)</h1>
@@ -35,7 +69,7 @@
             <datepicker :inline="true" placeholder="Select End Date" v-model="date"></datepicker>
             <br>
             <vs-textarea class="inputx mb-3" placeholder="Reason" v-model="reason"/>
-            <vs-button @click="submit()" :color="date && reason ? 'success' : 'danger'">Submit LOA</vs-button>
+            <vs-button @click="verifyLOA()" :color="date && reason ? 'success' : 'danger'">Submit LOA</vs-button>
           </div>
 
         </div>
@@ -48,7 +82,7 @@
       <vs-tab icon-pack="feather" icon="icon-info" label="Info">
         <div class="tab-info md:ml-4 md:mt-0 mt-4 ml-0">
           <h1>Credits and Info</h1>
-          <p>This website was designed by: CPL Vincent Lauro</p>
+          <p>This website was designed by: CPL Vincent Lauro (Lead) and Zachary Zahradka/2_Z_Zach</p>
           <p>The Discord Bot was designed by: SSG Eagle Trooper</p>
           <p style="color: lightcoral;">Content on this website may *only* be redistributed to the Iceberg Gaming
             official platforms. Violation of this will result in immediate removal from the community.</p>
@@ -67,7 +101,10 @@ import Datepicker from 'vuejs-datepicker';
 export default {
   name: "Settings",
   computed: {
-    ...mapGetters(["currentUser"])
+    ...mapGetters(["currentUser"]),
+  },
+  mounted() {
+    this.newIsEmailPublic = this.currentUser.isEmailPublic;
   },
   data() {
     return {
@@ -77,16 +114,20 @@ export default {
       confirmLOAPopup: false,
       endDateAlert: false,
       reasonAlert: false,
-      statusPopup: false,
+      LOAStatusPopup: false,
+      newIsEmailPublic: null,
       newStatus: "",
+      newDiscordID: "",
+      isDiscord_Invalid: false,
+      showConfirmationAlert_UserInfo: false
     }
   },
   components: {
     Datepicker
   },
   methods: {
-    ...mapActions(["submitLOA", "endLOA", "getDiscordUsername", "getDiscordProfilePicture", "changeStatus"]),
-    submit() {
+    ...mapActions(["submitLOA", "endLOA", "changeDiscordID", "changeStatus", "changeIsEmailPublic"]),
+    verifyLOA() {
       if (!this.date) {
         this.endDateAlert = true;
       } else if (!this.reason) {
@@ -97,22 +138,36 @@ export default {
         this.reasonAlert = false;
         this.popupActive = false;
       }
+    },
+    saveChanges_UserInfo() {
+      this.showConfirmationAlert_UserInfo = false;
+      const regex = /\b(.*[^\s\\\#])#([0-9]{4})\b/;
 
+      if(!regex.test(this.newDiscordID) && this.newDiscordID != ""){
+        this.isDiscord_Invalid = true;
+      }
+      else{
+        if(this.newDiscordID != ""){this.changeDiscordID(this.newDiscordID)}
+        if(this.newStatus != ""){this.changeStatus(this.newStatus)}
+        this.changeIsEmailPublic(this.newIsEmailPublic);
+        this.showConfirmationAlert_UserInfo = true;
+        this.isDiscord_Invalid = false;
+      }
     },
     confirmEndLOA() {
       this.confirmLOAPopup = false;
       this.endLOA();
     },
-    submitStatus(newStatus) {
-      this.changeStatus(newStatus);
-      this.statusPopup = false;
-    }
-  }
+  },
 }
 </script>
 
 <style scoped>
 .row-right {
   margin-right: 5px !important;
+}
+
+.input-spacing {
+  margin-top: 20px;
 }
 </style>
