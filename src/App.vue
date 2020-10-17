@@ -73,7 +73,7 @@ export default {
 
     window.addEventListener('resize', this.handleWindowResize)
     window.addEventListener('scroll', this.handleScroll)
-    await this.$store.dispatch('setUser')
+    await this.$store.dispatch('fetchCurrentUser')
   },
   destroyed () {
     window.removeEventListener('resize', this.handleWindowResize)

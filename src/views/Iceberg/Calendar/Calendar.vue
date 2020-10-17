@@ -93,7 +93,11 @@ export default {
         startDate: "",
         endDate: "",
         division: "Iceberg",
-        style: ""
+        style: "",
+        going: [],
+        maybe: [],
+        declined: [],
+        creatorID: ""
       }
     }
   },
@@ -119,7 +123,11 @@ export default {
           startDate: "",
           endDate: "",
           division: "Iceberg",
-          style: ""
+          style: "",
+          going: [],
+          maybe: [],
+          declined: [],
+          creatorID: ""
         };
       } else {
         alert("Error: Missing Field.")
@@ -127,7 +135,7 @@ export default {
     }
   },
   computed: {
-    ...mapGetters(["IcebergEvents", "events"])
+    ...mapGetters(["IcebergEvents", "events", "currentUser"])
   },
   async created () {
     await Promise.all([

@@ -19,7 +19,6 @@ import actions from './actions'
 // Importing Modules...
 import user from './modules/user'
 import application from './modules/application'
-import serverStatus from './modules/serverStatus'
 import loa from "./modules/settings";
 import userManagement from "@/store/modules/userManagement";
 import calendar from "@/store/modules/calendar"
@@ -34,7 +33,6 @@ export default new Vuex.Store({
   modules: {
     user,
     application,
-    serverStatus,
     loa,
     calendar,
 

@@ -63,11 +63,11 @@ export default {
     ...mapGetters(["user", "users"]),
   },
   methods: {
-    ...mapActions(["setUsers"])
+    ...mapActions(["fetchUsers"])
   },
     async created() {
     await Promise.all([
-      this.setUsers()
+      this.fetchUsers()
     ])
   }
 }

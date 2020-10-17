@@ -20,7 +20,7 @@ const getters = {
 }
 
 const actions = {
-  async setUser ({commit}) {
+  async fetchCurrentUser ({commit}) {
     if(firebase.auth().currentUser) {
       await firebase
         .firestore()
@@ -35,7 +35,7 @@ const actions = {
         })
     }
   },
-  async setUsers ({commit}) {
+  async fetchUsers ({commit}) {
     const users = []
     await firebase
       .firestore()
@@ -57,7 +57,7 @@ const actions = {
         status: "You can now change your status!",
         roles: ["[ICE] Member"]
       })
-    } else {
+    } else if(division === "17th") {
       await firebase.firestore().collection("users").doc(userID).update({
         bct_rank: "RCT",
         status: "You can now change your status!",
@@ -96,7 +96,7 @@ const actions = {
 
   async loginUser({commit}, [email, password]) {
     await firebase.auth().signInWithEmailAndPassword(email, password).then(async () => {
-      await this.dispatch('setUser');
+      await this.dispatch('fetchCurrentUser');
       await router.push('/user/apply')
     }).catch(error => {
       if (error) alert(error)
