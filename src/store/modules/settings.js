@@ -18,13 +18,13 @@ const actions = {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({onLOA: true}).catch(error => {
       if (error) throw error
     });
-    await context.dispatch("setUser");
+    await context.dispatch("fetchCurrentUser");
   },
   async endLOA(context) {
     await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({onLOA: false}).catch(error => {
       if(error) throw error;
     })
-    await context.dispatch("setUser");
+    await context.dispatch("fetchCurrentUser");
   },
   async changeStatus(context, newStatus) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({status: newStatus}).catch(error => {

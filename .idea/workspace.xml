@@ -24,8 +24,7 @@
   <component name="ChangeListManager">
     <list default="true" id="0b13aba1-2647-4490-a738-b437fdc3d86a" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/Calendar.vue" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" beforeDir="false" afterPath="$PROJECT_DIR$/src/views/Iceberg/Calendar/ViewEvent.vue" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/store/modules/calendar.js" beforeDir="false" afterPath="$PROJECT_DIR$/src/store/modules/calendar.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -67,7 +66,8 @@
     <property name="node.js.selected.package.tslint" value="(autodetect)" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="run.code.analysis.last.selected.profile" value="pProject Default" />
-    <property name="settings.editor.selected.configurable" value="reference.settingsdialog.IDE.editor.colors" />
+    <property name="settings.editor.selected.configurable" value="preferences.lookFeel" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\WebStorm 2020.2.3\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
     <property name="vue.rearranger.settings.migration" value="true" />
   </component>
   <component name="RecentsManager">
@@ -174,6 +174,14 @@
       <workItem from="1601588486153" duration="297000" />
       <workItem from="1602178596851" duration="114000" />
       <workItem from="1602178720729" duration="671000" />
+      <workItem from="1602441524526" duration="832000" />
+      <workItem from="1602460090820" duration="57000" />
+      <workItem from="1602460435901" duration="6937000" />
+      <workItem from="1602547743922" duration="656000" />
+      <workItem from="1602761987093" duration="1228000" />
+      <workItem from="1602776455172" duration="2415000" />
+      <workItem from="1602789487321" duration="155000" />
+      <workItem from="1602849172065" duration="1411000" />
     </task>
     <servers />
   </component>
@@ -193,6 +201,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="496" y="490" key="#Web_Browsers" timestamp="1602463362188">
+      <screen x="0" y="0" width="2560" height="1400" />
+    </state>
+    <state x="496" y="490" key="#Web_Browsers/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602463362188" />
     <state x="734" y="355" width="1092" height="738" key="#com.intellij.execution.impl.EditConfigurationsDialog" timestamp="1600698557473">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -201,12 +213,13 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1034" y="569" key="#com.intellij.ide.actions.ChooseComponentsToExportDialog/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1600618159899" />
-    <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1601119012425">
+    <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog" timestamp="1602763052766">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/-1680.0.1680.1010/0.0.2560.1400/2560.0.1920.1040@0.0.2560.1400" timestamp="1600131894118" />
     <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1601119012425" />
     <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1599769848499" />
+    <state x="1010" y="447" key="#com.intellij.refactoring.safeDelete.UnsafeUsagesDialog/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602763052766" />
     <state x="1038" y="570" key="ANALYSIS_DLG_com.intellij.analysis.BaseAnalysisAction$1" timestamp="1598623332616">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
@@ -292,31 +305,33 @@
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state width="2517" height="232" key="GridCell.Tab.3.right/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1601118329125" />
-    <state x="781" y="345" key="SettingsEditor" timestamp="1602178897428">
+    <state x="1114" y="379" key="SettingsEditor" timestamp="1602849309478">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="781" y="345" key="SettingsEditor/-1680.0.1680.1010/0.0.2560.1400/2560.0.1920.1040@0.0.2560.1400" timestamp="1600219993982" />
     <state x="781" y="345" key="SettingsEditor/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1600699341231" />
     <state x="781" y="345" key="SettingsEditor/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598726754110" />
-    <state x="781" y="345" key="SettingsEditor/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602178897428" />
-    <state x="987" y="299" width="585" height="801" key="find.popup" timestamp="1600807389077">
+    <state x="1114" y="379" key="SettingsEditor/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602849309478" />
+    <state x="987" y="299" width="585" height="801" key="find.popup" timestamp="1602762401385">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="987" y="299" width="585" height="801" key="find.popup/-1680.0.1680.1010/0.0.2560.1400/2560.0.1920.1040@0.0.2560.1400" timestamp="1600025271231" />
     <state x="987" y="299" width="585" height="801" key="find.popup/-1680.0.1680.1010/0.0.2560.1400@0.0.2560.1400" timestamp="1599949425184" />
     <state x="987" y="299" width="585" height="801" key="find.popup/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1600807389077" />
     <state x="987" y="299" width="585" height="801" key="find.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598753973583" />
+    <state x="987" y="299" width="585" height="801" key="find.popup/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602762401385" />
     <state x="936" y="330" key="run.anything.popup" timestamp="1601209692306">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="936" y="330" key="run.anything.popup/-1680.0.1680.1010/0.0.2560.1400/2560.0.1920.1040@0.0.2560.1400" timestamp="1600085495112" />
     <state x="936" y="330" key="run.anything.popup/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1601209692306" />
     <state x="936" y="330" key="run.anything.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1599518794648" />
-    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1600700737511">
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup" timestamp="1602781488063">
       <screen x="0" y="0" width="2560" height="1400" />
     </state>
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/-1680.0.1680.1010/0.0.2560.1400/2560.0.1920.1040@0.0.2560.1400" timestamp="1600086838635" />
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/-1680.0.1680.1010/2560.-30.1920.1040/0.0.2560.1400@0.0.2560.1400" timestamp="1600700737511" />
     <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/-1280.14.1280.984/2560.0.1680.1010@0.0.2560.1400" timestamp="1598725919540" />
+    <state x="943" y="315" width="672" height="678" key="search.everywhere.popup/0.0.2560.1400/2560.0.1920.1040/-1680.15.1680.1010@0.0.2560.1400" timestamp="1602781488063" />
   </component>
 </project>
