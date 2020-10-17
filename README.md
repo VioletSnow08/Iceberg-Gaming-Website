@@ -3,6 +3,8 @@
 Made with Vue.js using the Vuexy Vue.js Template.
 
 Property of Iceberg Gaming, with the 17th Brigade Combat team being a subsidary of it.
+You can view our to do list over at: https://trello.com/b/9IKIc1iz/iceberg-gaming-website
+(This readme will be formatted soon)
 
 The brand new Iceberg Gaming Website features tons of things.
 - An advanced application system
