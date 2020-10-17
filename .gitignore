@@ -14,5 +14,4 @@ docs/.vuepress/dist/
 yarn.lock
 yarn-error.log
 vuexy-shell-scripts
-.idea/workspace.xml
-.idea/workspace.xml
+.idea/
