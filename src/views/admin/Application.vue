@@ -31,6 +31,7 @@
         </div>
       </div>
       <ApplicationBP17th v-if="application($route.params.userID, $route.params.applicationID).division === '17th'" v-bind:application="application($route.params.userID, $route.params.applicationID)"/>
+      <ApplicationBPIceberg v-if="application($route.params.userID, $route.params.applicationID).division === 'Iceberg'" v-bind:application="application($route.params.userID, $route.params.applicationID)"/>
 
 
     </div>
@@ -45,6 +46,7 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import ApplicationBP17th from "@/layouts/applications/17th";
+import ApplicationBPIceberg from "@/layouts/applications/Iceberg";
 
 export default {
   name: 'Applications',
@@ -52,7 +54,8 @@ export default {
     ...mapActions(["changeApplicationStatus"])
   },
   components: {
-    ApplicationBP17th
+    ApplicationBP17th,
+    Iceberg
   },
   computed: {
     ...mapGetters(['application', 'user', 'applications'])

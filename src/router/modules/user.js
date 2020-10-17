@@ -41,6 +41,15 @@ export default [{
       },
     },
     {
+      path: '/iceberg/apply',
+      name: 'IcebergApply',
+      component: () => import('@/views/Iceberg/Apply.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Applicant']
+      },
+    },
+    {
       path: '/settings',
       name: 'Settings',
       component: () => import('@/views/user/Settings.vue'),
