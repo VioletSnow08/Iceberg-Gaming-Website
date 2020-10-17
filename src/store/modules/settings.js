@@ -24,7 +24,7 @@ const actions = {
     await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({onLOA: false}).catch(error => {
       if (error) throw error;
     })
-    await context.dispatch("setUser");
+    await context.dispatch("fetchCurrentUser");
   },
   async changeDiscordID(context, newID) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
@@ -40,7 +40,7 @@ const actions = {
     }).catch(error => {
       if (error) throw error;
     })
-    await context.dispatch("setUser");
+    await context.dispatch("fetchCurrentUser");
   },
 
   async changeIsEmailPublic(context, newIsEmailPublic) {
@@ -49,7 +49,7 @@ const actions = {
     }).catch(error => {
       if (error) throw error;
     })
-    await context.dispatch("setUser");
+    await context.dispatch("fetchCurrentUser");
   },
 }
 const mutations = {

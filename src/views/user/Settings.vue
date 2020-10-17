@@ -14,7 +14,7 @@
 
           <h1>User Info</h1>
           <br>
-          <vs-alert :active.sync="isDiscord_Invalid" color="danger">Invalid Discord ID!</vs-alert>
+          <vs-alert :active.sync="isDiscord_Invalid" color="danger">Invalid Discord Username & Tag!</vs-alert>
           <vs-alert :active.sync="showConfirmationAlert_UserInfo" color="success">Settings saved!</vs-alert>
           <vs-input
             :placeholder="currentUser.status"
@@ -28,10 +28,11 @@
 
           <vs-input
             class="input-spacing"
-            label="Change Discord ID"
+            label="Change Discord Username & Tag"
+            style="resize: none; width: 350px !important"
             :placeholder="currentUser.discord_id"
             v-model="newDiscordID"
-            style="width: 200px !important"
+
           />
 
           <vs-switch class="input-spacing" v-model="newIsEmailPublic">

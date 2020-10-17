@@ -44,11 +44,8 @@
                   </div>
                   <div class="vx-row mb-6">
                     <div class="vx-col w-full">
-                      <vs-input type="text" class="w-full" icon-pack="feather" icon="icon-hash" icon-no-border label="Discord ID" v-model="discord_id" />
+                      <vs-input type="text" class="w-full" icon-pack="feather" icon="icon-hash" icon-no-border label="Discord Username & Tag" v-model="discord_id" />
                     </div>
-                  </div>
-                  <div class="flex flex-wrap justify-between my-5">
-                    <router-link to="">Need help getting your Discord ID? Click here</router-link>
                   </div>
                   <div class="vx-row">
                     <div class="vx-col w-full">
