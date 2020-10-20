@@ -18,7 +18,7 @@
 
       <calendar-view
         :show-date="showDate"
-        @click-event="viewEventPrompt = true"
+        @click-event="viewEvent"
         :events="IcebergEvents">
         <calendar-view-header
           slot="header"
@@ -63,42 +63,7 @@
           <datetime value-zone="America/Mexico_City" use12-hour type="datetime" v-model="newEvent.endDate"></datetime>
         </div>
       </vs-prompt>
-      <!--EDIT EVENT-->
-      <vs-prompt
-      class="calendar-event-dialog"
-      title=""
-      accept-text="Save Changes"
-      :active.sync="viewEventPrompt">
-        <div class="calendar__label-container flex">
-          <vs-input name="event-name" class="w-full" label-placeholder="Event Title" v-model="newEvent.title"></vs-input>
-
-          <!--Event Type-->
-          <vs-dropdown vs-custom-content vs-trigger-click class="ml-auto my-2 cursor-pointer">
-            <feather-icon icon="TagIcon" svgClasses="h-5 w-5" class="cursor-pointer" @click.prevent></feather-icon>
-            <vs-dropdown-menu style="z-index: 200001">
-              <vs-dropdown-item @click="newEvent.label = 'Other'; newEvent.style='background-color: #3B81BA'">
-                <div class="h-3 w-3 inline-block rounded-full mr-2" style="background-color: #3B81BA;"></div>
-                <span>Events</span>
-              </vs-dropdown-item>
-
-              <vs-dropdown-item @click="newEvent.label = 'Meetings // Official'; newEvent.style='background-color: #8DE2FA'">
-                <div class="h-3 w-3 mr-1 inline-block rounded-full mr-2" style="background-color: #8DE2FA;"></div>
-                <span>Meetings // Official Events</span>
-              </vs-dropdown-item>
-            </vs-dropdown-menu>
-          </vs-dropdown>
-
-        </div>
-        <div class="my-4">
-          <small class="date-label">Start Date</small>
-          <datetime value-zone="America/Mexico_City" use12-hour type="datetime" v-model="newEvent.startDate"></datetime>
-        </div>
-        <div class="my-4">
-          <small class="date-label">End Date</small>
-          <datetime value-zone="America/Mexico_City" use12-hour type="datetime" v-model="newEvent.endDate"></datetime>
-        </div>
-      </vs-prompt>
-    </div>
+      </div>
 
   </div>
 
@@ -123,7 +88,6 @@ export default {
     return {
       showDate: new Date(),
       addEventPrompt: false,
-      viewEventPrompt: false,
       newEvent: {
         title: "",
         label: "",
@@ -147,8 +111,9 @@ export default {
     setShowDate(d) {
       this.showDate = d;
     },
+    ...mapActions(["user"]),
     viewEvent(event) {
-      console.log(event);
+     this.$router.push(`../iceberg/calendar/view/${event.id}`)
     },
     ...mapActions(["addEvent"]),
     addNewEvent() {
