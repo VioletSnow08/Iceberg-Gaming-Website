@@ -79,7 +79,11 @@ export default {
   methods: {
     ...mapActions(["setAttendance"]),
     checkUser(creator){
-      if(this.currentUser.id == creator.id){
+      const VALID_ROLES = ["[17th] NCO","[17th] 1st Platoon HQ","[17th] 32nd LSG HQ","[17th] Command","[17th] Officer","[17th] Alpha Company HQ"]
+      if(
+        this.currentUser.id == creator.id ||
+        this.currentUser.roles.some(r => VALID_ROLES.includes(r))
+      ){
         this.canUserEdit = true;
       }
     },

@@ -113,7 +113,7 @@ export default {
     },
     ...mapActions(["user"]),
     viewEvent(event) {
-     this.$router.push(`../iceberg/calendar/view/${event.id}`)
+     this.$router.push(`/iceberg/calendar/view/${event.id}`)
     },
     ...mapActions(["addEvent"]),
     addNewEvent() {
