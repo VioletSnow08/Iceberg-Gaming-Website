@@ -24,8 +24,8 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import ApplicationBP17th from "../layouts/applications/17th.vue";
-import ApplicationBPIceberg from "../layouts/applications/Iceberg.vue";
+import ApplicationBP17th from "../../layouts/applications/17th.vue";
+import ApplicationBPIceberg from "../../layouts/applications/Iceberg.vue";
 
 export default {
   name: 'Application',
