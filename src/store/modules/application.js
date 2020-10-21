@@ -114,9 +114,9 @@ const actions = {
     if (firebase.auth().currentUser) {
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => {
         if (doc.data().roles.includes("[ICE] Recruiter")) {
+          let newComment;
 
           if(division === "17th") {
-            let newComment = "";
             if (newStatus.toLowerCase() === "processing") {
               newComment = "Your application is currently being held for processing. When you're able to, we request that we interview you(nothing bad!) and that you hop on to the TeamSpeak (ts.iceberg-gaming.com) to reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here."
             } else if (newStatus.toLowerCase() === "accepted") {
@@ -128,16 +128,25 @@ const actions = {
               await this.dispatch("acceptUser", [userID, division]);
             } else if (newStatus.toLowerCase() === "declined") {
               newComment = "We have reviewed your application and we thank you for your interest in the 17th Brigade Combat Team. However, unfortunately we were unable to accept your application at this time. You may inquire about why your application was declined." +
-                " You are free to resubmit your application in the future at any time. We are sorry about the inconvenience."
+                " You are free to resubmit your application in the future at any time. We are sorry about the inconvenience.";
             }
-            await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
-              status: newStatus,
-              comment: newComment
-            })
+
           } else if(division === "Iceberg") {
+            if(newStatus.toLowerCase() === "processing") {
+              newComment = "Your application is currently being held for processing. When you're able to, we request that we interview you(nothing bad!) and that you hop on to the TeamSpeak (ts.iceberg-gaming.com) to reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.";
+            } else if(newStatus.toLowerCase() === "accepted") {
+              newComment = "";
+              await this.dispatch("acceptUser", [userID, division]);
+            } else if(newStatus.toLowerCase() === "declined") {
+              newComment = "We have reviewed your application and we thank you for your interest in Iceberg Gaming. However, unfortunately we were unable to accept your application at this time. You may inquire about why your application was declined." +
+                " You are free to resubmit your application in the future at any time. We are sorry about the inconvenience.";
+            }
+          };
 
-          }
-
+          await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
+            status: newStatus,
+            comment: newComment
+          });
         }
       })
     }

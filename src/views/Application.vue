@@ -12,6 +12,7 @@
       </div>
       <vs-button @click="$router.push('/applications')">Back</vs-button>
       <ApplicationBP17th v-if="application(currentUser.id, $route.params.applicationID).division === '17th'" v-bind:application="application(currentUser.id, $route.params.applicationID)"/>
+      <ApplicationBPIceberg v-if="application(currentUser.id, $route.params.applicationID).division === 'Iceberg'" v-bind:application="application(currentUser.id, $route.params.applicationID)"/>
     </div>
 
     <div v-else>
@@ -24,6 +25,7 @@
 <script>
 import {mapActions, mapGetters} from 'vuex'
 import ApplicationBP17th from "../layouts/applications/17th.vue";
+import ApplicationBPIceberg from "../layouts/applications/Iceberg.vue";
 
 export default {
   name: 'Application',
@@ -31,7 +33,8 @@ export default {
     ...mapGetters(['application', 'applications', 'currentUser'])
   },
   components: {
-    ApplicationBP17th
+    ApplicationBP17th,
+    ApplicationBPIceberg
   },
   data() {
     return {
@@ -40,7 +43,7 @@ export default {
   },
   async created() {
     await Promise.all([
-      this.$store.dispatch('setApplications'),
+      this.$store.dispatch('fetchApplications'),
     ])
   }
 }
