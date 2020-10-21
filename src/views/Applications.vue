@@ -8,7 +8,7 @@
       {{this.$vs.loading.close()}}
 
       <div v-for="app in applicationsFromUser(currentUser.id)" v-bind:key="app.id" class="vx-col w-full lg:w-1/4 sm:w-1/2 mb-base">
-        <vx-card :title="user(app.user_id).username" :subtitle="'Division: ' + app.division" class="p-2">
+        <vx-card :title="(app.division === '17th') ? '17th Brigade Combat Team' : (app.division === 'Iceberg') ? 'Iceberg Gaming' : app.division" class="p-2">
           <div class="text-center">
             <vs-chip v-if="app.status.toLowerCase() === 'accepted'" color="success">{{app.status}}</vs-chip>
             <vs-chip v-else-if="app.status.toLowerCase() === 'waiting'" color="warning">{{app.status}}</vs-chip>
