@@ -21,9 +21,6 @@ const getters = {
     })
     return applications;
   },
-  applicationsFromUserFromUnit: (state) => (userID, unit) => {
-    return state.applications.find(application => (application.user_id === userID) && (application.unit === unit))
-  }
 }
 
 const actions = {
@@ -54,7 +51,7 @@ const actions = {
         timezone,
         arma3Hours,
         hobbies,
-        whyjoin,
+        whyJoin,
         attractmilsim,
         attendOps,
         interestedRoles,
@@ -65,16 +62,39 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
-        await router.push('/user/17th/application')
+        await router.push('/user/applications')
       }).catch(error => {
         if (error) throw error
       })
-
-
     }
   },
 
-  async setApplications({commit}) {
+  async submitIcebergApplication({commit}, [steamURL, age, hoursInGamesTheyJoinFor, hobbies, areYouInAnyCommunities, whereDidYouHearUsFrom, gamesTheyJoinFor, whyJoin]) {
+    if(firebase.auth().currentUser) {
+      const application = {
+        steamURL,
+        age,
+        hoursInGamesTheyJoinFor,
+        hobbies,
+        areYouInAnyCommunities,
+        whereDidYouHearUsFrom,
+        gamesTheyJoinFor,
+        whyJoin,
+        status: "Waiting",
+        comment: "",
+        user_id: firebase.auth().currentUser.uid,
+        division: "Iceberg",
+        date: firebase.firestore.Timestamp.now()
+      }
+      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
+        await router.push('/user/applications')
+      }).catch(error => {
+        if(error) throw error;
+      })
+    }
+  },
+
+  async fetchApplications({commit}) {
     const newApplications = []
     await firebase.firestore().collection('users').get().then(async users => {
       for (let i = 0; i < users.docs.length; i++) {

@@ -39,7 +39,7 @@ export default {
   },
   async created () {
     await Promise.all([
-      this.$store.dispatch('setApplications'),
+      this.$store.dispatch('fetchApplications'),
       this.$store.dispatch('fetchUsers')
     ])
   }
