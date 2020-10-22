@@ -69,16 +69,16 @@ const actions = {
       })
     }
   },
-  async registerUser({commit}, [username, email, password, discord_id]) {
+  async registerUser({commit}, [username, email, password, discord]) {
     await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
       const user = {
         date: firebase.firestore.Timestamp.now(),
-        discord_id,
+        discord,
         email,
         onLOA: false,
         photoURL: "https://image.flaticon.com/icons/svg/2919/2919600.svg",
         roles: ["[ICE] Applicant"],
-        status: "Iceberg Applicant",
+        status: "Make sure to fill out an application!",
         username
       }
 

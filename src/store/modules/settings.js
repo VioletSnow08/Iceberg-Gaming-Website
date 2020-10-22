@@ -10,7 +10,7 @@ const actions = {
       start_date: await firebase.firestore.Timestamp.now(),
       end_date,
       reason,
-      user_id: firebase.auth().currentUser.uid
+      userID: firebase.auth().currentUser.uid
     }
     await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("loas").doc().set(loa).catch(error => {
       if (error) throw error
