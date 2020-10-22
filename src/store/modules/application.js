@@ -24,7 +24,7 @@ const getters = {
 }
 
 const actions = {
-  async submit17thApplication({commit}, [steamURL, age, timezone, arma3Hours, hobbies, whyjoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
+  async submit17thApplication({commit}, [steamURL, age, timezone, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
     if (firebase.auth().currentUser) {
       const interestedRoles = []
       if (ranger) {

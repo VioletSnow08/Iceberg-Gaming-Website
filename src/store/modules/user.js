@@ -61,7 +61,11 @@ const actions = {
       await firebase.firestore().collection("users").doc(userID).update({
         bct_rank: "RCT",
         status: "You can now change your status!",
-        roles: ["[ICE] Member", "[17th] Member", "[17th] Recruit"]
+        roles: ["[ICE] Member", "[17th] Member", "[17th] Recruit"],
+        bct_points: 0,
+        bct_events_attended: 0,
+        bct_eligibleForDemotion: false,
+        bct_eligibleForPromotion: false,
       })
     }
   },
@@ -70,16 +74,11 @@ const actions = {
       const user = {
         date: firebase.firestore.Timestamp.now(),
         discord_id,
-        bct_eligibleForDemotion: false,
-        bct_eligibleForPromotion: false,
         email,
-        bct_events_attended: 0,
         onLOA: false,
         photoURL: "https://image.flaticon.com/icons/svg/2919/2919600.svg",
-        bct_points: 0,
-        bct_rank: "",
-        roles: ["[ICE] Member"],
-        status: "Iceberg Member",
+        roles: ["[ICE] Applicant"],
+        status: "Iceberg Applicant",
         username
       }
 
