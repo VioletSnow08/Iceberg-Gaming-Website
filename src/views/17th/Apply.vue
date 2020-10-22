@@ -31,7 +31,7 @@
                       class="w-full mt-4"/>
           </div>
           <div class="vx-col md:w-1/2 w-full">
-            <vs-textarea v-model="whyjoin" label="Why do you want to join our community?" class="mb-0 md:mt-10 mt-6"
+            <vs-textarea v-model="whyJoin" label="Why do you want to join our community?" class="mb-0 md:mt-10 mt-6"
                          rows="3"/>
           </div>
           <div class="vx-col md:w-1/2 w-full">
