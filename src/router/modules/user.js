@@ -37,7 +37,7 @@ export default [{
       component: () => import('@/views/17th/Apply.vue'),
       meta: {
         requiresAuth: true,
-        roles: ['[ICE] Member']
+        roles: ['[ICE] Applicant', '[ICE] Member']
       },
     },
     {
