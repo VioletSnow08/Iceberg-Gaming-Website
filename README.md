@@ -2,7 +2,9 @@
 
 Made with Vue.js using the Vuexy Vue.js Template.
 
-Property of Vincent Lauro and Iceberg Gaming, with the 17th Brigade Combat team being a subsidary of it.
+Property of Iceberg Gaming, with the 17th Brigade Combat team being a subsidary of it.
+You can view our to do list over at: https://trello.com/b/9IKIc1iz/iceberg-gaming-website
+(This readme will be formatted soon)
 
 The brand new Iceberg Gaming Website features tons of things.
 - An advanced application system
@@ -17,3 +19,10 @@ The brand new Iceberg Gaming Website features tons of things.
 - Members/Users can view their own applications at any time.
 - 404 pages
 - Secure routing and navigation guards so members can't access the admin only areas, etc.
+
+
+# To Run
+
+npm install
+
+npm run serve
