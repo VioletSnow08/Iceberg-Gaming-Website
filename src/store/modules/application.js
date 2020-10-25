@@ -102,7 +102,7 @@ const actions = {
         await firebase.firestore().collection('users').doc(user.id).collection('applications').get().then(async applications => {
           for (const application of applications.docs) {
             const object = {...application.data(), id: application.id}
-            newApplications.push(object);
+            newApplications.unshift(object);
           }
         })
       }
