@@ -30,7 +30,7 @@
             class="input-spacing"
             label="Change Discord Username & Tag"
             style="resize: none; width: 350px !important"
-            :placeholder="currentUser.discord_id"
+            :placeholder="currentUser.discord"
             v-model="newDiscordID"
 
           />

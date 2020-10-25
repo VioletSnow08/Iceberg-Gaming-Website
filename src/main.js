@@ -16,7 +16,7 @@ import 'firebase/firestore'
 
 // INITIALIZING FIREBASE
 
-const firebaseConfig = require("./firebaseConfig");
+const firebaseConfig = require("./firebaseConfig.js");
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()

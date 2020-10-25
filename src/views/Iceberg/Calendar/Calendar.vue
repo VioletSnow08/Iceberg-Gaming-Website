@@ -111,7 +111,7 @@ export default {
       this.showDate = d;
     },
     viewEvent(event) {
-      console.log(event);
+
     },
     ...mapActions(["addEvent"]),
     addNewEvent() {

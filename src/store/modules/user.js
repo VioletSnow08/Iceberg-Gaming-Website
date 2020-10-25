@@ -50,36 +50,52 @@ const actions = {
       })
   },
   async acceptUser({commit}, [userID, division]) {
+    await firebase.firestore().collection("users").doc(userID).get().then(async doc => {
+      let newRoles = [];
+      let currentRoles = doc.data().roles;
     if(division === "Iceberg") {
+      newRoles = currentRoles;
+      if(!currentRoles.includes("[ICE] Member")) {
+        newRoles.push("[ICE] Member");
+      }
+      newRoles = newRoles.filter(role => role !== "[ICE] Applicant") // Adds all roles and will ensure that the [ICE] Applicant role is not applied.
       await firebase.firestore().collection("users").doc(userID).update({
         isIceberg: true,
         isApplicant: false,
         status: "You can now change your status!",
-        roles: ["[ICE] Member"]
+        roles: newRoles
       })
     } else if(division === "17th") {
+      newRoles = currentRoles
+      if(!currentRoles.includes("[ICE] Member")) {
+        newRoles.push("[ICE] Member");
+        newRoles = newRoles.filter(role => role !== "[ICE] Applicant") // Adds all roles and will ensure that the [ICE] Applicant role is not applied.
+      }
+      newRoles = newRoles.filter(role => !role.startsWith("[17th]")) // Removes all [17th] Roles
+      newRoles.push("[17th] Member");
+      newRoles.push("[17th] Recruit");
       await firebase.firestore().collection("users").doc(userID).update({
         bct_rank: "RCT",
         status: "You can now change your status!",
-        roles: ["[ICE] Member", "[17th] Member", "[17th] Recruit"]
+        roles: newRoles,
+        bct_points: 0,
+        bct_events_attended: 0,
+        bct_eligibleForDemotion: false,
+        bct_eligibleForPromotion: false,
       })
     }
+    })
   },
-  async registerUser({commit}, [username, email, password, discord_id]) {
+  async registerUser({commit}, [username, email, password, discord]) {
     await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
       const user = {
         date: firebase.firestore.Timestamp.now(),
-        discord_id,
-        bct_eligibleForDemotion: false,
-        bct_eligibleForPromotion: false,
+        discord,
         email,
-        bct_events_attended: 0,
         onLOA: false,
         photoURL: "https://image.flaticon.com/icons/svg/2919/2919600.svg",
-        bct_points: 0,
-        bct_rank: "",
-        roles: ["[ICE] Member"],
-        status: "Iceberg Member",
+        roles: ["[ICE] Applicant"],
+        status: "Make sure to fill out an application!",
         username
       }
 

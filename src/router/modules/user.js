@@ -5,7 +5,7 @@ export default [{
     {
       path: '/hub',
       name: 'hub',
-      component: () => import('@/views/Hub.vue'),
+      component: () => import('@/views/user/Hub.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
@@ -14,7 +14,7 @@ export default [{
     {
       path: '/applications',
       name: 'Applications',
-      component: () => import('@/views/Applications.vue'),
+      component: () => import('@/views/user/Applications.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member', '[ICE] Applicant']
@@ -24,7 +24,7 @@ export default [{
     {
       path: '/applications/view/:applicationID',
       name: 'Application',
-      component: () => import('@/views/Application.vue'),
+      component: () => import('@/views/user/Application.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[17th] Applicant', '[ICE] Member']
@@ -37,7 +37,16 @@ export default [{
       component: () => import('@/views/17th/Apply.vue'),
       meta: {
         requiresAuth: true,
-        roles: ['[ICE] Member']
+        roles: ['[ICE] Applicant', '[ICE] Member']
+      },
+    },
+    {
+      path: '/iceberg/apply',
+      name: 'IcebergApply',
+      component: () => import('@/views/Iceberg/Apply.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Applicant']
       },
     },
     {

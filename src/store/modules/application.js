@@ -7,7 +7,7 @@ const state = {
 }
 const getters = {
   application: (state) => (userID, applicationID) => {
-    return state.applications.find(application => (application.user_id === userID) && (application.id === applicationID))
+    return state.applications.find(application => (application.userID === userID) && (application.id === applicationID))
   },
   applications: (state) => {
     return state.applications;
@@ -15,19 +15,16 @@ const getters = {
   applicationsFromUser: (state) => (userID) => {
     let applications = [];
     state.applications.forEach(application => {
-      if(application.user_id === userID) {
+      if (application.userID === userID) {
         applications.push(application);
       }
     })
     return applications;
   },
-  applicationsFromUserFromUnit: (state) => (userID, unit) => {
-    return state.applications.find(application => (application.user_id === userID) && (application.unit === unit))
-  }
 }
 
 const actions = {
-  async submit17thApplication({commit}, [steamURL, age, timezone, arma3Hours, hobbies, whyjoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
+  async submit17thApplication({commit}, [steamURL, age, timezone, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
     if (firebase.auth().currentUser) {
       const interestedRoles = []
       if (ranger) {
@@ -54,27 +51,50 @@ const actions = {
         timezone,
         arma3Hours,
         hobbies,
-        whyjoin,
+        whyJoin,
         attractmilsim,
         attendOps,
         interestedRoles,
         status: 'Waiting',
         comment: "",
-        user_id: firebase.auth().currentUser.uid,
+        userID: firebase.auth().currentUser.uid,
         division: "17th",
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
-        await router.push('/user/17th/application')
+        await router.push('/user/applications')
       }).catch(error => {
         if (error) throw error
       })
-
-
     }
   },
 
-  async setApplications({commit}) {
+  async submitIcebergApplication({commit}, [steamURL, age, hoursInGamesTheyJoinFor, hobbies, areYouInAnyCommunities, whereDidYouHearUsFrom, gamesTheyJoinFor, whyJoin]) {
+    if (firebase.auth().currentUser) {
+      const application = {
+        steamURL,
+        age,
+        hoursInGamesTheyJoinFor,
+        hobbies,
+        areYouInAnyCommunities,
+        whereDidYouHearUsFrom,
+        gamesTheyJoinFor,
+        whyJoin,
+        status: "Waiting",
+        comment: "",
+        userID: firebase.auth().currentUser.uid,
+        division: "Iceberg",
+        date: firebase.firestore.Timestamp.now()
+      }
+      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
+        await router.push('/user/applications')
+      }).catch(error => {
+        if (error) throw error;
+      })
+    }
+  },
+
+  async fetchApplications({commit}) {
     const newApplications = []
     await firebase.firestore().collection('users').get().then(async users => {
       for (let i = 0; i < users.docs.length; i++) {
@@ -82,7 +102,7 @@ const actions = {
         await firebase.firestore().collection('users').doc(user.id).collection('applications').get().then(async applications => {
           for (const application of applications.docs) {
             const object = {...application.data(), id: application.id}
-            newApplications.push(object);
+            newApplications.unshift(object);
           }
         })
       }
@@ -94,9 +114,9 @@ const actions = {
     if (firebase.auth().currentUser) {
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => {
         if (doc.data().roles.includes("[ICE] Recruiter")) {
+          let newComment = "";
 
-          if(division === "17th") {
-            let newComment = "";
+          if (division === "17th") {
             if (newStatus.toLowerCase() === "processing") {
               newComment = "Your application is currently being held for processing. When you're able to, we request that we interview you(nothing bad!) and that you hop on to the TeamSpeak (ts.iceberg-gaming.com) to reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here."
             } else if (newStatus.toLowerCase() === "accepted") {
@@ -106,17 +126,32 @@ const actions = {
                 " . Second, we request that you hop on the Teamspeak (ts.iceberg-gaming.com) and message a Corporal(CPL) or above to get your roles. If nobody is available, make sure you post it in general chat on our Discord." +
                 " Last but not least, we ask that you familiarize yourself with our Code of Conduct, Ranks, and Structure Pages. If you happen to have any questions please feel free to ask around. Until then, we'll see you soon!"
               await this.dispatch("acceptUser", [userID, division]);
-            } else if (newStatus.toLowerCase() === "declined") {
+            } else if (newStatus.toLowerCase() === "denied") {
               newComment = "We have reviewed your application and we thank you for your interest in the 17th Brigade Combat Team. However, unfortunately we were unable to accept your application at this time. You may inquire about why your application was declined." +
-                " You are free to resubmit your application in the future at any time. We are sorry about the inconvenience."
+                " You are free to resubmit your application in the future at any time. We are sorry about the inconvenience.";
             }
+
             await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
               status: newStatus,
               comment: newComment
-            })
-          } else if(division === "Iceberg") {
+            });
+          } else if (division === "Iceberg") {
+            if (newStatus.toLowerCase() === "processing") {
+              newComment = "Your application is currently being held for processing. When you're able to, we request that we interview you(nothing bad!) and that you hop on to the TeamSpeak (ts.iceberg-gaming.com) to reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.";
+            } else if (newStatus.toLowerCase() === "accepted") {
+              newComment = "";
+              await this.dispatch("acceptUser", [userID, division]);
+            } else if (newStatus.toLowerCase() === "denied") {
+              newComment = "We have reviewed your application and we thank you for your interest in Iceberg Gaming. However, unfortunately we were unable to accept your application at this time. You may inquire about why your application was declined." +
+                " You are free to resubmit your application in the future at any time. We are sorry about the inconvenience.";
+            }
 
+            await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
+              status: newStatus,
+              comment: newComment
+            });
           }
+          ;
 
         }
       })
