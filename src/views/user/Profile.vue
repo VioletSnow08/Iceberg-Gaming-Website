@@ -35,8 +35,8 @@
             <h3 v-else>Unassigned</h3>
             <p>
               <span v-if="user($route.params.userID).roles.includes('[ICE] Recruiter')" class="brigade-position">Recruiter</span>
-              <span v-if="user($route.params.userID).roles.includes('[17th] NCO') && user($route.params.userID).roles.includes('[ICE] Recruiter')" class="brigade-position"> | NCO</span>
-              <span v-else-if="user($route.params.userID).roles.includes('[17th] NCO')" class="brigade-position">NCO</span>
+              <span v-if="user($route.params.userID).roles.includes('[17th] Ranger NCO') && user($route.params.userID).roles.includes('[ICE] Recruiter')" class="brigade-position"> | NCO</span>
+              <span v-else-if="user($route.params.userID).roles.includes('[17th] Ranger NCO')" class="brigade-position">NCO</span>
             </p>
             <vx-list :list="[
               `Rank: ${user($route.params.userID).bct_rank}`,
