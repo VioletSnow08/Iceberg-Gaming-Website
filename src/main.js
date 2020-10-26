@@ -28,11 +28,12 @@ import { VueHammer } from 'vue2-hammer'
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 require('./assets/css/iconfont.css')
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
 
-
+// Winston ~
 const httpTransportOptions = {
   host: 'http-intake.logs.datadoghq.com',
   path: "/v1/input/b6b4c63a6b8eec338b8617ae9495e173?ddsource=nodejs&service=Iceberg Gaming Website-DEVOPS",
@@ -50,12 +51,6 @@ const logger = createLogger({
 
 Vue.prototype.$logger = logger;
 
-logger.log({
-  message: "Failed Login",
-  level: "error",
-  userID: "1"
-
-})
 Vue.use(Vuesax)
 Vue.prototype.$http = axios
 Vue.use(VueHammer)
