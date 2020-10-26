@@ -7,8 +7,5 @@ let firebaseConfig = {
   messagingSenderId: '682700854607',
   appId: '1:682700854607:web:ca34e54af9128afb82e13a',
   measurementId: 'G-XS6SPLLTV2'
-};
-module.exports = {
-  firebaseConfig
 }
-
+module.exports = firebaseConfig
