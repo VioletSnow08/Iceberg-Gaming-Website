@@ -17,6 +17,7 @@
 <script>
 import themeConfig from '@/../themeConfig.js'
 import '@/assets/scss/vuexy/extraComponents/agGridStyleOverride.scss'
+import {mapGetters} from "vuex"
 
 export default {
   data () {
@@ -58,6 +59,9 @@ export default {
       this.$store.commit('UPDATE_WINDOW_SCROLL_Y', window.scrollY)
     }
   },
+  computed: {
+    ...mapGetters(["currentUser"]),
+  },
   async mounted () {
 
     this.toggleClassInBody(themeConfig.theme)
@@ -74,6 +78,19 @@ export default {
     window.addEventListener('resize', this.handleWindowResize)
     window.addEventListener('scroll', this.handleScroll)
     await this.$store.dispatch('fetchCurrentUser')
+    if(this.currentUser) {
+      this.$logger.info({
+        message: "A user opened the website",
+        isLoggedIn: true,
+        userID: this.currentUser.id,
+        username: this.currentUser.username
+      });
+    } else {
+      this.$logger.info({
+        message: "A user opened the website",
+        isLoggedIn: false
+      });
+    }
   },
   destroyed () {
     window.removeEventListener('resize', this.handleWindowResize)
