@@ -31,7 +31,7 @@
                       class="w-full mt-4"/>
           </div>
           <div class="vx-col md:w-1/2 w-full">
-            <vs-textarea v-model="whyjoin" label="Why do you want to join our community?" class="mb-0 md:mt-10 mt-6"
+            <vs-textarea v-model="whyJoin" label="Why do you want to join our community?" class="mb-0 md:mt-10 mt-6"
                          rows="3"/>
           </div>
           <div class="vx-col md:w-1/2 w-full">
@@ -84,7 +84,7 @@ export default {
       timezone: '',
       arma3Hours: '',
       hobbies: '',
-      whyjoin: '',
+      whyJoin: '',
       attractmilsim: '',
       ranger: '',
       medic: '',
@@ -99,7 +99,7 @@ export default {
     ...mapActions(['submit17thApplication']),
     formSubmitted () {
       if (this.age < 13) return alert('Invalid Age, unable to submit.')
-      this.submit17thApplication([this.steamURL, this.age, this.timezone, this.arma3Hours, this.hobbies, this.whyjoin, this.attractmilsim, this.ranger, this.medic, this.sapper, this.pilot, this.tank_crew, this.idf, this.attendOps])
+      this.submit17thApplication([this.steamURL, this.age, this.timezone, this.arma3Hours, this.hobbies, this.whyJoin, this.attractmilsim, this.ranger, this.medic, this.sapper, this.pilot, this.tank_crew, this.idf, this.attendOps])
     }
   },
   computed: {
