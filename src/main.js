@@ -27,7 +27,6 @@ import store from './store/store'
 import { VueHammer } from 'vue2-hammer'
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
-const tracer = require('dd-trace').init();
 require('./assets/css/iconfont.css')
 
 

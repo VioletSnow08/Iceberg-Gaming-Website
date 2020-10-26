@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.2",
+    "@logdna/logger": "^2.0.0",
     "ag-grid-community": "^21.2.2",
     "ag-grid-vue": "^21.2.2",
     "algoliasearch": "^3.33.0",
