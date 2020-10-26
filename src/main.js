@@ -10,77 +10,40 @@
 
 import Vue from 'vue'
 import App from './App.vue'
-
 import firebase from 'firebase'
 import 'firebase/firestore'
-
-// INITIALIZING FIREBASE
-
+import axios from './axios.js'
+import Vuesax from 'vuesax'
 const firebaseConfig = require("./firebaseConfig.js");
+import 'material-icons/iconfont/material-icons.css' //Material Icons
+import 'vuesax/dist/vuesax.css' // Vuesax
+import './filters/filters.js'
+import '../themeConfig.js'
+import './globalComponents.js'
+import './assets/scss/main.scss'
+import '@/assets/css/main.css'
+import router from './router/router.js'
+import store from './store/store'
+import { VueHammer } from 'vue2-hammer'
+import 'prismjs'
+import 'prismjs/themes/prism-tomorrow.css'
+const tracer = require('dd-trace').init();
+require('./assets/css/iconfont.css')
+
+
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
 
-// Vuesax Component Framework
-import Vuesax from 'vuesax'
-import 'material-icons/iconfont/material-icons.css' //Material Icons
-import 'vuesax/dist/vuesax.css' // Vuesax
+
 Vue.use(Vuesax)
-
-
-// axios
-import axios from './axios.js'
 Vue.prototype.$http = axios
-
-// Filters
-import './filters/filters.js'
-
-
-// Theme Configurations
-import '../themeConfig.js'
-
-
-// Globally Registered Components
-import './globalComponents.js'
-
-
-// Styles: SCSS
-import './assets/scss/main.scss'
-
-
-// Tailwind
-import '@/assets/css/main.css'
-
-
-// Vue Router
-import router from './router/router.js'
-
-
-// Vuex Store
-import store from './store/store'
-
-
-// Vuejs - Vue wrapper for hammerjs
-import { VueHammer } from 'vue2-hammer'
 Vue.use(VueHammer)
 
-// PrismJS
-import 'prismjs'
-import 'prismjs/themes/prism-tomorrow.css'
-
-
-// Feather font icon
-require('./assets/css/iconfont.css')
-
-
-// Vue select css
-// Note: In latest version you have to add it separately
-// import 'vue-select/dist/vue-select.css';
-
-
 Vue.config.productionTip = false
+let app;
 
-let app
+
 firebase.auth().onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({
