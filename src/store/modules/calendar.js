@@ -60,7 +60,7 @@ const actions = {
     await firebase.firestore().collection('events').doc().set(event).catch(error => {
       if (error) throw error;
     })
-    commit("addEvent", event);
+    await this.dispatch("fetchEvents");
   },
   async setAttendance({commit}, [eventID, attendance]) {
     await firebase.firestore().collection('events').doc(eventID).get().then(async event => {
@@ -101,15 +101,40 @@ const actions = {
       }
       await this.dispatch("fetchEvents");
     })
+  },
+  async editEvent({commit}, [eventID, title, label, startDate, endDate, style]) {
+    if(title) {
+      await firebase.firestore().collection('events').doc(eventID).update({
+        title
+      })
+    }
+    if(label) {
+      await firebase.firestore().collection('events').doc(eventID).update({
+        label
+      })
+    }
+    if(startDate) {
+      await firebase.firestore().collection('events').doc(eventID).update({
+        startDate
+      })
+    }
+    if(endDate) {
+      await firebase.firestore().collection('events').doc(eventID).update({
+        endDate
+      })
+    }
+    if(style) {
+      await firebase.firestore().collection('events').doc(eventID).update({
+        style
+      })
+    }
+    await this.dispatch("fetchEvents");
   }
 }
 const mutations = {
   setEvents(state, events) {
     state.events = events;
-  },
-  addEvent(state, event) {
-    state.events.push(event);
-  },
+  }
 }
 export default {
   state, getters, actions, mutations
