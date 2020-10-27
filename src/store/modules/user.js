@@ -1,5 +1,6 @@
 import * as firebase from 'firebase'
 import router from "@/router/router";
+import {logger} from "@/misc";
 
 const state = {
   user: null,
@@ -100,7 +101,8 @@ const actions = {
       }
 
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set(user).then(async () => { // Creates the user in the database
-        await this.dispatch('loginUser', [email, password]); // Calls the loginUser function
+
+        await router.push('/hub')
       }).catch(error => {
         if (error) throw error;
       })
@@ -114,15 +116,23 @@ const actions = {
     await firebase.auth().signInWithEmailAndPassword(email, password).then(async () => {
       await this.dispatch('fetchCurrentUser');
       await router.push('/user/apply')
+      logger.info({
+        message: "User logged in",
+        userID: firebase.auth().currentUser.uid,
+        username,
+        isLoggedIn: true
+      })
     }).catch(error => {
       if (error) alert(error)
     })
   },
 
   async logoutUser({commit}) {
+    let currentID = firebase.auth().currentUser.uid;
     await firebase.auth().signOut().then(async () => {
       commit('logoutUser');
       await router.push('/pages/login')
+
     })
   }
 }
