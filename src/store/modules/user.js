@@ -137,7 +137,11 @@ const actions = {
     await firebase.auth().signOut().then(async () => {
       commit('logoutUser');
       await router.push('/pages/login')
-
+      logger.info({
+        message: "User logged out",
+        userID: currentID,
+        isLoggedIn: false
+      })
     })
   }
 }
