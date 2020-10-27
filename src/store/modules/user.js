@@ -101,7 +101,12 @@ const actions = {
       }
 
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set(user).then(async () => { // Creates the user in the database
-
+        logger.info({
+          message: "Account created",
+          userID: firebase.auth().currentUser.uid,
+          username,
+          isLoggedIn: true
+        })
         await router.push('/hub')
       }).catch(error => {
         if (error) throw error;
