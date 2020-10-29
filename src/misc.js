@@ -55,8 +55,16 @@ const logger = createLogger({
   ],
 });
 
+const alertWarn = function(text) {
+  if(text == 1) {
+    text = "Oops. An error occurred. Vincent Lauro will be reaching out to you shortly."
+  }
+  alert(text);
+}
+
 module.exports = {
   firebaseConfig,
   logger,
+  alertWarn
 }
 
