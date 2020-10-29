@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
 
     if (!firebase.auth().currentUser) { // If the user is not signed in
-      await logView(to.path, from.path, undefined, "warn", "Attempt at accessing restricted page")
+      await logView(to.path, from.path, undefined, "notice", "Attempt at accessing restricted page")
       next({
         path: '/pages/perms',
         query: {
@@ -56,7 +56,7 @@ router.beforeEach(async (to, from, next) => {
           await logView(to.path, from.path, firebase.auth().currentUser.uid, "info", "User accessed a page")
           next();
         } else {
-          await logView(to.path, from.path, firebase.auth().currentUser.uid, "alert", "Attempt at accessing restricted page")
+          await logView(to.path, from.path, firebase.auth().currentUser.uid, "notice", "Attempt at accessing restricted page")
           next({
             path: '/pages/perms',
             query: {
@@ -70,7 +70,7 @@ router.beforeEach(async (to, from, next) => {
 
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (firebase.auth().currentUser) {
-      await logView(to.path, from.path, firebase.auth().currentUser.uid, "warn", "Attempt at accessing restricted page")
+      await logView(to.path, from.path, firebase.auth().currentUser.uid, "notice", "Attempt at accessing restricted page")
       next({
         path: '/pages/perms',
         query: {
@@ -87,7 +87,6 @@ router.beforeEach(async (to, from, next) => {
     } else {
       await logView(to.path, from.path, undefined, "info", "User Accessed a Page")
     }
-
     next()
   }
 })
