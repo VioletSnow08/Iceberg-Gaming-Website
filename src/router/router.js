@@ -16,6 +16,7 @@ import firebase from 'firebase'
 import User from "./modules/user";
 import Admin from "./modules/admin";
 import Pages from "./modules/pages";
+import {logger} from "@/misc.js"
 
 Vue.use(Router)
 
@@ -42,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
 
     if (!firebase.auth().currentUser) { // If the user is not signed in
-      await attemptAtAuth(to.path, from.path)
+      await logView(to.path, from.path, undefined, "warn", "Attempt at accessing restricted page")
       next({
         path: '/pages/perms',
         query: {
@@ -52,9 +53,10 @@ router.beforeEach(async (to, from, next) => {
     } else {
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => { // Else check to see if they have the proper roles.
         if (to.meta.roles.some(role => doc.data().roles.includes(role))) {
+          await logView(to.path, from.path, firebase.auth().currentUser.uid, "info", "User accessed a page")
           next();
         } else {
-          await attemptAtAuth(to.path, from.path)
+          await logView(to.path, from.path, firebase.auth().currentUser.uid, "alert", "Attempt at accessing restricted page")
           next({
             path: '/pages/perms',
             query: {
@@ -68,6 +70,7 @@ router.beforeEach(async (to, from, next) => {
 
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (firebase.auth().currentUser) {
+      await logView(to.path, from.path, firebase.auth().currentUser.uid, "warn", "Attempt at accessing restricted page")
       next({
         path: '/pages/perms',
         query: {
@@ -75,9 +78,16 @@ router.beforeEach(async (to, from, next) => {
         }
       })
     } else {
+      await logView(to.path, from.path, undefined, "info", "User Accessed a Page")
       next()
     }
   } else {
+    if(firebase.auth().currentUser) {
+      await logView(to.path, from.path, firebase.auth().currentUser.uid, "info", "User Accessed a Page")
+    } else {
+      await logView(to.path, from.path, undefined, "info", "User Accessed a Page")
+    }
+
     next()
   }
 })
@@ -91,19 +101,16 @@ router.afterEach(() => {
   }
 })
 
-async function attemptAtAuth(to, from) {
-  let ip;
-  await fetch('https://api.ipify.org?format=json')
-    .then(async x => x.json())
-    .then(async ({ip}) => {
-      await firebase.firestore().collection("logs").doc().set({
-        ip,
-        to,
-        from,
-      }).catch(error => {
-        if (error) throw error;
-      })
-    });
+async function logView(to, from, id, level, message, notes) {
+  logger.log({
+    level,
+    message,
+    to,
+    from,
+    isLoggedIn: id ? true : false,
+    id: id,
+    notes,
+  })
 }
 
 export default router
