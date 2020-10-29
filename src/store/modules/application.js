@@ -133,12 +133,6 @@ const actions = {
       for (let i = 0; i < users.docs.length; i++) {
         let user = users.docs[i];
         await firebase.firestore().collection('users').doc(user.id).collection('applications').get().then(async applications => {
-          logger.log({
-            level: "info",
-            message: "Applications Grabbed for User from DB",
-            isLoggedIn: true,
-            userID: firebase.auth().currentUser.uid
-          })
           for (const application of applications.docs) {
             const object = {...application.data(), id: application.id}
             newApplications.unshift(object);
