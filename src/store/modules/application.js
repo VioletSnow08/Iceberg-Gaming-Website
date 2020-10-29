@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import router from '@/router/router'
+import {logger} from "@/misc.js";
 
 const state = {
   applications: null
@@ -62,9 +63,25 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
+        logger.log({
+          level: "info",
+          message: "New Application created",
+          isLoggedIn: true,
+          division: "17th",
+          userID: firebase.auth().currentUser.uid,
+        })
         await router.push('/user/applications')
       }).catch(error => {
-        if (error) throw error
+        if(error) {
+          logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            division: "17th",
+            userID: firebase.auth().currentUser.uid
+          })
+        }
       })
     }
   },
@@ -87,9 +104,25 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
+        logger.log({
+          level: "info",
+          message: "New Application created",
+          isLoggedIn: true,
+          division: "Iceberg",
+          userID: firebase.auth().currentUser.uid,
+        })
         await router.push('/user/applications')
       }).catch(error => {
-        if (error) throw error;
+        if(error) {
+          logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            division: "Iceberg",
+            userID: firebase.auth().currentUser.uid
+          })
+        }
       })
     }
   },
@@ -100,13 +133,46 @@ const actions = {
       for (let i = 0; i < users.docs.length; i++) {
         let user = users.docs[i];
         await firebase.firestore().collection('users').doc(user.id).collection('applications').get().then(async applications => {
+          logger.log({
+            level: "info",
+            message: "Applications Grabbed for User from DB",
+            isLoggedIn: true,
+            userID: firebase.auth().currentUser.uid
+          })
           for (const application of applications.docs) {
             const object = {...application.data(), id: application.id}
             newApplications.unshift(object);
           }
+        }).catch(error => {
+          if(error) {
+            logger.log({
+              level: "alert",
+              message: error.message,
+              stack: error.stack,
+              isLoggedIn: true,
+              userID: firebase.auth().currentUser.uid
+            })
+          }
+        })
+      }
+      logger.log({
+        level: "info",
+        message: "Fetched Applications",
+        isLoggedIn: true,
+        userID: firebase.auth().currentUser.uid,
+      })
+    }).catch(error => {
+      if(error) {
+        logger.log({
+          level: "alert",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: firebase.auth().currentUser.uid,
         })
       }
     })
+
     commit("setApplications", newApplications);
   },
 
@@ -134,7 +200,33 @@ const actions = {
             await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
               status: newStatus,
               comment: newComment
-            });
+            }).then(async () => {
+              console.log("updated");
+              logger.log({
+                level: "info",
+                message: "Application Status Changed",
+                recruiter: firebase.auth().currentUser.uid,
+                isLoggedIn: true,
+                userID,
+                applicationID,
+                division,
+                newStatus
+              })
+            }).catch(error => {
+              if(error) {
+                logger.log({
+                  level: "alert",
+                  message: error.message,
+                  stack: error.stack,
+                  recruiter: firebase.auth().currentUser.uid,
+                  isLoggedIn: true,
+                  userID,
+                  applicationID,
+                  division,
+                  newStatus
+                })
+              }
+            })
           } else if (division === "Iceberg") {
             if (newStatus.toLowerCase() === "processing") {
               newComment = "Your application is currently being held for processing. When you're able to, we request that we interview you(nothing bad!) and that you hop on to the TeamSpeak (ts.iceberg-gaming.com) to reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.";
@@ -149,10 +241,33 @@ const actions = {
             await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
               status: newStatus,
               comment: newComment
-            });
+            }).then(async () => {
+              logger.log({
+                level: "info",
+                message: "Application Status Changed",
+                recruiter: firebase.auth().currentUser.uid,
+                isLoggedIn: true,
+                userID,
+                applicationID,
+                division,
+                newStatus
+              })
+            }).catch(error => {
+              if(error) {
+                logger.log({
+                  level: "alert",
+                  message: error.message,
+                  stack: error.stack,
+                  recruiter: firebase.auth().currentUser.uid,
+                  isLoggedIn: true,
+                  userID,
+                  applicationID,
+                  division,
+                  newStatus
+                })
+              }
+            })
           }
-          ;
-
         }
       })
     }
