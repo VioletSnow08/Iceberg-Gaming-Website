@@ -6,7 +6,6 @@
   Author: Pixinvent
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
-const { createLogger, format, transports } = require('winston');
 const firebaseConfig = require("./misc.js").firebaseConfig;
 const logger = require("./misc.js").logger;
 import "setimmediate";
@@ -33,7 +32,6 @@ require('./assets/css/iconfont.css')
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
-
 
 
 Vue.prototype.$logger = logger;
