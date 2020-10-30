@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import router from '@/router/router'
-import {logger} from "@/misc.js";
+import {logger, alertWarn} from "@/misc.js";
 
 const state = {
   applications: null
@@ -81,6 +81,7 @@ const actions = {
             division: "17th",
             userID: firebase.auth().currentUser.uid
           })
+          alertWarn(0)
         }
       })
     }
@@ -122,6 +123,7 @@ const actions = {
             division: "Iceberg",
             userID: firebase.auth().currentUser.uid
           })
+          alertWarn(0);
         }
       })
     }
@@ -146,6 +148,7 @@ const actions = {
               isLoggedIn: true,
               userID: firebase.auth().currentUser.uid
             })
+            alertWarn(0);
           }
         })
       }
@@ -164,6 +167,7 @@ const actions = {
           isLoggedIn: true,
           userID: firebase.auth().currentUser.uid,
         })
+        alertWarn(o)
       }
     })
 
@@ -219,6 +223,7 @@ const actions = {
                   division,
                   newStatus
                 })
+                alertWarn(0)
               }
             })
           } else if (division === "Iceberg") {
@@ -259,6 +264,7 @@ const actions = {
                   division,
                   newStatus
                 })
+                alertWarn(0)
               }
             })
           }
