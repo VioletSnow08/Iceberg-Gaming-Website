@@ -46,6 +46,7 @@ const actions = {
               isLoggedIn: true,
               userID: firebase.auth().currentUser.uid
             })
+            alertWarn(0);
           }
         })
     }
@@ -75,6 +76,7 @@ const actions = {
             isLoggedIn: true,
             userID: firebase.auth().currentUser.uid
           })
+          alertWarn(0);
         }
       })
   },
@@ -119,6 +121,7 @@ const actions = {
             recruiter: firebase.auth().currentUser.uid,
             isLoggedIn: true
           })
+          alertWarn(0);
         }
       })
     } else if(division === "17th") {
@@ -158,6 +161,7 @@ const actions = {
             recruiter: firebase.auth().currentUser.uid,
             isLoggedIn: true
           })
+          alertWarn(0)
         }
       })
     }
@@ -172,6 +176,7 @@ const actions = {
           recruiter: firebase.auth().currentUser.uid,
           isLoggedIn: true
         })
+        alertWarn(0);
       }
     })
   },
@@ -215,6 +220,7 @@ const actions = {
               "Firebase was unable to add the user to the database"
             ]
           })
+          alertWarn(0);
         }
       })
     }).catch(error => {
@@ -231,6 +237,7 @@ const actions = {
             "Firebase was unable to add the user to the database"
           ]
         })
+        alertWarn(0);
       }
     })
   },
@@ -253,8 +260,7 @@ const actions = {
           stack: error.stack,
           isLoggedIn: false
         })
-        alertWarn(1);
-        console.log(error.message);
+        alertWarn(0);
       }
     })
   },
@@ -278,6 +284,7 @@ const actions = {
           isLoggedIn: true,
           userID: firebase.auth().currentUser.uid
         })
+        alertWarn(0);
       }
     })
   }
