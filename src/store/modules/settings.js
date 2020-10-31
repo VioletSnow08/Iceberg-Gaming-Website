@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
-import {logger, alertWarn} from "@/misc";
+import {logger, alertWarn} from "@/utils";
 
 const getters = {}
 const actions = {

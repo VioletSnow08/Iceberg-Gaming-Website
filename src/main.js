@@ -6,8 +6,8 @@
   Author: Pixinvent
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
-const firebaseConfig = require("./misc.js").firebaseConfig;
-const logger = require("./misc.js").logger;
+const firebaseConfig = require("./utils.js").firebaseConfig;
+const logger = require("./utils.js").logger;
 import "setimmediate";
 import Vue from 'vue'
 import App from './App.vue'

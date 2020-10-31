@@ -1,6 +1,6 @@
 import * as firebase from 'firebase'
 import router from "@/router/router";
-import {logger, alertWarn} from "@/misc";
+import {logger, alertWarn} from "@/utils";
 
 const state = {
   user: null,
