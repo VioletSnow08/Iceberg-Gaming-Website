@@ -16,7 +16,7 @@ import firebase from 'firebase'
 import User from "./modules/user";
 import Admin from "./modules/admin";
 import Pages from "./modules/pages";
-import {logger} from "@/utils.js"
+import {logger, commonMessages} from "@/utils.js"
 
 Vue.use(Router)
 
@@ -43,7 +43,7 @@ router.beforeEach(async (to, from, next) => {
   if (to.matched.some(record => record.meta.requiresAuth)) {
 
     if (!firebase.auth().currentUser) { // If the user is not signed in
-      await logView(to.path, from.path, undefined, "notice", "Attempt at accessing restricted page")
+      await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
       next({
         path: '/pages/perms',
         query: {
@@ -53,10 +53,10 @@ router.beforeEach(async (to, from, next) => {
     } else {
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => { // Else check to see if they have the proper roles.
         if (to.meta.roles.some(role => doc.data().roles.includes(role))) {
-          await logView(to.path, from.path, firebase.auth().currentUser.uid, "info", "User accessed a page")
+          await logView(to.path, from.path, "info", commonMessages.accessPage)
           next();
         } else {
-          await logView(to.path, from.path, firebase.auth().currentUser.uid, "notice", "Attempt at accessing restricted page")
+          await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
           next({
             path: '/pages/perms',
             query: {
@@ -66,11 +66,9 @@ router.beforeEach(async (to, from, next) => {
         }
       })
     }
-
-
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (firebase.auth().currentUser) {
-      await logView(to.path, from.path, firebase.auth().currentUser.uid, "notice", "Attempt at accessing restricted page")
+      await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
       next({
         path: '/pages/perms',
         query: {
@@ -78,14 +76,14 @@ router.beforeEach(async (to, from, next) => {
         }
       })
     } else {
-      await logView(to.path, from.path, undefined, "info", "User Accessed a Page")
+      await logView(to.path, from.path, "info", commonMessages.accessPage)
       next()
     }
   } else {
-    if(firebase.auth().currentUser) {
-      await logView(to.path, from.path, firebase.auth().currentUser.uid, "info", "User Accessed a Page")
+    if (firebase.auth().currentUser) {
+      await logView(to.path, from.path, "info", commonMessages.accessPage)
     } else {
-      await logView(to.path, from.path, undefined, "info", "User Accessed a Page")
+      await logView(to.path, from.path, "info", commonMessages.accessPage)
     }
     next()
   }
@@ -99,8 +97,9 @@ router.afterEach(() => {
     appLoading.style.display = 'none'
   }
 })
-
-async function logView(to, from, id, level, message, notes) {
+async function logView(to, from, level, message, notes) {
+  let id;
+  if (firebase.auth().currentUser) id = firebase.auth().currentUser.uid;
   logger.log({
     level,
     message,
