@@ -87,5 +87,15 @@ export default [{
       },
       props: true
     },
+    {
+      path: '/:channelID/:param1/:param2/:param3',
+      name: "ViewChannel",
+      component: () => import('@/views/Channel/ViewChannel'),
+      meta: {
+        requiresAuth: true,
+        roles: ["CHANNEL_VAR"]
+      },
+      props: true
+    }
   ]
 }]
