@@ -52,13 +52,14 @@ const alertWarn = function(text) {
   alert(text);
 }
 
-const commonLogs = {
+const commonMessages = {
   accessPage: "User Accessed a Page",
   restrictedPage: "Attempt at accessing restricted page"
 }
 
 module.exports = {
   logger,
-  alertWarn
+  alertWarn,
+  commonMessages
 }
 
