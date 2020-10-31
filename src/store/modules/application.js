@@ -131,6 +131,14 @@ const actions = {
 
   async fetchApplications({commit}) {
     const newApplications = []
+    // await firebase.firestore().collectionGroup('applications').get().then(function(snapshot) {
+    //   snapshot.forEach((doc) => {
+    //     console.log(doc.data());
+    //   })
+    // }).catch(error => {
+    //   if(error) throw error;
+    // })
+
     await firebase.firestore().collection('users').get().then(async users => {
       for (let i = 0; i < users.docs.length; i++) {
         let user = users.docs[i];
@@ -167,7 +175,7 @@ const actions = {
           isLoggedIn: true,
           userID: firebase.auth().currentUser.uid,
         })
-        alertWarn(o)
+        alertWarn(0)
       }
     })
 
