@@ -6,8 +6,8 @@
   Author: Pixinvent
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
-const { createLogger, format, transports } = require('winston');
-const firebaseConfig = require("./credentials.js").firebaseConfig;
+const firebaseConfig = require("./misc.js").firebaseConfig;
+const logger = require("./misc.js").logger;
 import "setimmediate";
 import Vue from 'vue'
 import App from './App.vue'
@@ -33,26 +33,10 @@ require('./assets/css/iconfont.css')
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
 
-// Winston ~
-const httpTransportOptions = {
-  host: 'http-intake.logs.datadoghq.com',
-  path: "/v1/input/b6b4c63a6b8eec338b8617ae9495e173?ddsource=nodejs&service=Iceberg Gaming Website-DEVOPS",
-  ssl: true
-};
-const logger = createLogger({
-  level: 'info',
-  exitOnError: false,
-  format: format.json(),
-  transports: [
-    new transports.Http(httpTransportOptions),
-  ],
-});
-
 
 Vue.prototype.$logger = logger;
-
-Vue.use(Vuesax)
 Vue.prototype.$http = axios
+Vue.use(Vuesax)
 Vue.use(VueHammer)
 
 Vue.config.productionTip = false

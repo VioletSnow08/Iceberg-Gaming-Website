@@ -20,7 +20,7 @@ import actions from './actions'
 import user from './modules/user'
 import application from './modules/application'
 import loa from "./modules/settings";
-import calendar from "@/store/modules/calendar"
+import calendar from "@/store/modules/channel"
 
 Vue.use(Vuex)
 

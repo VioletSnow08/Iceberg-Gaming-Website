@@ -1,5 +1,6 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
+import {logger, alertWarn} from "@/misc";
 
 const getters = {}
 const actions = {
@@ -12,49 +13,154 @@ const actions = {
       reason,
       userID: firebase.auth().currentUser.uid
     }
-    await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("loas").doc().set(loa).catch(error => {
-      if (error) throw error
+    await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("loas").doc().set(loa).then(async () => {
+      logger.log({
+        level: "info",
+        message: "User fetched",
+        userID: firebase.auth().currentUser.uid,
+        isLoggedIn: true
+      })
+    }).catch(error => {
+      if (error) {
+        logger.log({
+          level: "error",
+          message: "Unable to fetch user",
+          error,
+          userID: firebase.auth().currentUser.uid,
+          debugInfo: {
+            end_date,
+            reason
+          },
+          isLoggedIn: true
+        })
+        alertWarn(0);
+      }
     });
-    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({onLOA: true}).catch(error => {
-      if (error) throw error
+    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({onLOA: true}).then(async () => {
+      logger.log({
+        level: "info",
+        message: "User submitted LOA",
+        isLoggedIn: true,
+        userID: firebase.auth().currentUser.uid
+      })
+    }).catch(error => {
+      if (error) {
+        logger.log({
+          level: "error",
+          message: "Unable to submit user's LOA",
+          error,
+          userID: firebase.auth().currentUser.uid,
+          debugInfo: {
+            end_date,
+            reason
+          },
+          isLoggedIn: true
+        })
+        alertWarn(0);
+      }
     });
     await context.dispatch("fetchCurrentUser");
   },
   async endLOA(context) {
-    await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({onLOA: false}).catch(error => {
-      if (error) throw error;
-    })
+    await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({onLOA: false}).then(async () => {
+      logger.log({
+        level: "info",
+        message: "User ended LOA",
+        userID: firebase.auth().currentUser.uid,
+        isLoggedIn: true
+      })
+    }).catch(error => {
+      if (error) {
+        logger.log({
+          level: "error",
+          message: "Unable to fetch user",
+          error,
+          userID: firebase.auth().currentUser.uid,
+          isLoggedIn: true
+        })
+        alertWarn(0);
+      }
+    });
     await context.dispatch("fetchCurrentUser");
   },
   async changeDiscordID(context, newID) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
-      discord_id: newID
+      discordID: newID
+    }).then(async () => {
+      logger.log({
+        level: "info",
+        message: "User changed Discord ID",
+        newDiscordID: newID,
+        isLoggedIn: true,
+        userID: firebase.auth().currentUser.uid
+      })
     }).catch(error => {
-      if (error) throw error;
+      if (error) {
+        logger.log({
+          level: "error",
+          message: "Unable to change Discord ID",
+          newDiscordID: newID,
+          isLoggedIn: true,
+          userID: firebase.auth().currentUser.uid
+        })
+        alertWarn(0);
+      }
     })
     await context.dispatch("fetchCurrentUser");
   },
   async changeStatus(context, newStatus) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
       status: newStatus
+    }).then(async () => {
+      logger.log({
+        level: "info",
+        message: "User changed status",
+        newStatus,
+        isLoggedIn: true,
+        userID: firebase.auth().currentUser.uid
+      })
     }).catch(error => {
-      if (error) throw error;
+      if (error) {
+        logger.log({
+          level: "error",
+          message: "Unable to update status",
+          newStatus,
+          isLoggedIn: true,
+          userID: firebase.auth().currentUser.uid,
+          error
+        })
+        alertWarn(0);
+      }
     })
     await context.dispatch("fetchCurrentUser");
-  },
-
-  async changeIsEmailPublic(context, newIsEmailPublic) {
+  }, async changeIsEmailPublic(context, newIsEmailPublic) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
       isEmailPublic: newIsEmailPublic
+    }).then(async () => {
+      logger.log({
+        level: "info",
+        message: "User changed isEmailPublic",
+        newIsEmailPublic,
+        userID: firebase.auth().currentUser.uid,
+        isLoggedIn: true
+      })
     }).catch(error => {
-      if (error) throw error;
+      if (error) {
+        logger.log({
+          level: "error",
+          message: "Unable to change isEmailPublic",
+          newIsEmailPublic,
+          userID: firebase.auth().currentUser.uid,
+          isLoggedIn: true,
+          error
+        })
+        alertWarn(0);
+      }
     })
     await context.dispatch("fetchCurrentUser");
   },
 }
-const mutations = {
-
-}
+const mutations = {}
 
 export default {
   getters, actions, mutations
