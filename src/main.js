@@ -6,14 +6,13 @@
   Author: Pixinvent
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
-const firebaseConfig = require("./utils.js").firebaseConfig;
+const {firebaseConfig} = require("./credentials");
 const logger = require("./utils.js").logger;
 import "setimmediate";
 import Vue from 'vue'
 import App from './App.vue'
 import firebase from 'firebase'
 import 'firebase/firestore'
-import axios from './axios.js'
 import Vuesax from 'vuesax'
 import 'material-icons/iconfont/material-icons.css' //Material Icons
 import 'vuesax/dist/vuesax.css' // Vuesax
@@ -35,7 +34,6 @@ firebase.analytics()
 
 
 Vue.prototype.$logger = logger;
-Vue.prototype.$http = axios
 Vue.use(Vuesax)
 Vue.use(VueHammer)
 
