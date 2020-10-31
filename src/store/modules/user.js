@@ -249,7 +249,6 @@ const actions = {
       logger.info({
         message: "User logged in",
         userID: firebase.auth().currentUser.uid,
-        username,
         isLoggedIn: true
       })
     }).catch(error => {
@@ -257,6 +256,7 @@ const actions = {
         logger.log({
           level: "emergency",
           message: error.message,
+          email, // Only way to identify the user
           stack: error.stack,
           isLoggedIn: false
         })
