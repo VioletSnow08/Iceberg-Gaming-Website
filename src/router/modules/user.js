@@ -88,7 +88,7 @@ export default [{
       props: true
     },
     {
-      path: '/:channelID/:param1/:param2/:param3',
+      path: '/channel/:channelID/:param1/:param2/:param3',
       name: "ViewChannel",
       component: () => import('@/views/Channel/ViewChannel'),
       meta: {
