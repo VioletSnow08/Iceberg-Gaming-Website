@@ -24,8 +24,8 @@ const actions = {
       if (error) {
         logger.log({
           level: "error",
-          message: "Unable to fetch user",
-          error,
+          message: error.message,
+          stack: error.stack,
           userID: firebase.auth().currentUser.uid,
           debugInfo: {
             end_date,
@@ -47,8 +47,8 @@ const actions = {
       if (error) {
         logger.log({
           level: "error",
-          message: "Unable to submit user's LOA",
-          error,
+          message: error.message,
+          stack: error.stack,
           userID: firebase.auth().currentUser.uid,
           debugInfo: {
             end_date,
@@ -73,8 +73,8 @@ const actions = {
       if (error) {
         logger.log({
           level: "error",
-          message: "Unable to fetch user",
-          error,
+          message: error.message,
+          stack: error.stack,
           userID: firebase.auth().currentUser.uid,
           isLoggedIn: true
         })
@@ -98,7 +98,8 @@ const actions = {
       if (error) {
         logger.log({
           level: "error",
-          message: "Unable to change Discord ID",
+          message: error.message,
+          stack: error.stack,
           newDiscordID: newID,
           isLoggedIn: true,
           userID: firebase.auth().currentUser.uid
@@ -123,11 +124,11 @@ const actions = {
       if (error) {
         logger.log({
           level: "error",
-          message: "Unable to update status",
+          message: error.message,
+          stack: error.stack,
           newStatus,
           isLoggedIn: true,
           userID: firebase.auth().currentUser.uid,
-          error
         })
         alertWarn(0);
       }
@@ -148,11 +149,11 @@ const actions = {
       if (error) {
         logger.log({
           level: "error",
-          message: "Unable to change isEmailPublic",
           newIsEmailPublic,
           userID: firebase.auth().currentUser.uid,
           isLoggedIn: true,
-          error
+          message: error.message,
+          stack: error.stack,
         })
         alertWarn(0);
       }
