@@ -50,21 +50,19 @@ router.beforeEach(async (to, from, next) => {
           redirect: to.fullPath
         }
       })
-    } else {
-      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => { // Else check to see if they have the proper roles.
-        if (to.meta.roles.some(role => doc.data().roles.includes(role))) {
-          await logView(to.path, from.path, "info", commonMessages.accessPage)
-          next();
-        } else {
-          await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
-          next({
-            path: '/pages/perms',
-            query: {
-              redirect: to.fullPath
+    } else { // If they are logged in
+      if(to.meta.roles.includes("CHANNEL_VAR")) {
+        await firebase.firestore().collection("channels").get().then(async channels => {
+          await channels.forEach(channel => {
+            if(channel.id === to.params.channelID) {
+              checkAndRedirect(to, from, next, channel.data().requiredRoles);
             }
           })
-        }
-      })
+        })
+      } else {
+        await checkAndRedirect(to, from, next, to.meta.roles)
+      }
+
     }
   } else if (to.matched.some(record => record.meta.requiresGuest)) {
     if (firebase.auth().currentUser) {
@@ -108,6 +106,23 @@ async function logView(to, from, level, message, notes) {
     isLoggedIn: id ? true : false,
     id: id,
     notes,
+  })
+}
+
+async function checkAndRedirect(to, from, next, requiredRoles) {
+  await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => { // Check to see if they have the proper roles.
+    if (requiredRoles.some(role => doc.data().roles.includes(role))) {
+      await logView(to.path, from.path, "info", commonMessages.accessPage)
+      next();
+    } else {
+      await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
+      next({
+        path: '/pages/perms',
+        query: {
+          redirect: to.fullPath
+        }
+      })
+    }
   })
 }
 
