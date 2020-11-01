@@ -19,10 +19,7 @@ const state = {
   channels: null
 }
 const getters = {
-  channels: (state) => (channelType) => {
-    if (channelType) {
-      return state.channels.filter(channel => channel.type === channelType);
-    }
+  channels: (state) => {
     return state.channels;
   },
   channel: (state) => (channelID) => {
@@ -90,19 +87,28 @@ const actions = {
           let newChannel = {
             id: channel.id,
             ...channel.data(),
-            events: [],
-            threads: []
           }
-          newEvents.forEach(event => {
-            if(channel.id === event.channelID) { // For each event, check if the ID of the channel is === to the ID of the event. If so, then add that event to the events array
-              newChannel.events.push(event);
+          if (newChannel.isCalendar) {
+            newChannel = {
+              ...newChannel,
+              events: []
             }
-          });
-          newThreads.forEach(thread => {
-            if(channel.id === thread.channelID) { // For each thread, check if the ID of the channel is === to the ID of the thread. If so, then add that thread to the threads array.
-              newChannel.threads.push(thread);
+            newEvents.forEach(event => {
+              if (channel.id === event.channelID) { // For each event, check if the ID of the channel is === to the ID of the event. If so, then add that event to the events array
+                newChannel.events.push(event);
+              }
+            });
+          } else if (newChannel.isForum) {
+            newChannel = {
+              ...newChannel,
+              threads: []
             }
-          })
+            newThreads.forEach(thread => {
+              if (channel.id === thread.channelID) { // For each thread, check if the ID of the channel is === to the ID of the thread. If so, then add that thread to the threads array.
+                newChannel.threads.push(thread);
+              }
+            })
+          }
           newChannels.push(newChannel);
         })
       }).catch(error => {
