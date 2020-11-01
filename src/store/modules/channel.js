@@ -99,7 +99,7 @@ const actions = {
             }
           });
           newThreads.forEach(thread => {
-            if(channel.id === thread.id) { // For each thread, check if the ID of the channel is === to the ID of the thread. If so, then add that thread to the threads array.
+            if(channel.id === thread.channelID) { // For each thread, check if the ID of the channel is === to the ID of the thread. If so, then add that thread to the threads array.
               newChannel.threads.push(thread);
             }
           })
