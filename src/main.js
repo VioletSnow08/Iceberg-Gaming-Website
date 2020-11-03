@@ -7,6 +7,9 @@
   Author URL: http://www.themeforest.net/user/pixinvent
 ==========================================================================================*/
 
+const {firebaseConfig} = require("./credentials");
+const logger = require("./utils.js").logger;
+import "setimmediate";
 
 import Vue from 'vue'
 import App from './App.vue'
@@ -15,13 +18,9 @@ import firebase from 'firebase'
 import 'firebase/firestore'
 
 // INITIALIZING FIREBASE
-
-const firebaseConfig = require("./firebaseConfig.js");
 // Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
-
-// Vuesax Component Framework
 import Vuesax from 'vuesax'
 import 'material-icons/iconfont/material-icons.css' //Material Icons
 import 'vuesax/dist/vuesax.css' // Vuesax
@@ -69,14 +68,13 @@ import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
 
 
+
+Vue.prototype.$logger = logger;
+Vue.use(Vuesax)
+Vue.use(VueHammer)
+
 // Feather font icon
 require('./assets/css/iconfont.css')
-
-
-// Vue select css
-// Note: In latest version you have to add it separately
-// import 'vue-select/dist/vue-select.css';
-
 
 Vue.config.productionTip = false
 

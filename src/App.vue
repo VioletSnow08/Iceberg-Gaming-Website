@@ -17,6 +17,7 @@
 <script>
 import themeConfig from '@/../themeConfig.js'
 import '@/assets/scss/vuexy/extraComponents/agGridStyleOverride.scss'
+import {mapGetters} from "vuex"
 
 export default {
   data () {

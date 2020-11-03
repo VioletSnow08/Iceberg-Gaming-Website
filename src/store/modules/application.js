@@ -1,6 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import router from '@/router/router'
+import {logger, alertWarn} from "@/utils.js";
 
 const state = {
   applications: null
@@ -62,9 +63,26 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
+        logger.log({
+          level: "info",
+          message: "New Application created",
+          isLoggedIn: true,
+          division: "17th",
+          userID: firebase.auth().currentUser.uid,
+        })
         await router.push('/user/applications')
       }).catch(error => {
-        if (error) throw error
+        if(error) {
+          logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            division: "17th",
+            userID: firebase.auth().currentUser.uid
+          })
+          alertWarn(0)
+        }
       })
     }
   },
@@ -87,15 +105,40 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
+        logger.log({
+          level: "info",
+          message: "New Application created",
+          isLoggedIn: true,
+          division: "Iceberg",
+          userID: firebase.auth().currentUser.uid,
+        })
         await router.push('/user/applications')
       }).catch(error => {
-        if (error) throw error;
+        if(error) {
+          logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            division: "Iceberg",
+            userID: firebase.auth().currentUser.uid
+          })
+          alertWarn(0);
+        }
       })
     }
   },
 
   async fetchApplications({commit}) {
     const newApplications = []
+    // await firebase.firestore().collectionGroup('applications').get().then(function(snapshot) {
+    //   snapshot.forEach((doc) => {
+    //     console.log(doc.data());
+    //   })
+    // }).catch(error => {
+    //   if(error) throw error;
+    // })
+
     await firebase.firestore().collection('users').get().then(async users => {
       for (let i = 0; i < users.docs.length; i++) {
         let user = users.docs[i];
@@ -104,9 +147,38 @@ const actions = {
             const object = {...application.data(), id: application.id}
             newApplications.unshift(object);
           }
+        }).catch(error => {
+          if(error) {
+            logger.log({
+              level: "alert",
+              message: error.message,
+              stack: error.stack,
+              isLoggedIn: true,
+              userID: firebase.auth().currentUser.uid
+            })
+            alertWarn(0);
+          }
         })
       }
+      logger.log({
+        level: "info",
+        message: "Fetched Applications",
+        isLoggedIn: true,
+        userID: firebase.auth().currentUser.uid,
+      })
+    }).catch(error => {
+      if(error) {
+        logger.log({
+          level: "alert",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: firebase.auth().currentUser.uid,
+        })
+        alertWarn(0)
+      }
     })
+
     commit("setApplications", newApplications);
   },
 
@@ -134,7 +206,34 @@ const actions = {
             await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
               status: newStatus,
               comment: newComment
-            });
+            }).then(async () => {
+              console.log("updated");
+              logger.log({
+                level: "info",
+                message: "Application Status Changed",
+                recruiter: firebase.auth().currentUser.uid,
+                isLoggedIn: true,
+                userID,
+                applicationID,
+                division,
+                newStatus
+              })
+            }).catch(error => {
+              if(error) {
+                logger.log({
+                  level: "alert",
+                  message: error.message,
+                  stack: error.stack,
+                  recruiter: firebase.auth().currentUser.uid,
+                  isLoggedIn: true,
+                  userID,
+                  applicationID,
+                  division,
+                  newStatus
+                })
+                alertWarn(0)
+              }
+            })
           } else if (division === "Iceberg") {
             if (newStatus.toLowerCase() === "processing") {
               newComment = "Your application is currently being held for processing. When you're able to, we request that we interview you(nothing bad!) and that you hop on to the TeamSpeak (ts.iceberg-gaming.com) to reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.";
@@ -149,10 +248,34 @@ const actions = {
             await firebase.firestore().collection("users").doc(userID).collection("applications").doc(applicationID).update({
               status: newStatus,
               comment: newComment
-            });
+            }).then(async () => {
+              logger.log({
+                level: "info",
+                message: "Application Status Changed",
+                recruiter: firebase.auth().currentUser.uid,
+                isLoggedIn: true,
+                userID,
+                applicationID,
+                division,
+                newStatus
+              })
+            }).catch(error => {
+              if(error) {
+                logger.log({
+                  level: "alert",
+                  message: error.message,
+                  stack: error.stack,
+                  recruiter: firebase.auth().currentUser.uid,
+                  isLoggedIn: true,
+                  userID,
+                  applicationID,
+                  division,
+                  newStatus
+                })
+                alertWarn(0)
+              }
+            })
           }
-          ;
-
         }
       })
     }

@@ -26,6 +26,7 @@
           :header-props="t.headerProps"
           @input="setShowDate"/>
       </calendar-view>
+      <!--ADD EVENT-->
       <vs-prompt
         class="calendar-event-dialog"
         title="Add Event"
@@ -36,7 +37,7 @@
         <div class="calendar__label-container flex">
           <vs-input name="event-name" class="w-full" label-placeholder="Event Title" v-model="newEvent.title"></vs-input>
 
-<!--          Event Type-->
+          <!--Event Type-->
           <vs-dropdown vs-custom-content vs-trigger-click class="ml-auto my-2 cursor-pointer">
             <feather-icon icon="TagIcon" svgClasses="h-5 w-5" class="cursor-pointer" @click.prevent></feather-icon>
             <vs-dropdown-menu style="z-index: 200001">
@@ -62,7 +63,7 @@
           <datetime value-zone="America/Mexico_City" use12-hour type="datetime" v-model="newEvent.endDate"></datetime>
         </div>
       </vs-prompt>
-    </div>
+      </div>
 
   </div>
 
@@ -110,8 +111,9 @@ export default {
     setShowDate(d) {
       this.showDate = d;
     },
+    ...mapActions(["user"]),
     viewEvent(event) {
-
+     this.$router.push(`/iceberg/calendar/view/${event.id}`)
     },
     ...mapActions(["addEvent"]),
     addNewEvent() {

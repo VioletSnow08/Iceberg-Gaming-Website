@@ -5,7 +5,17 @@
     </div>
     <div v-else-if="event($route.params.eventID) && users">
       {{ this.$vs.loading.close() }}
-      <h1>{{ event($route.params.eventID).title }}</h1>
+      <h1>
+        {{ event($route.params.eventID).title }}
+        <span v-if="canUserEdit">
+          <vs-button 
+            color="primary"
+            type="filled"
+            icon="edit"
+            style="float: right !important">
+          </vs-button>
+        </span>
+      </h1>
       <h2>Hosted by: {{ user(event($route.params.eventID).creatorID).username }}</h2>
       <h3>Start Date: {{ new Date(event($route.params.eventID).startDate) }}</h3>
       <h3>End Date: {{ new Date(event($route.params.eventID).endDate) }}</h3>
@@ -61,8 +71,25 @@ import {mapActions, mapGetters} from 'vuex'
 
 export default {
   name: "ViewEventIcebergGaming",
+  data(){
+    return{
+      canUserEdit: false
+    }
+  },
   methods: {
-    ...mapActions(["setAttendance"])
+    ...mapActions(["setAttendance"]),
+    checkUser(creator){
+      const VALID_ROLES = ["[17th] NCO","[17th] Command","[17th] Officer"]
+      if(
+        this.currentUser.id == creator.id ||
+        this.currentUser.roles.some(r => VALID_ROLES.includes(r))
+      ){
+        this.canUserEdit = true;
+      }
+    },
+  },
+  beforeMount(){
+    this.checkUser(this.user(this.event(this.$route.params.eventID).creatorID));
   },
   computed: {
     ...mapGetters(["event", "events", "user", "users", "currentUser"])
