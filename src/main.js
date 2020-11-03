@@ -17,8 +17,6 @@ import App from './App.vue'
 import firebase from 'firebase'
 import 'firebase/firestore'
 
-// INITIALIZING FIREBASE
-// Initialize Firebase
 firebase.initializeApp(firebaseConfig)
 firebase.analytics()
 import Vuesax from 'vuesax'
@@ -26,38 +24,13 @@ import 'material-icons/iconfont/material-icons.css' //Material Icons
 import 'vuesax/dist/vuesax.css' // Vuesax
 Vue.use(Vuesax)
 
-
-// axios
-import axios from './axios.js'
-Vue.prototype.$http = axios
-
-// Filters
 import './filters/filters.js'
-
-
-// Theme Configurations
 import '../themeConfig.js'
-
-
-// Globally Registered Components
 import './globalComponents.js'
-
-
-// Styles: SCSS
 import './assets/scss/main.scss'
-
-
-// Tailwind
 import '@/assets/css/main.css'
-
-
-// Vue Router
 import router from './router/router.js'
-
-
-// Vuex Store
 import store from './store/store'
-
 
 // Vuejs - Vue wrapper for hammerjs
 import { VueHammer } from 'vue2-hammer'
@@ -66,8 +39,6 @@ Vue.use(VueHammer)
 // PrismJS
 import 'prismjs'
 import 'prismjs/themes/prism-tomorrow.css'
-
-
 
 Vue.prototype.$logger = logger;
 Vue.use(Vuesax)
@@ -78,7 +49,7 @@ require('./assets/css/iconfont.css')
 
 Vue.config.productionTip = false
 
-let app
+let app;
 firebase.auth().onAuthStateChanged(() => {
   if (!app) {
     app = new Vue({

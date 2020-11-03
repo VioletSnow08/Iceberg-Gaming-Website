@@ -43,7 +43,7 @@ export default [{
     {
       path: '/iceberg/apply',
       name: 'IcebergApply',
-      component: () => import('@/views/Iceberg/Apply.vue'),
+      component: () => import('@/views/iceberg/Apply.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Applicant']
@@ -61,7 +61,7 @@ export default [{
     {
       path: '/iceberg/calendar',
       name: 'Calendar',
-      component: () => import('@/views/Channel/Calendar/Calendar.vue'),
+      component: () => import('@/views/channel/Calendar/Calendar.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
@@ -70,7 +70,7 @@ export default [{
     {
       path: '/iceberg/calendar/view/:eventID',
       name: 'ViewEvent',
-      component: () => import('@/views/Channel/Calendar/ViewEvent.vue'),
+      component: () => import('@/views/channel/Calendar/ViewEvent.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
@@ -90,7 +90,7 @@ export default [{
     {
       path: '/channel/:channelID/:param1/:param2/:param3',
       name: "ViewChannel",
-      component: () => import('@/views/Channel/ViewChannel'),
+      component: () => import('@/views/channel/ViewChannel'),
       meta: {
         requiresAuth: true,
         roles: ["CHANNEL_VAR"]
