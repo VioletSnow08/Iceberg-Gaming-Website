@@ -1,6 +1,6 @@
 import * as firebase from 'firebase'
 import router from "@/router/router";
-import {logger, alertWarn} from "@/misc";
+import {logger, alertWarn} from "@/utils";
 
 const state = {
   user: null,
@@ -41,8 +41,8 @@ const actions = {
           if(error) {
             logger.log({
               level: "emergency",
-              error,
-              message: "Unable to fetch current user",
+              message: error.message,
+              stack: error.stack,
               isLoggedIn: true,
               userID: firebase.auth().currentUser.uid
             })
@@ -71,8 +71,8 @@ const actions = {
         if (error) {
           logger.log({
             level: "critical",
-            error,
-            message: "Unable to fetch users",
+            message: error.message,
+            stack: error.stack,
             isLoggedIn: true,
             userID: firebase.auth().currentUser.uid
           })
@@ -114,8 +114,8 @@ const actions = {
         if(error) {
           logger.log({
             level: "error",
-            error,
-            message: "Unable to update user",
+            message: error.message,
+            stack: error.stack,
             division,
             userID,
             recruiter: firebase.auth().currentUser.uid,
@@ -154,8 +154,8 @@ const actions = {
         if(error) {
           logger.log({
             level: "error",
-            error,
-            message: "Unable to update user",
+            message: error.message,
+            stack: error.stack,
             division,
             userID,
             recruiter: firebase.auth().currentUser.uid,
@@ -169,8 +169,8 @@ const actions = {
       if(error) {
         logger.log({
           level: "alert",
-          message: "Unable to fetch users",
-          error,
+          message: error.message,
+          stack: error.stack,
           division,
           userID,
           recruiter: firebase.auth().currentUser.uid,
@@ -210,8 +210,8 @@ const actions = {
         if (error) {
           logger.log({
             level: "alert",
-            message: "Unable to register user",
-            error,
+            message: error.message,
+            stack: error.stack,
             isLoggedIn: false,
             username, // Only way to identify the user
             user,
@@ -227,13 +227,13 @@ const actions = {
       if (error) {
         logger.log({
           level: "alert",
-          error,
-          message: "Unable to register account",
+          message: error.message,
+          stack: error.stack,
           isLoggedIn: false,
           username, // Only way to identify the user
           user,
           notes: [
-            "Firebase was unable the account",
+            "Firebase was unable to register the account",
             "Firebase was unable to add the user to the database"
           ]
         })
@@ -249,7 +249,6 @@ const actions = {
       logger.info({
         message: "User logged in",
         userID: firebase.auth().currentUser.uid,
-        username,
         isLoggedIn: true
       })
     }).catch(error => {
@@ -257,6 +256,7 @@ const actions = {
         logger.log({
           level: "emergency",
           message: error.message,
+          email, // Only way to identify the user
           stack: error.stack,
           isLoggedIn: false
         })

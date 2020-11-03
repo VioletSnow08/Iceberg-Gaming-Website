@@ -1,4 +1,5 @@
 import * as firebase from "firebase";
+import {logger, alertWarn} from "@/utils";
 
 function formatDate(date) {
   let d = new Date(date),
@@ -38,7 +39,97 @@ const getters = {
   }
 }
 const actions = {
-
+  async fetchChannels({commit}) {
+    if (firebase.auth().currentUser) {
+      let newChannels = [];
+      let newEvents = [];
+      let newThreads = [];
+      await firebase.firestore().collection("channels").get().then(async channels => {
+        await firebase.firestore().collectionGroup("events").get().then(async events => {
+          events.forEach(event => {
+            newEvents.push({
+              id: event.id,
+              ...event.data()
+            })
+          })
+        }).catch(error => {
+          if (error) {
+            logger.log({
+              level: "alert",
+              message: error.message,
+              stack: error.stack,
+              userID: firebase.auth().currentUser.uid,
+              isLoggedIn: true
+            })
+            alertWarn(0);
+          }
+        })
+        await firebase.firestore().collectionGroup("threads").get().then(async threads => {
+          threads.forEach(thread => {
+            newThreads.push({
+              id: thread.id,
+              ...thread.data()
+            })
+          })
+        }).catch(error => {
+          if (error) {
+            logger.log({
+              level: "alert",
+              message: error.message,
+              stack: error.stack,
+              userID: firebase.auth().currentUser.uid,
+              isLoggedIn: true
+            })
+            alertWarn(0);
+          }
+        })
+        channels.forEach(channel => {
+          let newChannel = {
+            id: channel.id,
+            ...channel.data(),
+          }
+          if (newChannel.isCalendar) {
+            newChannel = {
+              ...newChannel,
+              events: []
+            }
+            newEvents.forEach(event => {
+              if (channel.id === event.channelID) { // For each event, check if the ID of the channel is === to the ID of the event. If so, then add that event to the events array
+                newChannel.events.push(event);
+              }
+            });
+          } else if (newChannel.isForum) {
+            newChannel = {
+              ...newChannel,
+              threads: []
+            }
+            newThreads.forEach(thread => {
+              if (channel.id === thread.channelID) { // For each thread, check if the ID of the channel is === to the ID of the thread. If so, then add that thread to the threads array.
+                newChannel.threads.push(thread);
+              }
+            })
+          }
+          newChannels.push(newChannel);
+        })
+      }).catch(error => {
+        if (error) {
+          console.log(error);
+          logger.log({
+            level: "alert",
+            message: error.message,
+            stack: error.stack,
+            userID: firebase.auth().currentUser.uid,
+            isLoggedIn: true
+          })
+          alertWarn(0);
+        }
+      }) // End of 1st / Initial Query
+      console.log(newChannels);
+      console.log(newEvents);
+      console.log(newThreads);
+      commit("setChannels", newChannels);
+    }
+  }
 }
 const mutations = {
   setChannels(state, channels) {

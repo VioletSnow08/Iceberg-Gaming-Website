@@ -15,4 +15,4 @@ yarn.lock
 yarn-error.log
 vuexy-shell-scripts
 .idea/
-src/misc.js
+src/credentials.js
