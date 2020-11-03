@@ -1,28 +1,26 @@
 # Iceberg Gaming Website
 
-Made with Vue.js using the Vuexy Vue.js Template.
+The Iceberg Gaming Website is designed to replace Guilded and become the main platform for communications.
 
-Property of Iceberg Gaming, with the 17th Brigade Combat team being a subsidary of it.
-You can view our to do list over at: https://trello.com/b/9IKIc1iz/iceberg-gaming-website
-(This readme will be formatted soon)
+## Requirements
+- Credentials from Vincent Lauro, EagleTrooper, or Hizumi
+- Permission to run from Vincent Lauro
+- Node.js
 
-The brand new Iceberg Gaming Website features tons of things.
-- An advanced application system
-- Calendars for each division only accessible by members of that division
-- User management for each division
-- Advanced and powerful recruitment system, soon to be integrated with the Iceberg Gaming Discord Bot
-- Featuring an extremely fast backend, using Firebase from Google
-- An LOA system for when you can't be around
-- Settings to adjust your account
-- Authentication utilizing Firebase's Authentication System
-- Recruiters can accept, deny, or process an application
-- Members/Users can view their own applications at any time.
-- 404 pages
-- Secure routing and navigation guards so members can't access the admin only areas, etc.
-
-
-# To Run
-
+## Installation
+Use the [npm](https://www.npmjs.com/) package manager to install the Iceberg Gaming Website.
+```bash
 npm install
+```
 
+## Usage
+To use the Iceberg Gaming Website, run the following command.
+```bash
 npm run serve
+```
+After that, the server will start and will give you a link to click to view the website. Then:
+- Click the first link, usually starting with localhost
+- Edit the URL in the browser to /pages/register
+- Create an account
+
+

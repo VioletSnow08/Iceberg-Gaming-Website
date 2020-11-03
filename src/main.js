@@ -8,6 +8,7 @@
 ==========================================================================================*/
 
 const {firebaseConfig} = require("./credentials");
+const axios = require("axios");
 const logger = require("./utils.js").logger;
 import "setimmediate";
 
@@ -32,6 +33,7 @@ import '@/assets/css/main.css'
 import router from './router/router.js'
 import store from './store/store'
 
+axios.get("http://localhost:3000")
 // Vuejs - Vue wrapper for hammerjs
 import { VueHammer } from 'vue2-hammer'
 Vue.use(VueHammer)
