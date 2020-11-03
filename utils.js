@@ -1,5 +1,5 @@
 const winston = require("winston");
-const { datadog } = require("../credentials.js");
+const { datadog } = require("./credentials.js");
 const { createLogger, format, transports } = require('winston');
 const base_url = "http://localhost:3000/api/v1/"
 require("setimmediate");

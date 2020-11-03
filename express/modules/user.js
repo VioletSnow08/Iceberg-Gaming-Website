@@ -1,12 +1,13 @@
 const express = require('express')
-const app = express()
+const router = express.Router();
 const port = 3000
-let router = express.Router();
-const {base_url, logger} = require("@/utils")
+const {base_url, logger} = require("../../utils")
 
 
-app.get(`/api/v1/user/:id`, function (req, res) {
-  if(firebase.auth().currentUser) {
+router.get(`/api/v1/user/:id`, function (req, res) {
+  let con = req.app.get('con');
+  let firebase = req.app.get('firebase');
+  // if(firebase.auth().currentUser) {
     con.query(`SELECT * FROM users WHERE id = ?`, [req.params.id], function (error, results, fields) {
       if (error) {
         logger.log({
@@ -20,15 +21,13 @@ app.get(`/api/v1/user/:id`, function (req, res) {
         return res.status(500)
       }
       console.log("results");
-      console.log(results);
+      console.log(results[0].discord);
     })
-  } else {
-    console.log("403");
-    res.status(404);
-    return;
-  }
+  // } else {
+  //   console.log("403");
+  //   res.status(404);
+  //   return;
+  // }
 })
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:${port}`)
-})
+module.exports = router;

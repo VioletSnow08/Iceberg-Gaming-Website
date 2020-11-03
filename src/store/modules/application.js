@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import router from '@/router/router'
-import {logger, alertWarn} from "@/utils.js";
+import {logger, alertWarn} from "../../../utils";
 
 const state = {
   applications: null

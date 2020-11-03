@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import {logger, alertWarn} from "@/utils";
+import {logger, alertWarn} from "../../../utils";
 
 function formatDate(date) {
   let d = new Date(date),

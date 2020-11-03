@@ -16,7 +16,7 @@ import firebase from 'firebase'
 import User from "./modules/user";
 import Admin from "./modules/admin";
 import Pages from "./modules/pages";
-import {logger, commonMessages} from "@/utils.js"
+import {logger, commonMessages} from "../../utils"
 
 Vue.use(Router)
 

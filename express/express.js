@@ -15,9 +15,14 @@ let con = MYSQL.createConnection({
 
 firebase.initializeApp(firebaseConfig);
 
-
+app.set('firebase', firebase);
+app.set('con', con);
 app.use(express.static(path.join(__dirname, '../dist')));
+
+
 // API Modules
+app.use(require('./modules/user'));
+
 
 
 // app.get('*', (req,res) => {
