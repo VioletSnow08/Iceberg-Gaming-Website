@@ -18,7 +18,7 @@ To use the Iceberg Gaming Website, run the following command.
 ```bash
 npm run serve
 ```
-After that, the server will start and will give you a link to click to view the website. Then:
+After that, the express will start and will give you a link to click to view the website. Then:
 - Click the first link, usually starting with localhost
 - Edit the URL in the browser to /pages/register
 - Create an account
