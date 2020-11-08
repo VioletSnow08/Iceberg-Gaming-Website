@@ -35,3 +35,7 @@ app.use('/api/v1/user/', require('./modules/user').router);
 app.listen(port, () => {
   console.log(`Example app listening at http://localhost:${port}`)
 })
+
+module.exports.verifyToken = {
+
+}
