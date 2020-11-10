@@ -6,16 +6,17 @@ const {jwt_secret, jwt_refresh_secret} = require("../../credentials");
 const base_api = "/api/v1";
 const md5 = require("md5");
 const jwt = require("jsonwebtoken");
+const chalk = require('chalk');
 
 
 // POST: /api/v1/user/login
 // Params: none
 // Body: email, password
-// On Success: Returns accessToken and refreshToken
+// Return: accessToken, refreshToken
 router.post('/login', async (req, res) => {
   const con = req.app.get('con');
   const {email, password} = req.body;
-  if (!email || !password) return res.status(401).send("Please provide an email, password!");
+  if (!email || !password) return res.status(401).send("Please provide an email and password!");
   const hash = md5(password);
   await con.query(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, hash], async (error, results) => { // Validate User
     if (error) {
@@ -52,6 +53,7 @@ router.post('/login', async (req, res) => {
 // POST: Current User / Fetch Current User
 // Params: none
 // Body: refreshToken
+// Return: user
 router.post('/', async (req, res) => {
   const con = req.app.get('con');
   const refreshToken = req.body.refreshToken;
@@ -61,12 +63,28 @@ router.post('/', async (req, res) => {
       res.sendStatus(500);
       throw error;
     } else if (results[0]) {
-      await con.query(`SELECT * FROM users WHERE id = ?`, [results[0].id], (err, result) => {
+      await con.query(`SELECT * FROM users JOIN user_roles ON users.id = user_roles.id WHERE users.id = ?`, [results[0].id], (err, result) => {
         if (err) {
           res.sendStatus(500);
           throw err;
         } else if (result[0]) {
-          res.json(result[0]);
+          let user = result[0];
+          let roles = [];
+          result.forEach(r => {
+            roles.push(r.role);
+          })
+          let safeUser = {
+            id: user.id,
+            createdAt: user.createdAt,
+            discord: user.discord,
+            email: user.email,
+            onLOA: user.onLOA,
+            photoURL: user.photoURL,
+            status: user.status,
+            username: user.username,
+            roles
+          }
+          res.json(safeUser);
         } else {
           res.sendStatus(404); // User not found
         }
@@ -83,7 +101,6 @@ router.post('/', async (req, res) => {
 // Body: refreshToken
 // Return: accessToken
 router.post('/refresh_token', async (req, res) => {
-
   const con = req.app.get('con');
   const {refreshToken} = req.body;
   if (!refreshToken) return res.status(401).send("Please login and provide an id!");
@@ -93,7 +110,6 @@ router.post('/refresh_token', async (req, res) => {
       throw error;
     } else if (results[0]) {
       const accessToken = generateAccessToken(results[0].id);
-      console.log("Refreshed! - " + accessToken);
       res.json({accessToken})
     } else {
       res.sendStatus(401);
