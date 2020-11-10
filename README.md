@@ -3,8 +3,6 @@
 The Iceberg Gaming Website is designed to replace Guilded and become the main platform for communications.
 
 ## Requirements
-- Credentials from Vincent Lauro, EagleTrooper, or Hizumi
-- Permission to run from Vincent Lauro
 - Node.js
 
 ## Installation
