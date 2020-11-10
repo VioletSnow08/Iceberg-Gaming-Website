@@ -17,8 +17,7 @@
 <script>
 import themeConfig from '@/../themeConfig.js'
 import '@/assets/scss/vuexy/extraComponents/agGridStyleOverride.scss'
-import {mapGetters} from "vuex"
-
+import {mapActions, mapGetters} from "vuex"
 export default {
   data () {
     return {
@@ -46,6 +45,7 @@ export default {
         if (document.body.className.match('theme-semi-dark')) document.body.classList.remove('theme-semi-dark')
       }
     },
+    ...mapActions(['fetchCurrentUser', 'accessTokenTimer']),
     setAppClasses (classesStr) {
       this.vueAppClasses.push(classesStr)
     },
@@ -74,7 +74,8 @@ export default {
 
     window.addEventListener('resize', this.handleWindowResize)
     window.addEventListener('scroll', this.handleScroll)
-    await this.$store.dispatch('fetchCurrentUser')
+    await this.fetchCurrentUser()
+    await this.accessTokenTimer()
   },
   destroyed () {
     window.removeEventListener('resize', this.handleWindowResize)

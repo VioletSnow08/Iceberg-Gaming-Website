@@ -4,6 +4,8 @@ const {mysql, firebaseConfig, jwt_secret} = require("../credentials");
 let MYSQL = require("mysql");
 const path = require('path');
 const jwt = require('jsonwebtoken');
+const cors = require('cors');
+const cookieParser = require('cookie-parser');
 
 const app = express()
 const port = 3001
@@ -15,7 +17,8 @@ let con = MYSQL.createConnection({
 
 
 firebase.initializeApp(firebaseConfig);
-
+app.use(cookieParser());
+app.use(cors({origin: true, credentials: true}));
 app.set('firebase', firebase);
 app.set('con', con);
 app.set('jwt', jwt);

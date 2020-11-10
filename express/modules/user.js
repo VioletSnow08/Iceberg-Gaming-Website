@@ -10,10 +10,12 @@ const jwt = require("jsonwebtoken");
 
 // POST: /api/v1/user/login
 // Params: none
-// Body: email, password, uuid
+// Body: email, password
+// On Success: Returns accessToken and refreshToken
 router.post('/login', async (req, res) => {
   const con = req.app.get('con');
-  const {email, password, uuid} = req.body;
+  const {email, password} = req.body;
+  if (!email || !password) return res.status(401).send("Please provide an email, password!");
   const hash = md5(password);
   await con.query(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, hash], async (error, results) => { // Validate User
     if (error) {
@@ -23,7 +25,7 @@ router.post('/login', async (req, res) => {
       const userID = results[0].id;
       const accessToken = generateAccessToken(userID);
       let refreshToken = jwt.sign(userID, jwt_refresh_secret);
-      await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ? AND uuid`, [refreshToken, userID, uuid], async (e, r) => { // Check for a refresh token in the DB
+      await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ?`, [refreshToken, userID], async (e, r) => { // Check for a refresh token in the DB
         if (e) {
           res.sendStatus(500);
           throw e;
@@ -31,7 +33,7 @@ router.post('/login', async (req, res) => {
           refreshToken = r[0].token;
           res.json({accessToken, refreshToken});
         } else { // If there is no refresh token in the database...
-          await con.query(`INSERT INTO tokens (token, id, uuid) VALUES (?, ?, ?)`, [refreshToken, userID, uuid], (err, result) => {
+          await con.query(`INSERT INTO tokens (token, id) VALUES (?, ?)`, [refreshToken, userID], (err, result) => {
             if (err) {
               res.sendStatus(500);
               throw err;
@@ -47,25 +49,51 @@ router.post('/login', async (req, res) => {
   })
 })
 
-router.post('/fetch_user', async (req, res) => {
+// POST: Current User / Fetch Current User
+// Params: none
+// Body: refreshToken
+router.post('/', async (req, res) => {
   const con = req.app.get('con');
-
+  const refreshToken = req.body.refreshToken;
+  if (!refreshToken) return res.status(401).send("Please login!");
+  await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken], async (error, results) => {
+    if (error) {
+      res.sendStatus(500);
+      throw error;
+    } else if (results[0]) {
+      await con.query(`SELECT * FROM users WHERE id = ?`, [results[0].id], (err, result) => {
+        if (err) {
+          res.sendStatus(500);
+          throw err;
+        } else if (result[0]) {
+          res.json(result[0]);
+        } else {
+          res.sendStatus(404); // User not found
+        }
+      })
+    } else {
+      res.status(503);
+    }
+  })
 })
 
 
 // POST: /api/v1/user/refresh_token
 // Params: none
-// Body: refreshToken, id, uuid
+// Body: refreshToken
+// Return: accessToken
 router.post('/refresh_token', async (req, res) => {
+
   const con = req.app.get('con');
-  const {refreshToken, id, uuid} = req.body;
-  if (refreshToken == null) return res.sendStatus(401);
-  await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ? AND uuid = ?`, [refreshToken, id, uuid], (error, results) => {
+  const {refreshToken} = req.body;
+  if (!refreshToken) return res.status(401).send("Please login and provide an id!");
+  await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken], (error, results) => {
     if (error) {
       res.sendStatus(503);
       throw error;
     } else if (results[0]) {
-      const accessToken = generateAccessToken(results[0].token)
+      const accessToken = generateAccessToken(results[0].id);
+      console.log("Refreshed! - " + accessToken);
       res.json({accessToken})
     } else {
       res.sendStatus(401);
@@ -75,15 +103,16 @@ router.post('/refresh_token', async (req, res) => {
 
 // DELETE: /api/v1/user/logout
 // Params: none
-// Body: refreshToken, id, uuid
+// Body: id
 router.delete('/logout', async (req, res) => {
   const con = req.app.get('con');
-  const {refreshToken, id, uuid} = req.body;
-  await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ? AND uuid = ?`, [refreshToken, id, uuid], async (error, results) => { // If token exists...
+  const {id} = req.body;
+  if (!refreshToken || !id) return res.status(401).send("Please login and provide an id!");
+  await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ?`, [refreshToken, id], async (error, results) => { // If token exists...
     if (error) {
       res.sendStatus(503);
     } else if (results[0]) {
-      await con.query(`DELETE FROM tokens WHERE token = ? AND id = ? AND uuid = ?`, [refreshToken, id, uuid], (err) => { // Then delete the token
+      await con.query(`DELETE FROM tokens WHERE token = ? AND id = ?`, [refreshToken, id], (err) => { // Then delete the token
         if (err) {
           res.sendStatus(503);
           throw err;

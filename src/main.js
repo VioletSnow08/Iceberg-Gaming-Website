@@ -36,8 +36,6 @@ firebase.analytics()
 
 
 
-
-
 Vue.use(Vuesax)
 Vue.use(VueHammer)
 Vue.prototype.$logger = logger;

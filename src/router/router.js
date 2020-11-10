@@ -39,53 +39,53 @@ const router = new Router({
 
 // Navigation Guards - They work by providing the *lowest* role/rank that can access it, then by listing any other roles.
 
-router.beforeEach(async (to, from, next) => {
-  if (to.matched.some(record => record.meta.requiresAuth)) {
-
-    if (!firebase.auth().currentUser) { // If the user is not signed in
-      await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
-      next({
-        path: '/pages/perms',
-        query: {
-          redirect: to.fullPath
-        }
-      })
-    } else { // If they are logged in
-      if(to.meta.roles.includes("CHANNEL_VAR")) {
-        await firebase.firestore().collection("channels").get().then(async channels => {
-          await channels.forEach(channel => {
-            if(channel.id === to.params.channelID) {
-              checkAndRedirect(to, from, next, channel.data().requiredRoles);
-            }
-          })
-        })
-      } else {
-        await checkAndRedirect(to, from, next, to.meta.roles)
-      }
-
-    }
-  } else if (to.matched.some(record => record.meta.requiresGuest)) {
-    if (firebase.auth().currentUser) {
-      await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
-      next({
-        path: '/pages/perms',
-        query: {
-          redirect: to.fullPath
-        }
-      })
-    } else {
-      await logView(to.path, from.path, "info", commonMessages.accessPage)
-      next()
-    }
-  } else {
-    if (firebase.auth().currentUser) {
-      await logView(to.path, from.path, "info", commonMessages.accessPage)
-    } else {
-      await logView(to.path, from.path, "info", commonMessages.accessPage)
-    }
-    next()
-  }
-})
+// router.beforeEach(async (to, from, next) => {
+//   if (to.matched.some(record => record.meta.requiresAuth)) {
+//
+//     if (!firebase.auth().currentUser) { // If the user is not signed in
+//       await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
+//       next({
+//         path: '/pages/perms',
+//         query: {
+//           redirect: to.fullPath
+//         }
+//       })
+//     } else { // If they are logged in
+//       if(to.meta.roles.includes("CHANNEL_VAR")) {
+//         await firebase.firestore().collection("channels").get().then(async channels => {
+//           await channels.forEach(channel => {
+//             if(channel.id === to.params.channelID) {
+//               checkAndRedirect(to, from, next, channel.data().requiredRoles);
+//             }
+//           })
+//         })
+//       } else {
+//         await checkAndRedirect(to, from, next, to.meta.roles)
+//       }
+//
+//     }
+//   } else if (to.matched.some(record => record.meta.requiresGuest)) {
+//     if (firebase.auth().currentUser) {
+//       await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
+//       next({
+//         path: '/pages/perms',
+//         query: {
+//           redirect: to.fullPath
+//         }
+//       })
+//     } else {
+//       await logView(to.path, from.path, "info", commonMessages.accessPage)
+//       next()
+//     }
+//   } else {
+//     if (firebase.auth().currentUser) {
+//       await logView(to.path, from.path, "info", commonMessages.accessPage)
+//     } else {
+//       await logView(to.path, from.path, "info", commonMessages.accessPage)
+//     }
+//     next()
+//   }
+// })
 
 
 router.afterEach(() => {

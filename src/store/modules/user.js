@@ -1,6 +1,14 @@
 import * as firebase from 'firebase'
 import router from "@/router/router";
-import {logger, alertWarn} from "../../../utils";
+import {logger, alertWarn, base_url} from "../../../utils";
+import axios from "axios";
+
+axios.defaults.headers = {
+  'Content-Type': 'application/json'
+}
+import store from '../store';
+
+/** in my case, it should be js file. */
 
 const state = {
   user: null,
@@ -21,284 +29,85 @@ const getters = {
 }
 
 const actions = {
-  async fetchCurrentUser ({commit}) {
-    if(firebase.auth().currentUser) {
-      await firebase
-        .firestore()
-        .collection('users')
-        .doc(firebase.auth().currentUser.uid).get().then(doc => {
-          logger.log({
-            level: "info",
-            message: "Current user fetched",
-            userID: firebase.auth().currentUser.uid,
-            isLoggedIn: true
-          })
-          if (doc.exists) {
-            const object = {...doc.data(), id: doc.id}
-            commit('setUser', object)
-          }
-        }).catch(error => {
-          if(error) {
-            logger.log({
-              level: "emergency",
-              message: error.message,
-              stack: error.stack,
-              isLoggedIn: true,
-              userID: firebase.auth().currentUser.uid
-            })
-            alertWarn(0);
-          }
-        })
-    }
-  },
-  async fetchUsers ({commit}) {
-    const users = []
-    await firebase
-      .firestore()
-      .collection('users').get().then(snapshot => {
-        logger.log({
-          level: "info",
-          message: "Users fetched",
-          isLoggedIn: true,
-          userID: firebase.auth().currentUser.uid
-        })
-        snapshot.docs.forEach(doc => {
-          const object = { ...doc.data(), id: doc.id}
-          users.push(object)
-        })
-        commit('setUsers', users)
-      }).catch(error => {
-        if (error) {
-          logger.log({
-            level: "critical",
-            message: error.message,
-            stack: error.stack,
-            isLoggedIn: true,
-            userID: firebase.auth().currentUser.uid
-          })
-          alertWarn(0);
+  async fetchCurrentUser({commit}) {
+    // TODO: Return if no refreshToken
+    const refreshToken = await localStorage.getItem('refreshToken');
+    const accessToken = await this.dispatch('fetchAccessToken');
+    await axios.post(`${base_url}/user/`, JSON.stringify({refreshToken}))
+      .then(function (response) {
+        let user = {
+          ...response.data,
+          refreshToken,
+          accessToken
         }
-      })
+        commit('fetchCurrentUser', user);
+      }).catch(function (error) {
+        console.log(error);
+      });
   },
-  async acceptUser({commit}, [userID, division]) {
-    await firebase.firestore().collection("users").doc(userID).get().then(async doc => {
-      logger.log({
-        level: "info",
-        message: "User fetched",
-        isLoggedIn: true,
-        userID: firebase.auth().currentUser.uid,
-      })
-      let newRoles = [];
-      let currentRoles = doc.data().roles;
-    if(division === "Iceberg") {
-      newRoles = currentRoles;
-      if(!currentRoles.includes("[ICE] Member")) {
-        newRoles.push("[ICE] Member");
-      }
-      newRoles = newRoles.filter(role => role !== "[ICE] Applicant") // Adds all roles and will ensure that the [ICE] Applicant role is not applied.
-      await firebase.firestore().collection("users").doc(userID).update({
-        isIceberg: true,
-        isApplicant: false,
-        status: "You can now change your status!",
-        roles: newRoles
-      }).then(async () => {
-        logger.log({
-          level: "info",
-          message: "User was accepted",
-          division,
-          userID,
-          recruiter: firebase.auth().currentUser.uid,
-          isLoggedIn: true
-        })
-      }).catch(error => {
-        if(error) {
-          logger.log({
-            level: "error",
-            message: error.message,
-            stack: error.stack,
-            division,
-            userID,
-            recruiter: firebase.auth().currentUser.uid,
-            isLoggedIn: true
-          })
-          alertWarn(0);
-        }
-      })
-    } else if(division === "17th") {
-      newRoles = currentRoles
-      if(!currentRoles.includes("[ICE] Member")) {
-        newRoles.push("[ICE] Member");
-        newRoles = newRoles.filter(role => role !== "[ICE] Applicant") // Adds all roles and will ensure that the [ICE] Applicant role is not applied.
-      }
-      newRoles = newRoles.filter(role => !role.startsWith("[17th]")) // Removes all [17th] Roles
-      newRoles.push("[17th] Member");
-      newRoles.push("[17th] Recruit");
-      await firebase.firestore().collection("users").doc(userID).update({
-        bct_rank: "RCT",
-        status: "You can now change your status!",
-        roles: newRoles,
-        bct_points: 0,
-        bct_events_attended: 0,
-        bct_eligibleForDemotion: false,
-        bct_eligibleForPromotion: false,
-      }).then(async () => {
-        logger.log({
-          level: "info",
-          message: "User was accepted",
-          division,
-          userID,
-          recruiter: firebase.auth().currentUser.uid,
-          isLoggedIn: true
-        })
-      }).catch(error => {
-        if(error) {
-          logger.log({
-            level: "error",
-            message: error.message,
-            stack: error.stack,
-            division,
-            userID,
-            recruiter: firebase.auth().currentUser.uid,
-            isLoggedIn: true
-          })
-          alertWarn(0)
-        }
-      })
-    }
-    }).catch(error => {
-      if(error) {
-        logger.log({
-          level: "alert",
-          message: error.message,
-          stack: error.stack,
-          division,
-          userID,
-          recruiter: firebase.auth().currentUser.uid,
-          isLoggedIn: true
-        })
-        alertWarn(0);
-      }
-    })
+  async accessTokenTimer({commit}) {
+    setInterval(() => {
+      let accessToken = this.dispatch('fetchAccessToken');
+      commit('setAccessToken', accessToken);
+    }, 3000);
   },
-  async registerUser({commit}, [username, email, password, discord]) {
-    await firebase.auth().createUserWithEmailAndPassword(email, password).then(async () => {
-      logger.log({
-        level: "info",
-        message: "Account created",
-        isLoggedIn: false
-      })
-      const user = {
-        date: firebase.firestore.Timestamp.now(),
-        discord,
-        email,
-        onLOA: false,
-        photoURL: "https://image.flaticon.com/icons/svg/2919/2919600.svg",
-        roles: ["[ICE] Applicant"],
-        status: "Make sure to fill out an application!",
-        username
-      }
-
-      await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).set(user).then(async () => { // Creates the user in the database
-        logger.info({
-          message: "User created",
-          userID: firebase.auth().currentUser.uid,
-          username,
-          isLoggedIn: true
-        })
-        await router.push('/hub')
-      }).catch(error => {
-        if (error) {
-          logger.log({
-            level: "alert",
-            message: error.message,
-            stack: error.stack,
-            isLoggedIn: false,
-            username, // Only way to identify the user
-            user,
-            notes: [
-              "Firebase created the account",
-              "Firebase was unable to add the user to the database"
-            ]
-          })
-          alertWarn(0);
-        }
-      })
-    }).catch(error => {
-      if (error) {
-        logger.log({
-          level: "alert",
-          message: error.message,
-          stack: error.stack,
-          isLoggedIn: false,
-          username, // Only way to identify the user
-          user,
-          notes: [
-            "Firebase was unable to register the account",
-            "Firebase was unable to add the user to the database"
-          ]
-        })
-        alertWarn(0);
-      }
-    })
-  },
-
   async loginUser({commit}, [email, password]) {
-    await firebase.auth().signInWithEmailAndPassword(email, password).then(async () => {
+    // await firebase.auth().signInWithEmailAndPassword(email, password).then(async () => {
+    //   await this.dispatch('fetchCurrentUser');
+    //   await router.push('/user/apply')
+    //   logger.info({
+    //     message: "User logged in",
+    //     userID: firebase.auth().currentUser.uid,
+    //     isLoggedIn: true
+    //   })
+    // }).catch(error => {
+    //   if (error) {
+    //     logger.log({
+    //       level: "emergency",
+    //       message: error.message,
+    //       email, // Only way to identify the user
+    //       stack: error.stack,
+    //       isLoggedIn: false
+    //     })
+    //     alertWarn(0);
+    //   }
+    // })
+    await axios.post(`${base_url}/user/login`, JSON.stringify({email, password})).then(async (response) => {
+      await localStorage.setItem('refreshToken', response.data.refreshToken) // No need to stringify, since it is already a string
       await this.dispatch('fetchCurrentUser');
-      await router.push('/user/apply')
-      logger.info({
-        message: "User logged in",
-        userID: firebase.auth().currentUser.uid,
-        isLoggedIn: true
-      })
-    }).catch(error => {
-      if (error) {
-        logger.log({
-          level: "emergency",
-          message: error.message,
-          email, // Only way to identify the user
-          stack: error.stack,
-          isLoggedIn: false
-        })
-        alertWarn(0);
-      }
+      await router.push('/user/hub')
+    }).catch((error) => {
+      if (error) throw error;
     })
   },
-
-  async logoutUser({commit}) {
-    let currentID = firebase.auth().currentUser.uid;
-    await firebase.auth().signOut().then(async () => {
-      commit('logoutUser');
-      await router.push('/pages/login')
-      logger.info({
-        message: "User logged out",
-        userID: currentID,
-        isLoggedIn: false
+  async fetchAccessToken({commit}) {
+    if (store.getters.currentUser) {
+      const data = JSON.stringify({
+        refreshToken: store.getters.currentUser.refreshToken
       })
-    }).catch(error => {
-      if(error) {
-        logger.log({
-          level: "critical",
-          message: error.message,
-          stack: error.stack,
-          isLoggedIn: true,
-          userID: firebase.auth().currentUser.uid
-        })
-        alertWarn(0);
-      }
-    })
+      return await axios.post(`${base_url}/user/refresh_token`, data).then(async (response) => {
+        const accessToken = response.data.accessToken;
+        return accessToken;
+      })
+    } else return null;
   }
 }
 
 const mutations = {
-  setUser (state, user) {
+  setUser(state, user) {
     state.user = user
   },
-  setUsers (state, users) {
+  setUsers(state, users) {
     state.users = users
   },
   logoutUser(state) {
     state.user = null;
+  },
+  fetchCurrentUser(state, user) {
+    state.user = user;
+  },
+  setAccessToken(state, accessToken) {
+    state.user.accessToken = accessToken;
   }
 }
 
