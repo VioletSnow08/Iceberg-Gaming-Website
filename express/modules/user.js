@@ -104,7 +104,6 @@ router.post('/refresh_token', async (req, res) => {
   const con = req.app.get('con');
   const {refreshToken} = req.body;
   if (!refreshToken) return res.status(401).send("Please login and provide an id!");
-  console.log("Refreshed Token!");
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken], (error, results) => {
     if (error) {
       res.sendStatus(503);
