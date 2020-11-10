@@ -104,6 +104,7 @@ router.post('/refresh_token', async (req, res) => {
   const con = req.app.get('con');
   const {refreshToken} = req.body;
   if (!refreshToken) return res.status(401).send("Please login and provide an id!");
+  console.log("Refreshed Token!");
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken], (error, results) => {
     if (error) {
       res.sendStatus(503);
@@ -119,10 +120,11 @@ router.post('/refresh_token', async (req, res) => {
 
 // DELETE: /api/v1/user/logout
 // Params: none
-// Body: id
+// Body: refreshToken, id
+// Returns: 200 status code
 router.delete('/logout', async (req, res) => {
   const con = req.app.get('con');
-  const {id} = req.body;
+  const {refreshToken, id} = req.body;
   if (!refreshToken || !id) return res.status(401).send("Please login and provide an id!");
   await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ?`, [refreshToken, id], async (error, results) => { // If token exists...
     if (error) {

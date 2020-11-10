@@ -46,8 +46,10 @@ const actions = {
   },
   async accessTokenTimer({commit}) {
     setInterval(() => {
-      let accessToken = this.dispatch('fetchAccessToken');
-      commit('setAccessToken', accessToken);
+      if (store.getters.currentUser) {
+        let accessToken = this.dispatch('fetchAccessToken');
+        commit('setAccessToken', accessToken);
+      }
     }, 3000);
   },
   async loginUser({commit}, [email, password]) {
@@ -68,6 +70,24 @@ const actions = {
         return response.data.accessToken;
       })
     } else return null;
+  },
+  async logoutUser({commit}) {
+    const refreshToken = await localStorage.getItem('refreshToken');
+    if (refreshToken) {
+      const id = await store.getters.currentUser.id;
+      await axios.delete(`${base_url}/user/logout`, {
+        data: {
+          refreshToken,
+          id
+        }
+      }).then((response) => {
+        localStorage.removeItem('refreshToken');
+        commit('logoutUser');
+        router.push('/');
+      }).catch((error) => {
+        if (error) throw error;
+      })
+    }
   }
 }
 
@@ -77,6 +97,9 @@ const mutations = {
   },
   setAccessToken(state, accessToken) {
     state.user.accessToken = accessToken;
+  },
+  logoutUser(state) {
+    state.user = null;
   }
 }
 
