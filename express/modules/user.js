@@ -1,12 +1,12 @@
 const express = require('express')
 const router = express.Router();
 const port = 3000
-const logger = require("../../utils").logger;
 const {jwt_secret, jwt_refresh_secret} = require("../../credentials");
 const base_api = "/api/v1";
 const md5 = require("md5");
 const jwt = require("jsonwebtoken");
 const chalk = require('chalk');
+const logger = require("../utils").logger;
 
 
 // POST: /api/v1/user/login
@@ -14,6 +14,7 @@ const chalk = require('chalk');
 // Body: email, password
 // Return: accessToken, refreshToken
 router.post('/login', async (req, res) => {
+  const api = "/api/v1/user/login";
   const con = req.app.get('con');
   const {email, password} = req.body;
   if (!email || !password) return res.status(401).send("Please provide an email and password!");
@@ -21,7 +22,14 @@ router.post('/login', async (req, res) => {
   await con.query(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, hash], async (error, results) => { // Validate User
     if (error) {
       res.sendStatus(503);
-      throw error;
+      logger.log({
+        level: "emergency",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: false,
+        id: null,
+        api
+      })
     } else if (results[0]) { // If user...
       const userID = results[0].id;
       const accessToken = generateAccessToken(userID);
@@ -29,17 +37,53 @@ router.post('/login', async (req, res) => {
       await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ?`, [refreshToken, userID], async (e, r) => { // Check for a refresh token in the DB
         if (e) {
           res.sendStatus(500);
-          throw e;
+          logger.log({
+            level: "emergency",
+            message: e.message,
+            stack: e.stack,
+            isLoggedIn: false,
+            id: results[0].id,
+            api
+          })
         } else if (r[0]) { // If a refresh token is in the database...
           refreshToken = r[0].token;
           res.json({accessToken, refreshToken});
+          logger.log({
+            level: "info",
+            message: "User logged in successfully",
+            isLoggedIn: true,
+            id: results[0].id,
+            refreshToken,
+            accessToken,
+            api,
+            notes: "No new refreshToken was generated"
+          })
         } else { // If there is no refresh token in the database...
           await con.query(`INSERT INTO tokens (token, id) VALUES (?, ?)`, [refreshToken, userID], (err, result) => {
             if (err) {
               res.sendStatus(500);
-              throw err;
+              logger.log({
+                level: "emergency",
+                message: error.message,
+                stack: error.stack,
+                isLoggedIn: false,
+                id: results[0].id,
+                api,
+                refreshToken,
+                accessToken
+              })
             } else {
               res.json({accessToken, refreshToken});
+              logger.log({
+                level: "info",
+                message: "User logged in successfully",
+                isLoggedIn: true,
+                id: results[0].id,
+                refreshToken,
+                accessToken,
+                api,
+                notes: "A new refreshToken was generated"
+              })
             }
           })
         }
@@ -58,41 +102,22 @@ router.post('/', async (req, res) => {
   const con = req.app.get('con');
   const refreshToken = req.body.refreshToken;
   if (!refreshToken) return res.status(401).send("Please login!");
-  await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken], async (error, results) => {
-    if (error) {
+  await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken], (error, results) => {
+    if(error) {
       res.sendStatus(500);
       throw error;
-    } else if (results[0]) {
-      await con.query(`SELECT * FROM users JOIN user_roles ON users.id = user_roles.id WHERE users.id = ?`, [results[0].id], (err, result) => {
-        if (err) {
-          res.sendStatus(500);
-          throw err;
-        } else if (result[0]) {
-          let user = result[0];
-          let roles = [];
-          result.forEach(r => {
-            roles.push(r.role);
-          })
-          let safeUser = {
-            id: user.id,
-            createdAt: user.createdAt,
-            discord: user.discord,
-            email: user.email,
-            onLOA: user.onLOA,
-            photoURL: user.photoURL,
-            status: user.status,
-            username: user.username,
-            roles
-          }
-          res.json(safeUser);
-        } else {
-          res.sendStatus(404); // User not found
-        }
-      })
-    } else {
-      res.status(503);
+    } else if(results[0]) {
+
     }
+
   })
+  // TODO: Check for token
+  // TODO: Check if token is valid
+  // TODO: If token is valid, check if user exists
+  // TODO: If user exists, check for roles
+  // TODO: If Roles, check for 17th Member
+  // TODO: If 17th Member, add the 17th Row to their user object
+  // TODO: Remove password from returned user data/object
 })
 
 
@@ -146,8 +171,6 @@ router.delete('/logout', async (req, res) => {
 function generateAccessToken(id) {
   return jwt.sign({id}, jwt_secret, {expiresIn: '15s'})
 }
-
-
 module.exports = {
   router
 };

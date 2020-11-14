@@ -1,5 +1,4 @@
 const express = require('express')
-const firebase = require("firebase");
 const {mysql, firebaseConfig, jwt_secret} = require("../credentials");
 let MYSQL = require("mysql");
 const path = require('path');
@@ -16,10 +15,8 @@ let con = MYSQL.createConnection({
 })
 
 
-firebase.initializeApp(firebaseConfig);
 app.use(cookieParser());
 app.use(cors({origin: true, credentials: true}));
-app.set('firebase', firebase);
 app.set('con', con);
 app.set('jwt', jwt);
 app.use(express.static(path.join(__dirname, '../dist')));
@@ -27,7 +24,7 @@ let bodyParser = require('body-parser')
 app.use(bodyParser.json());
 
 // API Modules
-app.use('/api/v1/user/', require('./modules/user').router);
+app.use('/api/v1/user', require('./modules/user').router);
 
 
 

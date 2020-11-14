@@ -2,7 +2,6 @@ const winston = require("winston");
 const { datadog } = require("./credentials.js");
 const { createLogger, format, transports } = require('winston');
 const base_url = "http://localhost:3001/api/v1"
-require("setimmediate");
 
 // Winston ~
 const httpTransportOptions = {
@@ -22,19 +21,7 @@ const customLevels = {
     debug: 7,
     success: 8
   },
-  // colors: {
-  //   emergency: "red",
-  //   alert: "red",
-  //   critical: "red",
-  //   error: "red",
-  //   warn: "yellow",
-  //   notice: "magenta",
-  //   info: "blue",
-  //   debug: "gray",
-  //   success: "green"
-  // }
 }
-// winston.addColors(customLevels.colors);
 const logger = createLogger({
   level: 'info',
   levels: customLevels.levels,
