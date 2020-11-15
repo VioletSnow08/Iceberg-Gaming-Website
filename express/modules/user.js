@@ -15,8 +15,10 @@ const logger = require("../../utils").logger;
 // Return: accessToken, refreshToken
 router.post('/login', async (req, res) => {
   const {email, password} = req.body;
-  if (!email || !password) return res.status(401).send("Please provide an email and password!");
-
+  let hasReturned = false;
+  if (!email || !password) {
+    return res.status(401).send("Please provide an email and password!")
+  }
   const api = "/api/v1/user/login";
   const con = req.app.get('con');
   const hash = md5(password);
@@ -24,25 +26,29 @@ router.post('/login', async (req, res) => {
   let refreshToken;
   let userID;
   await con.query(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, hash]).then(async rows => {
-    if(rows[0]) {
+    if (rows[0]) {
       userID = rows[0].id;
       return await con.query(`SELECT * FROM tokens WHERE id = ?`, [userID]) // Check if they have an existing token...
     } else {
       res.status(401).send("Please provide a valid email and password!"); // Invalid Credentials
+      hasReturned = true;
     }
   }).then(async rows => {
     accessToken = generateAccessToken(userID)
-    if(rows[0]) { // If they have an existing token...
+    if (rows[0]) { // If they have an existing token...
       refreshToken = rows[0].token;
-      res.json({accessToken, refreshToken})
     } else { // If they don't have an existing token...
       refreshToken = jwt.sign(userID, jwt_refresh_secret);
-      res.json({accessToken, refreshToken})
       return await con.query(`INSERT INTO tokens (token, id) VALUES (?, ?)`, [refreshToken, userID])
     }
+    res.json({accessToken, refreshToken})
+    hasReturned = true;
   }).catch(error => {
-    if(error) {
-      res.sendStatus(500);
+    if (error) {
+      if(hasReturned === false) {
+        res.sendStatus(500);
+        hasReturned = true;
+      }
       logger.log({
         level: "emergency",
         message: error.message,
@@ -61,9 +67,66 @@ router.post('/login', async (req, res) => {
 // Return: user
 router.post('/', async (req, res) => {
   const api = "/api/v1/user/";
+  const con = req.app.get('con');
   const refreshToken = req.body.refreshToken;
   if (!refreshToken) return res.status(401).send("Please login!");
-
+  let userID;
+  let safeUser;
+  let apps;
+  let hasReturned = false;
+  await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
+    if (!hasReturned && rows[0]) { // If there is a token... (required)
+      userID = rows[0].id;
+      return await con.query(`SELECT * FROM users WHERE id = ?`, [userID])
+    } else {
+      res.sendStatus(401);
+      hasReturned = true;
+    }
+  }).then(async rows => {
+    if (!hasReturned && rows[0]) { // If there is a user... (required)
+      safeUser = rows[0];
+      return await con.query(`SELECT * FROM user_roles WHERE user_id = ?`, [userID]);
+    } else {
+      res.sendStatus(401);
+      hasReturned = true;
+    }
+  }).then(async rows => {
+    let roles = [];
+    if (!hasReturned && rows[0]) { // If the user has roles... (required)
+      rows.forEach(role => {
+        roles.push(role);
+      })
+      safeUser.roles = roles;
+      return await con.query(`SELECT * FROM 17th_members WHERE user_id = ? ORDER BY createdAt desc`, [userID])
+    } else {
+      res.sendStatus(401);
+      hasReturned = true;
+    }
+  }).then(async rows => {
+    if (!hasReturned && rows[0]) { // If the user has any 17th Member Rows (not required)
+      safeUser.bct = rows;
+    }
+    return await con.query(`SELECT * FROM iceberg_applications WHERE user_id = ?`, [userID])
+  }).then(async rows => {
+    if (!hasReturned && rows[0]) { // If the user has any Iceberg Applications (not required)
+      rows.forEach(row => {
+        apps.push(row);
+      })
+    }
+    return await con.query(`SELECT * FROM 17th_applications WHERE user_id = ?`, [userID])
+  }).then(async rows => {
+    if (!hasReturned && rows[0]) { // If the user has any 17th BCT Applications (not required)
+      rows.forEach(row => {
+        apps.push(row);
+      })
+    }
+  }).catch(error => {
+    if(error) {
+      throw error;
+    }
+  })
+  if(safeUser && !hasReturned) res.json(safeUser);
+  else if(!hasReturned) res.send(401);
 })
 
 
@@ -76,7 +139,7 @@ router.post('/refresh_token', async (req, res) => {
   const con = req.app.get('con');
   if (!refreshToken) return res.status(401).send("Please login and provide an id!");
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
-    if(rows[0]) {
+    if (rows[0]) {
       res.json({accessToken: await generateAccessToken(rows[0].id)})
     } else {
       res.sendStatus(401);
