@@ -73,7 +73,15 @@ router.post('/', async (req, res) => {
 // Return: accessToken
 router.post('/refresh_token', async (req, res) => {
   const {refreshToken} = req.body;
+  const con = req.app.get('con');
   if (!refreshToken) return res.status(401).send("Please login and provide an id!");
+  await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
+    if(rows[0]) {
+      res.json({accessToken: await generateAccessToken(rows[0].id)})
+    } else {
+      res.sendStatus(401);
+    }
+  })
 })
 
 // DELETE: /api/v1/user/logout
