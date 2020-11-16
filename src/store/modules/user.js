@@ -88,6 +88,17 @@ const actions = {
         if (error) throw error;
       })
     }
+  },
+  async registerUser({commit}, [username, email, password, discord]) {
+    await axios.post(`${base_url}/user/register`, {
+      email, password, discord, username
+    }).then(response => {
+      router.push('/pages/login');
+    }).catch((error) => {
+      if(error) {
+        alert(error.message);
+      }
+    })
   }
 }
 

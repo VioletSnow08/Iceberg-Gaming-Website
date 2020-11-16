@@ -8,7 +8,48 @@ const jwt = require("jsonwebtoken");
 const chalk = require('chalk');
 const logger = require("../../utils").logger;
 
-
+// POST: /api/v1/user/register
+// Params: none
+// Body: email, password, username, discord
+// Return: <status code>
+router.post('/register', async (req, res) => {
+  const {email, password, username, discord} = req.body;
+  const api = "/api/v1/user/register";
+  const con = req.app.get('con');
+  let hasReturned = false;
+  if(!email || !password || !username || !discord) {
+    return res.status(400).send("Please provide an email, password, username, and Discord Username and Tag!")
+  }
+  const hash = md5(password);
+  await con.query(`SELECT * FROM users WHERE email = ?`, [email]).then(async rows => {
+    if(rows[0]) {
+      res.status(400).send("An account with that email already exists!");
+      hasReturned = true;
+    } else {
+      return await con.query(`INSERT INTO users (createdAt, discord, email, password, username) VALUES (?, ?, ?, ?, ?)`, [new Date(), discord, email, hash, username])
+    }
+  }).then(async () => {
+    res.send();
+    hasReturned = true;
+  }).catch(error => {
+    if (error) {
+      if(hasReturned === false) {
+        res.status(500).send("A server error has occurred! Please try again.");
+        hasReturned = true;
+      }
+      logger.log({
+        level: "emergency",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: false,
+        email,
+        username,
+        discord,
+        api,
+      })
+    }
+  })
+})
 // POST: /api/v1/user/login
 // Params: none
 // Body: email, password
@@ -46,7 +87,7 @@ router.post('/login', async (req, res) => {
   }).catch(error => {
     if (error) {
       if(hasReturned === false) {
-        res.sendStatus(500);
+        res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }
       logger.log({
@@ -121,8 +162,19 @@ router.post('/', async (req, res) => {
       })
     }
   }).catch(error => {
-    if(error) {
-      throw error;
+    if (error) {
+      if(hasReturned === false) {
+        res.status(500).send("A server error has occurred! Please try again.");
+        hasReturned = true;
+      }
+      logger.log({
+        level: "emergency",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: false,
+        id: userID,
+        api,
+      })
     }
   })
   if(safeUser && !hasReturned) res.json(safeUser);
@@ -153,8 +205,34 @@ router.post('/refresh_token', async (req, res) => {
 // Returns: 200 status code
 router.delete('/logout', async (req, res) => {
   const {refreshToken, id} = req.body;
+  const con = req.app.get('con');
+  let hasReturned = false;
+  console.log(refreshToken);
   if (!refreshToken || !id) return res.status(401).send("Please login and provide an id!");
 
+  await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ?`, [refreshToken, id]).then(async rows => {
+    if(rows[0]) {
+      return await con.query(`DELETE FROM tokens WHERE token = ? AND id = ?`, [refreshToken, id])
+    } else {
+      res.sendStatus(401);
+      hasReturned = true;
+    }
+  }).catch(error => {
+    if (error) {
+      if(hasReturned === false) {
+        res.status(500).send("A server error has occurred! Please try again.");
+        hasReturned = true;
+      }
+      logger.log({
+        level: "emergency",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: false,
+        id,
+        api,
+      })
+    }
+  })
 })
 
 function generateAccessToken(id) {

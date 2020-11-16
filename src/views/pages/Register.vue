@@ -44,13 +44,13 @@
                   </div>
                   <div class="vx-row mb-6">
                     <div class="vx-col w-full">
-                      <vs-input type="text" class="w-full" icon-pack="feather" icon="icon-hash" icon-no-border label="Discord Username & Tag" v-model="discord_id" />
+                      <vs-input type="text" class="w-full" icon-pack="feather" icon="icon-hash" icon-no-border label="Discord Username & Tag" v-model="discord" />
                     </div>
                   </div>
                   <div class="vx-row">
                     <div class="vx-col w-full">
                       <vs-button @click="register" class="mr-3 mb-2">Submit</vs-button>
-                      <vs-button color="warning" type="border" class="mb-2" @click="email = password = password2 = username = discord_id = ''; check4 = false;">Cancel</vs-button>
+                      <vs-button color="warning" type="border" class="mb-2" @click="email = password = password2 = username = discord = ''; check4 = false;">Cancel</vs-button>
                     </div>
                   </div>
                 </div>
@@ -75,7 +75,7 @@ export default {
       email: '',
       password: '',
       password2: '',
-      discord_id: ''
+      discord: ''
     }
   },
   methods: {
@@ -84,7 +84,7 @@ export default {
       if (this.password !== this.password2) {
         alert('Passwords do not match!')
       } else {
-        this.registerUser([this.username, this.email, this.password, this.discord_id])
+        this.registerUser([this.username, this.email, this.password, this.discord])
       }
     }
   },
