@@ -39,7 +39,10 @@ const actions = {
           }
           commit('fetchCurrentUser', user);
         }).catch(function (error) {
-          console.log(error);
+          if(error) {
+            alert(error.message)
+          }
+
         });
     }
 
@@ -58,7 +61,7 @@ const actions = {
       await this.dispatch('fetchCurrentUser');
       await router.push('/user/hub')
     }).catch((error) => {
-      if (error) throw error;
+      if (error) alert(error.message);
     })
   },
   async fetchAccessToken({commit}) {
@@ -85,7 +88,7 @@ const actions = {
         commit('logoutUser');
         router.push('/');
       }).catch((error) => {
-        if (error) throw error;
+        if (error) alert(error.message);
       })
     }
   },
