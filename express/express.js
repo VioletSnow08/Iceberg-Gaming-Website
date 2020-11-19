@@ -34,8 +34,6 @@ MYSQL.createConnection({
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
   })
-
-  module.exports.con = con;
 }).catch(error => {
-  if(error) throw error;
+  if (error) throw error;
 })
