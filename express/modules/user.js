@@ -28,9 +28,10 @@ router.post('/register', async (req, res) => {
     } else {
       return await con.query(`INSERT INTO users (createdAt, discord, email, password, username) VALUES (?, ?, ?, ?, ?)`, [new Date(), discord, email, hash, username])
     }
-  }).then(async () => {
-    res.send();
-    hasReturned = true;
+  }).then(async row => {
+    if (hasReturned === false) {
+      return await con.query(`INSERT INTO user_roles (user_id, role) VALUES (?, ?)`, [row.insertId, "[ICE] Member"])
+    }
   }).catch(error => {
     if (error) {
       if(hasReturned === false) {
@@ -49,6 +50,9 @@ router.post('/register', async (req, res) => {
       })
     }
   })
+  if (hasReturned === false) {
+    res.send();
+  }
 })
 // POST: /api/v1/user/login
 // Params: none
