@@ -25,6 +25,7 @@ MYSQL.createConnection({
 
 // API Modules
   app.use('/api/v1/user', require('./modules/user').router);
+  app.use('/api/v1/settings', require('./modules/settings').router);
 
 
 // app.get('*', (req,res) => {
