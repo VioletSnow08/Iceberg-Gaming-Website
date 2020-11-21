@@ -20,9 +20,11 @@ const requiresAuth = (req, res, next) => {
         })
         res.sendStatus(500);
       } else {
-        await con.query(`SELECT * FROM tokens WHERE id = ? AND user_id = ?`, [decodedToken.id, decodedToken.userID]).then(rows => {
+        await con.query(`SELECT * FROM users WHERE id = ?`, [decodedToken.id]).then(rows => {
           if(rows[0]) {
             next();
+          } else {
+            res.status(401).send("Invalid accessToken!");
           }
         }).catch(error => {
           if(error) {
