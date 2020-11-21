@@ -1,0 +1,9 @@
+const express = require('express')
+const router = express.Router();
+const port = 3000
+const {jwt_secret, jwt_refresh_secret} = require("../../credentials");
+const base_api = "/api/v1";
+const md5 = require("md5");
+const jwt = require("jsonwebtoken");
+const chalk = require('chalk');
+const logger = require("../../utils").logger;
