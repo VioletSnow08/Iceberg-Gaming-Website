@@ -17,12 +17,12 @@ router.post('/register', async (req, res) => {
   const api = "/api/v1/user/register";
   const con = req.app.get('con');
   let hasReturned = false;
-  if(!email || !password || !username || !discord) {
+  if (!email || !password || !username || !discord) {
     return res.status(400).send("Please provide an email, password, username, and Discord Username and Tag!")
   }
   const hash = md5(password);
   await con.query(`SELECT * FROM users WHERE email = ?`, [email]).then(async rows => {
-    if(rows[0]) {
+    if (rows[0]) {
       res.status(400).send("An account with that email already exists!");
       hasReturned = true;
     } else {
@@ -34,7 +34,7 @@ router.post('/register', async (req, res) => {
     }
   }).catch(error => {
     if (error) {
-      if(hasReturned === false) {
+      if (hasReturned === false) {
         res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }
@@ -90,7 +90,7 @@ router.post('/login', async (req, res) => {
     hasReturned = true;
   }).catch(error => {
     if (error) {
-      if(hasReturned === false) {
+      if (hasReturned === false) {
         res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }
@@ -167,7 +167,7 @@ router.post('/', async (req, res) => {
     }
   }).catch(error => {
     if (error) {
-      if(hasReturned === false) {
+      if (hasReturned === false) {
         res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }
@@ -181,8 +181,8 @@ router.post('/', async (req, res) => {
       })
     }
   })
-  if(safeUser && !hasReturned) res.json(safeUser);
-  else if(!hasReturned) res.send(401);
+  if (safeUser && !hasReturned) res.json(safeUser);
+  else if (!hasReturned) res.send(401);
 })
 
 
@@ -210,20 +210,23 @@ router.post('/refresh_token', async (req, res) => {
 router.delete('/logout', async (req, res) => {
   const {refreshToken, id} = req.body;
   const con = req.app.get('con');
+  const api = "/api/v1/user/logout";
   let hasReturned = false;
-  console.log(refreshToken);
   if (!refreshToken || !id) return res.status(401).send("Please login and provide an id!");
 
   await con.query(`SELECT * FROM tokens WHERE token = ? AND id = ?`, [refreshToken, id]).then(async rows => {
-    if(rows[0]) {
+    if (rows[0]) {
       return await con.query(`DELETE FROM tokens WHERE token = ? AND id = ?`, [refreshToken, id])
     } else {
       res.sendStatus(401);
       hasReturned = true;
     }
+  }).then(async () => {
+    hasReturned = true;
+    res.sendStatus(200);
   }).catch(error => {
     if (error) {
-      if(hasReturned === false) {
+      if (hasReturned === false) {
         res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }

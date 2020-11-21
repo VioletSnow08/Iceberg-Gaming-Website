@@ -83,10 +83,10 @@ const actions = {
           refreshToken,
           id
         }
-      }).then((response) => {
-        localStorage.removeItem('refreshToken');
-        commit('logoutUser');
-        router.push('/');
+      }).then(async (response) => {
+        await localStorage.removeItem('refreshToken');
+        await commit('logoutUser');
+        await router.push('/').catch(()=>{});;
       }).catch((error) => {
         if (error) alert(error.message);
       })
