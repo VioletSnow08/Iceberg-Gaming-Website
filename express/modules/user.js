@@ -7,6 +7,7 @@ const md5 = require("md5");
 const jwt = require("jsonwebtoken");
 const chalk = require('chalk');
 const logger = require("../../utils").logger;
+const {getUser} = require("../middleware/auth");
 
 // POST: /api/v1/user/register
 // Params: none
@@ -30,7 +31,7 @@ router.post('/register', async (req, res) => {
     }
   }).then(async row => {
     if (hasReturned === false) {
-      return await con.query(`INSERT INTO user_roles (user_id, role) VALUES (?, ?)`, [row.insertId, "[ICE] Member"])
+      return await con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Member"])
     }
   }).catch(error => {
     if (error) {
@@ -110,7 +111,7 @@ router.post('/login', async (req, res) => {
 // Params: none
 // Body: refreshToken
 // Return: user
-router.post('/', async (req, res) => {
+router.post('/', async (req, res, next) => {
   const api = "/api/v1/user/";
   const con = req.app.get('con');
   const refreshToken = req.body.refreshToken;
@@ -120,69 +121,14 @@ router.post('/', async (req, res) => {
   let apps;
   let hasReturned = false;
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
-    if (!hasReturned && rows[0]) { // If there is a token... (required)
+    if (!hasReturned && rows[0]) { // If there is a refresh token... (required)
       userID = rows[0].id;
-      return await con.query(`SELECT * FROM users WHERE id = ?`, [userID])
+      await getUser(req, res, next, userID);
     } else {
       res.sendStatus(401);
       hasReturned = true;
-    }
-  }).then(async rows => {
-    if (!hasReturned && rows[0]) { // If there is a user... (required)
-      safeUser = rows[0];
-      return await con.query(`SELECT * FROM user_roles WHERE user_id = ?`, [userID]);
-    } else {
-      res.sendStatus(401);
-      hasReturned = true;
-    }
-  }).then(async rows => {
-    let roles = [];
-    if (!hasReturned && rows[0]) { // If the user has roles... (required)
-      rows.forEach(role => {
-        roles.push(role);
-      })
-      safeUser.roles = roles;
-      return await con.query(`SELECT * FROM 17th_members WHERE user_id = ? ORDER BY createdAt desc`, [userID])
-    } else {
-      res.sendStatus(401);
-      hasReturned = true;
-    }
-  }).then(async rows => {
-    if (!hasReturned && rows[0]) { // If the user has any 17th Member Rows (not required)
-      safeUser.bct = rows;
-    }
-    return await con.query(`SELECT * FROM iceberg_applications WHERE user_id = ?`, [userID])
-  }).then(async rows => {
-    if (!hasReturned && rows[0]) { // If the user has any Iceberg Applications (not required)
-      rows.forEach(row => {
-        apps.push(row);
-      })
-    }
-    return await con.query(`SELECT * FROM 17th_applications WHERE user_id = ?`, [userID])
-  }).then(async rows => {
-    if (!hasReturned && rows[0]) { // If the user has any 17th BCT Applications (not required)
-      rows.forEach(row => {
-        apps.push(row);
-      })
-    }
-  }).catch(error => {
-    if (error) {
-      if (hasReturned === false) {
-        res.status(500).send("A server error has occurred! Please try again.");
-        hasReturned = true;
-      }
-      logger.log({
-        level: "emergency",
-        message: error.message,
-        stack: error.stack,
-        isLoggedIn: false,
-        id: userID,
-        api,
-      })
     }
   })
-  if (safeUser && !hasReturned) res.json(safeUser);
-  else if (!hasReturned) res.send(401);
 })
 
 

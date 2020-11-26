@@ -1,65 +1,29 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
-import {logger, alertWarn} from "../../../utils";
+import {logger, alertWarn, base_url} from "../../../utils";
+import axios from "axios";
+import store from '../store';
+axios.defaults.headers = {
+  'Content-Type': 'application/json'
+}
 
 const getters = {}
 const actions = {
 // LOAS
 
   async submitLOA(context, [end_date, reason]) {
-    const loa = {
-      start_date: await firebase.firestore.Timestamp.now(),
-      end_date,
-      reason,
-      userID: firebase.auth().currentUser.uid
-    }
-    await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("loas").doc().set(loa).then(async () => {
-      logger.log({
-        level: "info",
-        message: "User fetched",
-        userID: firebase.auth().currentUser.uid,
-        isLoggedIn: true
-      })
+    const accessToken = await store.getters.currentUser.accessToken;
+    await axios.post(`${base_url}/settings/loa/submit`, {
+      accessToken,
+      endDate: end_date,
+      reason
+    }).then(async () => {
+        await context.dispatch("fetchCurrentUser");
     }).catch(error => {
-      if (error) {
-        logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          userID: firebase.auth().currentUser.uid,
-          debugInfo: {
-            end_date,
-            reason
-          },
-          isLoggedIn: true
-        })
-        alertWarn(0);
+      if(error) {
+        alert(error.message);
       }
-    });
-    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({onLOA: true}).then(async () => {
-      logger.log({
-        level: "info",
-        message: "User submitted LOA",
-        isLoggedIn: true,
-        userID: firebase.auth().currentUser.uid
-      })
-    }).catch(error => {
-      if (error) {
-        logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          userID: firebase.auth().currentUser.uid,
-          debugInfo: {
-            end_date,
-            reason
-          },
-          isLoggedIn: true
-        })
-        alertWarn(0);
-      }
-    });
-    await context.dispatch("fetchCurrentUser");
+    })
   },
   async endLOA(context) {
     await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({onLOA: false}).then(async () => {

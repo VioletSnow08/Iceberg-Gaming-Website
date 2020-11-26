@@ -7,3 +7,46 @@ const md5 = require("md5");
 const jwt = require("jsonwebtoken");
 const chalk = require('chalk');
 const logger = require("../../utils").logger;
+const {requiresAuth} = require("../middleware/auth");
+
+router.use(requiresAuth);
+
+// POST: /api/v1/settings/loa/submit
+// Params: none
+// Body: accessToken, end_date, reason
+// Return: loa
+router.post('/loa/submit', async (req, res) => {
+  const {accessToken, endDate, reason} = req.body;
+  const userID = req.user.id;
+  console.log("User ID: " + userID);
+  return;
+  const con = req.app.get('con');
+
+  let loa = {
+    startDate: new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}),
+    endDate: endDate.toLocaleString('en-US', {timeZone: 'America/Chicago'}),
+    reason,
+    userID
+  }
+  await con.query(`INSERT INTO loas (startDate, endDate, reason, userID) VALUES (?, ?, ?, ?)`, [loa.startDate, loa.endDate, loa.reason, loa.userID]).then(() => {
+    res.sendStatus(200);
+  }).catch(error => {
+    if(error) {
+      logger.log({
+        level: "error",
+        loa,
+        userID,
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true
+      })
+      res.sendStatus(500);
+    }
+  })
+})
+
+
+
+module.exports = {
+  router
+};

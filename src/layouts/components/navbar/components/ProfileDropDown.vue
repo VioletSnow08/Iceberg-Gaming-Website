@@ -27,7 +27,7 @@
 
 
           <vs-divider class="m-1" />
-          <li v-if="currentUser.roles.includes('[ICE] Member')" @click="$router.push('/settings')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
+          <li v-if="currentUser" @click="$router.push('/settings')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="SettingsIcon" svgClasses="w-4 h-4" />
             <span class="ml-2">Settings</span>
           </li>

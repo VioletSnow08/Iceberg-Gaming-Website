@@ -17,11 +17,12 @@ async function requiresAuth(req, res, next) {
           id: null,
           api: "Requires Auth - Middleware"
         })
-        res.sendStatus(400);
+        res.status(400).send("JWT Expired!");
       } else {
-        await con.query(`SELECT * FROM users WHERE id = ?`, [decodedToken.id]).then(rows => {
+        await con.query(`SELECT * FROM users WHERE id = ?`, [decodedToken.id]).then(async rows => {
           if(rows[0]) {
-            req.userID = decodedToken.id;
+            let user = await getUser(req, res, next, decodedToken.id)
+            req.user = user;
             next();
           } else {
             res.status(401).send("Invalid accessToken!");
@@ -46,7 +47,71 @@ async function requiresAuth(req, res, next) {
   }
 }
 
+async function getUser(req, res, next, userID) {
+  const con = req.app.get('con');
+  let safeUser;
+  let apps;
+  let hasReturned = false;
+  await con.query(`SELECT * FROM users WHERE id = ?`, [userID]).then(async rows => {
+    if (!hasReturned && rows[0]) { // If there is a user... (required)
+      safeUser = rows[0];
+      return await con.query(`SELECT * FROM user_roles WHERE userID = ?`, [userID]);
+    } else {
+      res.sendStatus(401);
+      hasReturned = true;
+    }
+  }).then(async rows => {
+    let roles = [];
+    if (!hasReturned && rows[0]) { // If the user has roles... (required)
+      rows.forEach(role => {
+        roles.push(role);
+      })
+      safeUser.roles = roles;
+      return await con.query(`SELECT * FROM 17th_members WHERE userID = ? ORDER BY createdAt desc`, [userID])
+    } else {
+      res.sendStatus(401);
+      hasReturned = true;
+    }
+  }).then(async rows => {
+    if (!hasReturned && rows[0]) { // If the user has any 17th Member Rows (not required)
+      safeUser.bct = rows;
+    }
+    return await con.query(`SELECT * FROM iceberg_applications WHERE userID = ?`, [userID])
+  }).then(async rows => {
+    if (!hasReturned && rows[0]) { // If the user has any Iceberg Applications (not required)
+      rows.forEach(row => {
+        apps.push(row);
+      })
+    }
+    return await con.query(`SELECT * FROM 17th_applications WHERE userID = ?`, [userID])
+  }).then(async rows => {
+    if (!hasReturned && rows[0]) { // If the user has any 17th BCT Applications (not required)
+      rows.forEach(row => {
+        apps.push(row);
+      })
+    }
+  }).catch(error => {
+    if (error) {
+      if (hasReturned === false) {
+        res.status(500).send("A server error has occurred! Please try again.");
+        hasReturned = true;
+      }
+      logger.log({
+        level: "emergency",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: false,
+        id: userID,
+        api,
+      })
+    }
+  })
+  if (safeUser && !hasReturned) return safeUser;
+  else if (!hasReturned) res.send(401);
+
+}
 
 module.exports = {
-  requiresAuth
+  requiresAuth,
+  getUser
 }
