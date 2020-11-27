@@ -56,10 +56,10 @@ const actions = {
     }, 3000);
   },
   async loginUser({commit}, [email, password]) {
-    await axios.post(`${base_url}/user/login`, JSON.stringify({email, password})).then(async (response) => {
-      await localStorage.setItem('refreshToken', response.data.refreshToken) // No need to stringify, since it is already a string
-      await this.dispatch('fetchCurrentUser');
-      await router.push('/user/hub')
+    await axios.post(`${base_url}/user/login`, JSON.stringify({email, password})).then((response) => {
+      localStorage.setItem('refreshToken', response.data.refreshToken) // No need to stringify, since it is already a string
+      this.dispatch('fetchCurrentUser');
+      router.push('/user/hub')
     }).catch((error) => {
       if (error) alert(error.message);
     })
@@ -83,10 +83,10 @@ const actions = {
           refreshToken,
           id
         }
-      }).then(async (response) => {
-        await localStorage.removeItem('refreshToken');
-        await commit('logoutUser');
-        await router.push('/').catch(()=>{});;
+      }).then((response) => {
+        localStorage.removeItem('refreshToken');
+        commit('logoutUser');
+        router.push('/').catch(()=>{});;
       }).catch((error) => {
         if (error) alert(error.message);
       })
