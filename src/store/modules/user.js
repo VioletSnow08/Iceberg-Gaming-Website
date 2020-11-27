@@ -26,7 +26,7 @@ const getters = {
 }
 
 const actions = {
-  async fetchCurrentUser({commit}) {
+  async fetchCurrentUser({commit, rootGetters}) {
     const refreshToken = await localStorage.getItem('refreshToken');
     if (refreshToken) {
       const accessToken = await this.dispatch('fetchAccessToken');
@@ -47,15 +47,15 @@ const actions = {
     }
 
   },
-  async accessTokenTimer({commit}) {
+  async accessTokenTimer({commit, rootGetters}) {
     setInterval(() => {
-      if (store.getters.currentUser) {
+      if (rootGetters.currentUser) {
         let accessToken = this.dispatch('fetchAccessToken');
         commit('setAccessToken', accessToken);
       }
     }, 3000);
   },
-  async loginUser({commit}, [email, password]) {
+  async loginUser({commit, rootGetters}, [email, password]) {
     await axios.post(`${base_url}/user/login`, JSON.stringify({email, password})).then((response) => {
       localStorage.setItem('refreshToken', response.data.refreshToken) // No need to stringify, since it is already a string
       this.dispatch('fetchCurrentUser');
@@ -64,20 +64,20 @@ const actions = {
       if (error) alert(error.message);
     })
   },
-  async fetchAccessToken({commit}) {
-    if (store.getters.currentUser) {
+  async fetchAccessToken({commit, rootGetters}) {
+    if (rootGetters.currentUser) {
       const data = JSON.stringify({
-        refreshToken: store.getters.currentUser.refreshToken
+        refreshToken: rootGetters.currentUser.refreshToken
       })
       return await axios.post(`${base_url}/user/refresh_token`, data).then(async (response) => {
         return response.data.accessToken;
       })
     } else return null;
   },
-  async logoutUser({commit}) {
+  async logoutUser({commit, rootGetters}) {
     const refreshToken = await localStorage.getItem('refreshToken');
     if (refreshToken) {
-      const id = await store.getters.currentUser.id;
+      const id = await rootGetters.currentUser.id;
       await axios.delete(`${base_url}/user/logout`, {
         data: {
           refreshToken,
@@ -92,7 +92,7 @@ const actions = {
       })
     }
   },
-  async registerUser({commit}, [username, email, password, discord]) {
+  async registerUser({commit, rootGetters}, [username, email, password, discord]) {
     await axios.post(`${base_url}/user/register`, {
       email, password, discord, username
     }).then(response => {
