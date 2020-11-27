@@ -66,10 +66,9 @@ const actions = {
   },
   async fetchAccessToken({commit, rootGetters}) {
     if (rootGetters.currentUser) {
-      const data = JSON.stringify({
+      return await axios.post(`${base_url}/user/refresh_token`, {
         refreshToken: rootGetters.currentUser.refreshToken
-      })
-      return await axios.post(`${base_url}/user/refresh_token`, data).then(async (response) => {
+      }).then(async (response) => {
         return response.data.accessToken;
       })
     } else return null;
