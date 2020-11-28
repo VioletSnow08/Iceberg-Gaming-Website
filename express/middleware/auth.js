@@ -21,12 +21,12 @@ async function requiresAuth(req, res, next) {
       } else {
         await con.query(`SELECT * FROM users WHERE id = ?`, [decodedToken.id]).then(async rows => {
           if(rows[0]) {
-            let user = getUser(req, res, next, decodedToken.id)
-            if(user) {
-              req.user = user;
-              next();
-            } // else if handled in the function
-
+            getUser(req, res, next, decodedToken.id).then(user => {
+              if(user) {
+                  req.user = user;
+                  next();
+              }
+            })
           } else {
             res.status(401).send("Invalid accessToken!");
           }
@@ -109,9 +109,14 @@ async function getUser(req, res, next, userID) {
       })
     }
   })
-  if (safeUser && !hasReturned) return safeUser;
-  else if (!hasReturned) res.send(401);
-
+  let promise = new Promise(function(resolve, reject) {
+    if(safeUser && !hasReturned) resolve(safeUser);
+    else {
+      res.sendStatus(401);
+      reject();
+    };
+  });
+  return promise;
 }
 
 module.exports = {

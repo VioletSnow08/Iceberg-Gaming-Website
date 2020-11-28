@@ -123,10 +123,11 @@ router.post('/', async (req, res, next) => {
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
     if (!hasReturned && rows[0]) { // If there is a refresh token... (required)
       userID = rows[0].id;
-      let user = await getUser(req, res, next, userID);
-      if(user) {
-        res.json(user);
-      }
+      getUser(req, res, next, userID).then(user => {
+        if(user) {
+          res.json(user);
+        }
+      })
     } else {
       res.sendStatus(401);
       hasReturned = true;

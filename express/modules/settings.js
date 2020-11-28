@@ -18,8 +18,6 @@ router.use(requiresAuth);
 router.post('/loa/submit', async (req, res) => {
   const {accessToken, endDate, reason} = req.body;
   const userID = req.user.id;
-  console.log("User ID: " + userID);
-  return;
   const con = req.app.get('con');
 
   let loa = {
