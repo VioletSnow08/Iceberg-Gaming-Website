@@ -21,9 +21,12 @@ async function requiresAuth(req, res, next) {
       } else {
         await con.query(`SELECT * FROM users WHERE id = ?`, [decodedToken.id]).then(async rows => {
           if(rows[0]) {
-            let user = await getUser(req, res, next, decodedToken.id)
-            req.user = user;
-            next();
+            let user = getUser(req, res, next, decodedToken.id)
+            if(user) {
+              req.user = user;
+              next();
+            } // else if handled in the function
+
           } else {
             res.status(401).send("Invalid accessToken!");
           }

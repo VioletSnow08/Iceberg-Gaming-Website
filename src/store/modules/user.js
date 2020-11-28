@@ -29,16 +29,16 @@ const actions = {
   async fetchCurrentUser({commit, rootGetters}) {
     const refreshToken = await localStorage.getItem('refreshToken');
     if (refreshToken) {
-      const accessToken = await this.dispatch('fetchAccessToken');
-      await axios.post(`${base_url}/user/`, JSON.stringify({refreshToken}))
-        .then(function (response) {
+      const accessToken = this.dispatch('fetchAccessToken', [refreshToken]);
+      await axios.post(`${base_url}/user/`, {refreshToken})
+        .then(response => {
           let user = {
             ...response.data,
             refreshToken,
             accessToken
           }
           commit('fetchCurrentUser', user);
-        }).catch(function (error) {
+        }).catch(error => {
           if(error) {
             alert(error.message)
           }
@@ -50,13 +50,13 @@ const actions = {
   async accessTokenTimer({commit, rootGetters}) {
     setInterval(() => {
       if (rootGetters.currentUser) {
-        let accessToken = this.dispatch('fetchAccessToken');
+        let accessToken = this.dispatch('fetchAccessToken', [rootGetters.currentUser.refreshToken]);
         commit('setAccessToken', accessToken);
       }
     }, 3000);
   },
   async loginUser({commit, rootGetters}, [email, password]) {
-    await axios.post(`${base_url}/user/login`, JSON.stringify({email, password})).then((response) => {
+    await axios.post(`${base_url}/user/login`, {email, password}).then((response) => {
       localStorage.setItem('refreshToken', response.data.refreshToken) // No need to stringify, since it is already a string
       this.dispatch('fetchCurrentUser');
       router.push('/user/hub')
@@ -64,10 +64,10 @@ const actions = {
       if (error) alert(error.message);
     })
   },
-  async fetchAccessToken({commit, rootGetters}) {
-    if (rootGetters.currentUser) {
+  async fetchAccessToken({commit, rootGetters}, [refreshToken]) {
+    if (refreshToken) {
       return await axios.post(`${base_url}/user/refresh_token`, {
-        refreshToken: rootGetters.currentUser.refreshToken
+        refreshToken
       }).then(async (response) => {
         return response.data.accessToken;
       })
