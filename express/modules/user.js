@@ -126,11 +126,27 @@ router.post('/', async (req, res, next) => {
       getUser(req, res, next, userID).then(user => {
         if(user) {
           res.json(user);
+          logger.log({
+            level: "info",
+            message: "Current User Fetched",
+            api,
+            refreshToken,
+            userID,
+            isLoggedIn: true
+          })
         }
       })
     } else {
       res.sendStatus(401);
       hasReturned = true;
+      logger.log({
+        level: "info",
+        message: "Attempted to fetch current user with invalid token",
+        isLoggedIn: false,
+        userID: null,
+        api,
+        refreshToken
+      })
     }
   })
 })
@@ -143,12 +159,31 @@ router.post('/', async (req, res, next) => {
 router.post('/refresh_token', async (req, res) => {
   const {refreshToken} = req.body;
   const con = req.app.get('con');
+  const api = "/api/v1/user/refresh_token";
   if (!refreshToken) return res.status(401).send("Please login and provide an id!");
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
     if (rows[0]) {
-      res.json({accessToken: await generateAccessToken(rows[0].id)})
+      let accessToken = await generateAccessToken(rows[0].id)
+      res.json({accessToken})
+      logger.log({
+        level: "info",
+        message: "Generated Access Token",
+        accessToken,
+        refreshToken,
+        userID: rows[0].id,
+        isLoggedIn: true,
+        api
+      })
     } else {
       res.sendStatus(401);
+      logger.log({
+        level: "info",
+        message: "Failed to generate Access Token",
+        refreshToken,
+        userID: null,
+        isLoggedIn: false,
+        api
+      })
     }
   })
 })
@@ -174,6 +209,14 @@ router.delete('/logout', async (req, res) => {
   }).then(async () => {
     hasReturned = true;
     res.sendStatus(200);
+    logger.log({
+      level: "info",
+      message: "Account deleted",
+      isLoggedIn: false,
+      refreshToken,
+      userID: id,
+      api
+    })
   }).catch(error => {
     if (error) {
       if (hasReturned === false) {
