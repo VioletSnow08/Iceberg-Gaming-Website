@@ -48,9 +48,9 @@ const actions = {
 
   },
   async accessTokenTimer({commit, rootGetters}) {
-    setInterval(() => {
+    setInterval(async() => {
       if (rootGetters.currentUser) {
-        let accessToken = this.dispatch('fetchAccessToken', [rootGetters.currentUser.refreshToken]);
+        let accessToken = await this.dispatch('fetchAccessToken', [rootGetters.currentUser.refreshToken]);
         commit('setAccessToken', accessToken);
       }
     }, 3000);

@@ -22,12 +22,23 @@ router.post('/loa/submit', async (req, res) => {
 
   let loa = {
     startDate: new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}),
-    endDate: endDate.toLocaleString('en-US', {timeZone: 'America/Chicago'}),
+    endDate: new Date(endDate).toLocaleString('en-US', {timeZone: 'America/Chicago'}),
     reason,
     userID
   }
-  await con.query(`INSERT INTO loas (startDate, endDate, reason, userID) VALUES (?, ?, ?, ?)`, [loa.startDate, loa.endDate, loa.reason, loa.userID]).then(() => {
-    res.sendStatus(200);
+  await con.query(`INSERT INTO loas (startDate, endDate, reason, userID) VALUES (?, ?, ?, ?)`, [loa.startDate, loa.endDate, loa.reason, loa.userID]).then(result => {
+    loa = {
+      ...loa,
+      id: result.insertId
+    }
+    res.json(loa);
+    logger.log({
+      level: "info",
+      loa,
+      userID,
+      message: "LOA Created",
+      isLoggedIn: true
+    })
   }).catch(error => {
     if(error) {
       logger.log({
