@@ -124,7 +124,7 @@ router.post('/', async (req, res, next) => {
     if (!hasReturned && rows[0]) { // If there is a refresh token... (required)
       userID = rows[0].id;
       getUser(req, res, next, userID).then(user => {
-        if(user) {
+        if (user) {
           res.json(user);
           logger.log({
             level: "info",
@@ -142,6 +142,40 @@ router.post('/', async (req, res, next) => {
       logger.log({
         level: "info",
         message: "Attempted to fetch current user with invalid token",
+        isLoggedIn: false,
+        userID: null,
+        api,
+        refreshToken
+      })
+    }
+  })
+})
+// POST: /api/v1/user/all
+// Params: none
+// Body: refreshToken
+// Return: user
+router.post('/all', async (req, res, next) => {
+  const api = "/api/v1/user/all";
+  const con = req.app.get('con');
+  const refreshToken = req.body.refreshToken;
+  if (!refreshToken) return res.status(401).send("Please login!");
+  let userID;
+  let safeUsers = [];
+  await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
+    if (rows[0]) { // If there is a refresh token... (required)
+      await con.query(`SELECT * FROM users`).then(async rowss => {
+        if (rowss) {
+          rowss.forEach(row => {
+            safeUsers.push(row);
+          })
+        }
+        res.json(safeUsers);
+      })
+    } else {
+      res.sendStatus(401);
+      logger.log({
+        level: "info",
+        message: "Attempted to fetch users with invalid token",
         isLoggedIn: false,
         userID: null,
         api,

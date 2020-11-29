@@ -32,22 +32,19 @@ const logger = createLogger({
   ],
 });
 
-const alertWarn = function(text) {
-  if(text == 0) {
-    text = "Oops. An error occurred. Vincent Lauro will be reaching out to you shortly."
-  }
-  alert(text);
-}
-
 const commonMessages = {
   accessPage: "User Accessed a Page",
   restrictedPage: "Attempt at accessing restricted page"
 }
 
+function alertGeneral() {
+  alert("Oops! An error has occurred. Please try again later. If this problem continues, please contact Vinniehat.");
+}
+
 module.exports = {
   logger,
-  alertWarn,
   commonMessages,
-  base_url
+  base_url,
+  alertGeneral
 }
 
