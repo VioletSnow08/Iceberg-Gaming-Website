@@ -123,7 +123,7 @@ router.post('/', async (req, res, next) => {
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
     if (!hasReturned && rows[0]) { // If there is a refresh token... (required)
       userID = rows[0].id;
-      getUser(req, res, next, userID).then(user => {
+      getUser(con, userID).then(user => {
         if (user) {
           res.json(user);
           logger.log({
@@ -159,18 +159,11 @@ router.post('/all', async (req, res, next) => {
   const con = req.app.get('con');
   const refreshToken = req.body.refreshToken;
   if (!refreshToken) return res.status(401).send("Please login!");
-  let userID;
   let safeUsers = [];
+  let hasReturned = false;
   await con.query(`SELECT * FROM tokens WHERE token = ?`, [refreshToken]).then(async rows => {
     if (rows[0]) { // If there is a refresh token... (required)
-      await con.query(`SELECT * FROM users`).then(async rowss => {
-        if (rowss) {
-          rowss.forEach(row => {
-            safeUsers.push(row);
-          })
-        }
-        res.json(safeUsers);
-      })
+      return await con.query(`SELECT * FROM users`)
     } else {
       res.sendStatus(401);
       logger.log({
@@ -181,7 +174,19 @@ router.post('/all', async (req, res, next) => {
         api,
         refreshToken
       })
+      hasReturned = true;
     }
+  }).then(async rows => {
+    if (!hasReturned && rows) {
+      for (let i = 0; i < rows.length; i++) {
+        let id = rows[i].id;
+        if (hasReturned) break;
+        getUser(con, id).then(user => {
+          safeUsers.push(user);
+        }).catch(() => {})
+      }
+    }
+    res.json(safeUsers);
   })
 })
 
@@ -270,7 +275,7 @@ router.delete('/logout', async (req, res) => {
 })
 
 function generateAccessToken(id) {
-  return jwt.sign({id}, jwt_secret, {expiresIn: '15s'})
+  return jwt.sign({id}, jwt_secret, {expiresIn: '10m'})
 }
 
 
