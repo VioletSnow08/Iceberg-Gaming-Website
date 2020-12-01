@@ -8,6 +8,7 @@ const jwt = require("jsonwebtoken");
 const chalk = require('chalk');
 const logger = require("../../utils").logger;
 const {requiresAuth} = require("../middleware/auth");
+const {DateTime} = require("luxon");
 
 router.use(requiresAuth);
 
@@ -16,13 +17,21 @@ router.use(requiresAuth);
 // Body: accessToken, end_date, reason
 // Return: loa
 router.post('/loa/submit', async (req, res) => {
-  const {accessToken, endDate, reason} = req.body;
+  let {accessToken, endDate, reason} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
-
+  endDate = new Date(endDate);
   let loa = {
-    startDate: new Date().toLocaleString('en-US', {timeZone: 'America/Chicago'}),
-    endDate: new Date(endDate).toLocaleString('en-US', {timeZone: 'America/Chicago'}),
+    startDate: DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss'),
+    endDate: DateTime.fromObject({
+      year: endDate.getFullYear(),
+      month: endDate.getMonth(),
+      day: endDate.getDay(),
+      hour: endDate.getHours(),
+      minutes: endDate.getMinutes(),
+      seconds: endDate.getSeconds(),
+      zone: 'America/Chicago'
+    }).toFormat('yyyy-MM-dd HH:mm:ss'),
     reason,
     userID
   }

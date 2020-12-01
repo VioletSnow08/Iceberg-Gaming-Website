@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!currentUser || !users">
+    <div v-if="!currentUser">
       <h1>{{ this.$vs.loading({type: "radius", text: "Loading User..."}) }}</h1>
     </div>
     <div v-else>
@@ -56,7 +56,7 @@
             <h1>Leave of Absence(LOA)</h1>
             <h5>Do you have to take a break from the community? Fill out an LOA!</h5>
             <br>
-            <div v-if="isUserOnLOA(currentUser.id)">
+            <div v-if="isCurrentUserOnLOA()">
               <vs-button @click="confirmLOAPopup=true" color="primary">End LOA</vs-button>
               <vs-popup classContent="popup-example" title="Are you sure you would like to end your current LOA"
                         :active.sync="confirmLOAPopup">
@@ -107,7 +107,7 @@ import Datepicker from 'vuejs-datepicker';
 export default {
   name: "Settings",
   computed: {
-    ...mapGetters(["currentUser", "isUserOnLOA", "users"]),
+    ...mapGetters(["currentUser", "isCurrentUserOnLOA", "users"]),
   },
   mounted() {
     setTimeout(() => {
