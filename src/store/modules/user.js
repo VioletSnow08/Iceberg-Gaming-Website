@@ -23,14 +23,17 @@ const getters = {
   users: state => {
     return state.users;
   },
-  isUserOnLOA: (state) => (userID) => {
-    let user = state.users.find(user => user.id === userID);
+  isCurrentUserOnLOA: (state) => (userID) => {
+    let user = state.user;
     if(user.loas[0]) {
       if(user.loas[0].isDeleted === 0) {
         return true
+      } else {
+        return false;
       }
+    } else {
+      return false;
     }
-    return false;
   }
 }
 
@@ -60,7 +63,7 @@ const actions = {
         let accessToken = await this.dispatch('fetchAccessToken', [rootGetters.currentUser.refreshToken]);
         commit('setAccessToken', accessToken);
       }
-    }, 3000);
+    }, 540000);
   },
   async loginUser({commit, rootGetters}, [email, password]) {
     await axios.post(`${utils.base_url}/user/login`, {email, password}).then((response) => {
@@ -113,7 +116,7 @@ const actions = {
     const refreshToken = await localStorage.getItem('refreshToken');
     if(refreshToken) {
       await axios.post(`${utils.base_url}/user/all`, {refreshToken}).then(response => {
-        commit('setUsers', response.data.users);
+        commit('setUsers', response.data);
       }).catch(error => {
         if(error) {
           utils.alertGeneral()
@@ -132,6 +135,9 @@ const mutations = {
   },
   logoutUser(state) {
     state.user = null;
+  },
+  setUsers(state, users) {
+    state.users = users;
   }
 }
 

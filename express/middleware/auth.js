@@ -20,12 +20,16 @@ async function requiresAuth(req, res, next) {
       } else {
         await con.query(`SELECT * FROM users WHERE id = ?`, [decodedToken.id]).then(async rows => {
           if (rows[0]) {
-            getUser(req, res, next, decodedToken.id).then(user => {
+            getUser(con, decodedToken.id).then(user => {
               if (user) {
                 req.user = user;
                 next();
               }
-            }).catch({})
+            }).catch(error => {
+              if(error) {
+                res.status(401).send("Oops! An error has occurred.");
+              }
+            })
           } else {
             res.status(401).send("Invalid accessToken!");
           }
@@ -49,59 +53,58 @@ async function requiresAuth(req, res, next) {
   }
 }
 
-async function getUser(req, res, next, userID) {
-  const con = req.app.get('con');
+async function getUser(con, userID) {
   let user;
   let apps = [];
   let roles = [];
   let loas = [];
   let bctMemberRows = [];
-  let errorCode;
+  let hasReturned;
   let errorMessage = "";
   let caughtError;
   await con.query(`SELECT * FROM users WHERE id = ?`, [userID]).then(async rows => {
-    if (!errorCode && rows[0]) { // If there is a user... (required)
+    if (!hasReturned && rows[0]) { // If there is a user... (required)
       user = rows[0];
       return await con.query(`SELECT * FROM user_roles WHERE userID = ?`, [userID]);
     } else {
-      errorCode = 401;
+      hasReturned = true;
     }
   }).then(async rows => {
-    if (!errorCode && rows[0]) { // If the user has roles... (required)
+    if (!hasReturned && rows[0]) { // If the user has roles... (required)
       rows.forEach(role => {
         roles.push(role);
       })
       user.roles = roles;
       return await con.query(`SELECT * FROM 17th_members WHERE userID = ? ORDER BY createdAt desc`, [userID])
     } else {
-      errorCode = 401;
+      hasReturned = true;
     }
   }).then(async rows => {
-    if (!errorCode && rows[0]) { // If the user has any 17th Member Rows (not required)
+    if (!hasReturned && rows[0]) { // If the user has any 17th Member Rows (not required)
       rows.forEach(row => {
         bctMemberRows.push(row);
       })
       user.bct = bctMemberRows;
     }
-    return await con.query(`SELECT * FROM iceberg_applications WHERE userID = ?`, [userID])
+    return await con.query(`SELECT * FROM iceberg_applications WHERE userID = ? ORDER BY createdAt desc`, [userID])
   }).then(async rows => {
-    if (!errorCode && rows[0]) { // If the user has any Iceberg Applications (not required)
+    if (!hasReturned && rows[0]) { // If the user has any Iceberg Applications (not required)
       rows.forEach(row => {
         apps.push(row);
       })
       // Is not added to the user because we have the 17th Applications to add to the array still...
     }
-    return await con.query(`SELECT * FROM 17th_applications WHERE userID = ?`, [userID])
+    return await con.query(`SELECT * FROM 17th_applications WHERE userID = ? ORDER BY createdAt desc`, [userID])
   }).then(async rows => {
-    if (!errorCode && rows[0]) { // If the user has any 17th BCT Applications (not required)
+    if (!hasReturned && rows[0]) { // If the user has any 17th BCT Applications (not required)
       rows.forEach(row => {
         apps.push(row);
       })
       user.applications = apps;
     }
-    return await con.query(`SELECT * FROM loas WHERE userID = ?`, [userID])
+    return await con.query(`SELECT * FROM loas WHERE userID = ? ORDER BY startDate desc`, [userID])
   }).then(async rows => {
-    if (!errorCode && rows[0]) {
+    if (!hasReturned && rows[0]) {
       rows.forEach(row => {
         loas.push(row);
       })
@@ -109,8 +112,6 @@ async function getUser(req, res, next, userID) {
     }
   }).catch(error => {
     if (error) {
-      errorCode = 500;
-      errorMessage = "An error has occurred, please try again."
       caughtError = error;
       logger.log({
         level: "emergency",
@@ -123,7 +124,7 @@ async function getUser(req, res, next, userID) {
     }
   })
   let promise = new Promise(function (resolve, reject) {
-    if (user && !errorCode) {
+    if (user && !hasReturned) {
       let safeUser = {
         id: user.id,
         createdAt: user.createdAt,
@@ -139,12 +140,9 @@ async function getUser(req, res, next, userID) {
         loas
       }
       resolve(safeUser);
-    }
-    else {
-      res.status(errorCode).send(errorMessage);
+    } else {
       reject(caughtError);
-    }
-    ;
+    };
   });
   return promise;
 }
