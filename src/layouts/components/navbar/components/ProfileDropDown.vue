@@ -1,6 +1,6 @@
 <template>
   <div class="the-navbar__user-meta flex items-center" v-if="currentUser">
-
+    <vs-chip v-if="currentUser.loas[0].isDeleted === 0" style="margin-right:10px" color="warning">On LOA</vs-chip>
     <div class="text-right leading-tight hidden sm:block">
       <p class="font-semibold">{{ currentUser.username }}</p>
       <small>{{ currentUser.status }}</small>
