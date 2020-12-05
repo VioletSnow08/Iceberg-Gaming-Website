@@ -16,7 +16,7 @@ import firebase from 'firebase'
 import User from "./modules/user";
 import Admin from "./modules/admin";
 import Pages from "./modules/pages";
-import {logger, commonMessages} from "../../utils"
+const utils = require("../../utils");
 
 Vue.use(Router)
 
@@ -98,7 +98,7 @@ router.afterEach(() => {
 async function logView(to, from, level, message, notes) {
   let id;
   if (firebase.auth().currentUser) id = firebase.auth().currentUser.uid;
-  logger.log({
+  utils.logger.log({
     level,
     message,
     to,
@@ -106,23 +106,6 @@ async function logView(to, from, level, message, notes) {
     isLoggedIn: id ? true : false,
     id: id,
     notes,
-  })
-}
-
-async function checkAndRedirect(to, from, next, requiredRoles) {
-  await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => { // Check to see if they have the proper roles.
-    if (requiredRoles.some(role => doc.data().roles.includes(role))) {
-      await logView(to.path, from.path, "info", commonMessages.accessPage)
-      next();
-    } else {
-      await logView(to.path, from.path, "notice", commonMessages.restrictedPage)
-      next({
-        path: '/pages/perms',
-        query: {
-          redirect: to.fullPath
-        }
-      })
-    }
   })
 }
 

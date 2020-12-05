@@ -1,15 +1,16 @@
 const jwt = require("jsonwebtoken");
 const {jwt_secret} = require("../../credentials");
-const {logger} = require("../../utils");
+const utils = require("../../utils");
 
 
 async function requiresAuth(req, res, next) {
   const accessToken = req.body.accessToken;
   const con = req.app.get('con');
+  console.log(accessToken);
   if (accessToken) {
     jwt.verify(accessToken, jwt_secret, async (error, decodedToken) => {
       if (error) {
-        logger.log({
+        utils.logger.log({
           level: "info",
           message: error.message,
           isLoggedIn: false,
@@ -35,7 +36,7 @@ async function requiresAuth(req, res, next) {
           }
         }).catch(e => {
           if (e) {
-            logger.log({
+            utils.logger.log({
               level: "emergency",
               message: e.message,
               stack: e.stack,
@@ -113,7 +114,7 @@ async function getUser(con, userID) {
   }).catch(error => {
     if (error) {
       caughtError = error;
-      logger.log({
+      utils.logger.log({
         level: "emergency",
         message: error.message,
         stack: error.stack,

@@ -11,7 +11,8 @@ import Axios from "axios";
 
 const {firebaseConfig} = require("../credentials");
 const axios = require("axios");
-const logger = require("../utils.js").logger;
+const utils = require("../utils");
+const logger = utils.logger;
 import "setimmediate";
 import Vue from 'vue'
 import App from './App.vue'

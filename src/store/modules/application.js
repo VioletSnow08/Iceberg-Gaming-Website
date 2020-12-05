@@ -1,7 +1,7 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import router from '@/router/router'
-import {logger, alertWarn} from "../../../utils";
+const utils = require("../../../utils");
 
 const state = {
   applications: null
@@ -63,7 +63,7 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
-        logger.log({
+        utils.logger.log({
           level: "info",
           message: "New Application created",
           isLoggedIn: true,
@@ -73,7 +73,7 @@ const actions = {
         await router.push('/user/applications')
       }).catch(error => {
         if(error) {
-          logger.log({
+          utils.logger.log({
             level: "error",
             message: error.message,
             stack: error.stack,
@@ -81,7 +81,7 @@ const actions = {
             division: "17th",
             userID: firebase.auth().currentUser.uid
           })
-          alertWarn(0)
+          utils.alertGeneral()
         }
       })
     }
@@ -105,7 +105,7 @@ const actions = {
         date: firebase.firestore.Timestamp.now()
       }
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
-        logger.log({
+        utils.logger.log({
           level: "info",
           message: "New Application created",
           isLoggedIn: true,
@@ -115,7 +115,7 @@ const actions = {
         await router.push('/user/applications')
       }).catch(error => {
         if(error) {
-          logger.log({
+          utils.logger.log({
             level: "error",
             message: error.message,
             stack: error.stack,
@@ -123,7 +123,7 @@ const actions = {
             division: "Iceberg",
             userID: firebase.auth().currentUser.uid
           })
-          alertWarn(0);
+          utils.alertGeneral();
         }
       })
     }
@@ -149,18 +149,18 @@ const actions = {
           }
         }).catch(error => {
           if(error) {
-            logger.log({
+            utils.logger.log({
               level: "alert",
               message: error.message,
               stack: error.stack,
               isLoggedIn: true,
               userID: firebase.auth().currentUser.uid
             })
-            alertWarn(0);
+            utils.alertGeneral();
           }
         })
       }
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "Fetched Applications",
         isLoggedIn: true,
@@ -168,14 +168,14 @@ const actions = {
       })
     }).catch(error => {
       if(error) {
-        logger.log({
+        utils.logger.log({
           level: "alert",
           message: error.message,
           stack: error.stack,
           isLoggedIn: true,
           userID: firebase.auth().currentUser.uid,
         })
-        alertWarn(0)
+        utils.alertGeneral()
       }
     })
 
@@ -208,7 +208,7 @@ const actions = {
               comment: newComment
             }).then(async () => {
               console.log("updated");
-              logger.log({
+              utils.logger.log({
                 level: "info",
                 message: "Application Status Changed",
                 recruiter: firebase.auth().currentUser.uid,
@@ -220,7 +220,7 @@ const actions = {
               })
             }).catch(error => {
               if(error) {
-                logger.log({
+                utils.logger.log({
                   level: "alert",
                   message: error.message,
                   stack: error.stack,
@@ -231,7 +231,7 @@ const actions = {
                   division,
                   newStatus
                 })
-                alertWarn(0)
+                utils.alertGeneral()
               }
             })
           } else if (division === "Iceberg") {
@@ -249,7 +249,7 @@ const actions = {
               status: newStatus,
               comment: newComment
             }).then(async () => {
-              logger.log({
+              utils.logger.log({
                 level: "info",
                 message: "Application Status Changed",
                 recruiter: firebase.auth().currentUser.uid,
@@ -261,7 +261,7 @@ const actions = {
               })
             }).catch(error => {
               if(error) {
-                logger.log({
+                utils.logger.log({
                   level: "alert",
                   message: error.message,
                   stack: error.stack,
@@ -272,7 +272,7 @@ const actions = {
                   division,
                   newStatus
                 })
-                alertWarn(0)
+                utils.alertGeneral()
               }
             })
           }

@@ -1,5 +1,5 @@
 import * as firebase from "firebase";
-import {logger, alertWarn} from "../../../utils";
+const utils = require("../../../utils");
 
 function formatDate(date) {
   let d = new Date(date),
@@ -54,14 +54,14 @@ const actions = {
           })
         }).catch(error => {
           if (error) {
-            logger.log({
+            utils.logger.log({
               level: "alert",
               message: error.message,
               stack: error.stack,
               userID: firebase.auth().currentUser.uid,
               isLoggedIn: true
             })
-            alertWarn(0);
+            utils.alertGeneral();
           }
         })
         await firebase.firestore().collectionGroup("threads").get().then(async threads => {
@@ -73,14 +73,14 @@ const actions = {
           })
         }).catch(error => {
           if (error) {
-            logger.log({
+            utils.logger.log({
               level: "alert",
               message: error.message,
               stack: error.stack,
               userID: firebase.auth().currentUser.uid,
               isLoggedIn: true
             })
-            alertWarn(0);
+            utils.alertGeneral();
           }
         })
         channels.forEach(channel => {
@@ -114,14 +114,14 @@ const actions = {
       }).catch(error => {
         if (error) {
           console.log(error);
-          logger.log({
+          utils.logger.log({
             level: "alert",
             message: error.message,
             stack: error.stack,
             userID: firebase.auth().currentUser.uid,
             isLoggedIn: true
           })
-          alertWarn(0);
+          utils.alertGeneral();
         }
       }) // End of 1st / Initial Query
       console.log(newChannels);

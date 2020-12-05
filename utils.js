@@ -40,11 +40,14 @@ const commonMessages = {
 function alertGeneral() {
   alert("Oops! An error has occurred. Please try again later. If this problem continues, please contact Vinniehat.");
 }
+const doesUserContainRoles = (userRoles, containsRoles) => {
+  return !!userRoles.some(row => containsRoles.includes(row.role))
+}
 
 module.exports = {
   logger,
   commonMessages,
   base_url,
-  alertGeneral
+  alertGeneral,
+  doesUserContainRoles
 }
-

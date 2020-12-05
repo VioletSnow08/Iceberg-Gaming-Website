@@ -6,7 +6,7 @@ const base_api = "/api/v1";
 const md5 = require("md5");
 const jwt = require("jsonwebtoken");
 const chalk = require('chalk');
-const logger = require("../../utils").logger;
+const utils = require("../../utils");
 const {getUser} = require("../middleware/auth");
 
 // POST: /api/v1/user/register
@@ -39,7 +39,7 @@ router.post('/register', async (req, res) => {
         res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }
-      logger.log({
+      utils.logger.log({
         level: "emergency",
         message: error.message,
         stack: error.stack,
@@ -95,7 +95,7 @@ router.post('/login', async (req, res) => {
         res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }
-      logger.log({
+      utils.logger.log({
         level: "emergency",
         message: error.message,
         stack: error.stack,
@@ -126,7 +126,7 @@ router.post('/', async (req, res, next) => {
       getUser(con, userID).then(user => {
         if (user) {
           res.json(user);
-          logger.log({
+          utils.logger.log({
             level: "info",
             message: "Current User Fetched",
             api,
@@ -139,7 +139,7 @@ router.post('/', async (req, res, next) => {
     } else {
       res.sendStatus(401);
       hasReturned = true;
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "Attempted to fetch current user with invalid token",
         isLoggedIn: false,
@@ -166,7 +166,7 @@ router.post('/all', async (req, res, next) => {
       return await con.query(`SELECT * FROM users`)
     } else {
       res.sendStatus(401);
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "Attempted to fetch users with invalid token",
         isLoggedIn: false,
@@ -204,7 +204,7 @@ router.post('/refresh_token', async (req, res) => {
     if (rows[0]) {
       let accessToken = await generateAccessToken(rows[0].id)
       res.json({accessToken})
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "Generated Access Token",
         accessToken,
@@ -215,7 +215,7 @@ router.post('/refresh_token', async (req, res) => {
       })
     } else {
       res.sendStatus(401);
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "Failed to generate Access Token",
         refreshToken,
@@ -248,7 +248,7 @@ router.delete('/logout', async (req, res) => {
   }).then(async () => {
     hasReturned = true;
     res.sendStatus(200);
-    logger.log({
+    utils.logger.log({
       level: "info",
       message: "Account deleted",
       isLoggedIn: false,
@@ -262,7 +262,7 @@ router.delete('/logout', async (req, res) => {
         res.status(500).send("A server error has occurred! Please try again.");
         hasReturned = true;
       }
-      logger.log({
+      utils.logger.log({
         level: "emergency",
         message: error.message,
         stack: error.stack,

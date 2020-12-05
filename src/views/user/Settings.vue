@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!currentUser">
+    <div v-if="!currentUser || !users">
       <h1>{{ this.$vs.loading({type: "radius", text: "Loading User..."}) }}</h1>
     </div>
     <div v-else>
@@ -152,12 +152,12 @@ export default {
       this.showConfirmationAlert_UserInfo = false;
       const regex = /\b(.*[^\s\\\#])#([0-9]{4})\b/;
 
-      if(!regex.test(this.newDiscordID) && this.newDiscordID != ""){
+      if(!regex.test(this.newDiscordID) && this.newDiscordID !== ""){
         this.isDiscord_Invalid = true;
       }
       else{
-        if(this.newDiscordID != ""){this.changeDiscordID(this.newDiscordID)}
-        if(this.newStatus != ""){this.changeStatus(this.newStatus)}
+        if(this.newDiscordID !== ""){this.changeDiscordID(this.newDiscordID)}
+        if(this.newStatus !== ""){this.changeStatus(this.newStatus)}
         this.changeIsEmailPublic(this.newIsEmailPublic);
         this.showConfirmationAlert_UserInfo = true;
         this.isDiscord_Invalid = false;
@@ -165,9 +165,14 @@ export default {
     },
     confirmEndLOA() {
       this.confirmLOAPopup = false;
-      this.endLOA();
+      this.endLOA([this.currentUser.id, this.currentUser.loas[0].id]);
     },
   },
+  async created() {
+    await Promise.all([
+      this.$store.dispatch('fetchUsers'),
+    ])
+  }
 }
 </script>
 

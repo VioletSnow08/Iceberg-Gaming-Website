@@ -1,8 +1,8 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
-import {logger, alertWarn, base_url} from "../../../utils";
 import axios from "axios";
 import store from '../store';
+const utils = require("../../../utils");
 axios.defaults.headers = {
   'Content-Type': 'application/json'
 }
@@ -13,7 +13,7 @@ const actions = {
 
   async submitLOA(context, [end_date, reason]) {
     const accessToken = await store.getters.currentUser.accessToken;
-    await axios.post(`${base_url}/settings/loa/submit`, {
+    await axios.post(`${utils.base_url}/settings/loa/submit`, {
       accessToken,
       endDate: end_date,
       reason
@@ -21,37 +21,28 @@ const actions = {
         await context.dispatch("fetchCurrentUser");
     }).catch(error => {
       if(error) {
-        alert(error.message);
+        utils.alertGeneral()
       }
     })
   },
-  async endLOA(context) {
-    await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).update({onLOA: false}).then(async () => {
-      logger.log({
-        level: "info",
-        message: "User ended LOA",
-        userID: firebase.auth().currentUser.uid,
-        isLoggedIn: true
-      })
+  async endLOA({rootGetters}, [userID, loaID]) { // Allows admins to end another user's LOA
+    await axios.post(`${utils.base_url}/settings/loa/end`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      userID,
+      loaID: loaID
+    }).then(async () => {
+      await context.dispatch("fetchCurrentUser");
     }).catch(error => {
-      if (error) {
-        logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          userID: firebase.auth().currentUser.uid,
-          isLoggedIn: true
-        })
-        alertWarn(0);
+      if(error) {
+        utils.alertGeneral()
       }
-    });
-    await context.dispatch("fetchCurrentUser");
+    })
   },
   async changeDiscordID(context, newID) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
       discordID: newID
     }).then(async () => {
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "User changed Discord ID",
         newDiscordID: newID,
@@ -60,7 +51,7 @@ const actions = {
       })
     }).catch(error => {
       if (error) {
-        logger.log({
+        utils.logger.log({
           level: "error",
           message: error.message,
           stack: error.stack,
@@ -77,7 +68,7 @@ const actions = {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
       status: newStatus
     }).then(async () => {
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "User changed status",
         newStatus,
@@ -86,7 +77,7 @@ const actions = {
       })
     }).catch(error => {
       if (error) {
-        logger.log({
+        utils.logger.log({
           level: "error",
           message: error.message,
           stack: error.stack,
@@ -102,7 +93,7 @@ const actions = {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
       isEmailPublic: newIsEmailPublic
     }).then(async () => {
-      logger.log({
+      utils.logger.log({
         level: "info",
         message: "User changed isEmailPublic",
         newIsEmailPublic,
@@ -111,7 +102,7 @@ const actions = {
       })
     }).catch(error => {
       if (error) {
-        logger.log({
+        utils.logger.log({
           level: "error",
           newIsEmailPublic,
           userID: firebase.auth().currentUser.uid,

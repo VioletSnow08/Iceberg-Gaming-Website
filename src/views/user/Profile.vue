@@ -7,7 +7,7 @@
     {{ this.$vs.loading.close() }}
     <img :src="user($route.params.userID).photoURL" :alt="user($route.params.userID).username" width=150 height=150>
     <h1>
-      <span id="username">{{user($route.params.userID).username}}</span> - 
+      <span id="username">{{user($route.params.userID).username}}</span> -
       <span v-if="user($route.params.userID).roles.includes('[17th] Member')">17th Brigade </span>
       <span v-else>Iceberg Member</span>
       <span v-if="user($route.params.userID).roles.includes('[17th] Member')">[{{user($route.params.userID).bct_rank}}]</span>
@@ -21,7 +21,7 @@
             <vx-list v-if="user($route.params.userID).isEmailPublic" :list="[
             `Email: ${user($route.params.userID).email}`,
             `Discord: ${user($route.params.userID).discord_id}`
-            ]"/>  
+            ]"/>
             <vx-list v-else :list="[
               `Discord: ${user($route.params.userID).discord_id}`
             ]"/>
@@ -39,9 +39,9 @@
               <span v-else-if="user($route.params.userID).roles.includes('[17th] Ranger NCO')" class="brigade-position">NCO</span>
             </p>
             <vx-list :list="[
-              `Rank: ${user($route.params.userID).bct_rank}`,
-              `Points: ${user($route.params.userID).bct_points}`,
-              `Events Attended: ${user($route.params.userID).bct_events_attended}`
+              `Rank: ${user($route.params.userID).bct[0].rank}`,
+              `Points: ${user($route.params.userID).bct[0].points}`,
+              `Events Attended: ${user($route.params.userID).bct[0].events_attended}`
             ]"/>
           </vx-card>
       </vs-col>
@@ -62,12 +62,9 @@ export default {
   computed: {
     ...mapGetters(["user", "users"]),
   },
-  methods: {
-    ...mapActions(["fetchUsers"])
-  },
     async created() {
     await Promise.all([
-      this.fetchUsers()
+      this.$store.dispatch('fetchUsers'),
     ])
   }
 }
@@ -77,7 +74,7 @@ export default {
   .brigade-position{
     font-weight: bold;
   }
-  
+
   .card-title{
     padding: 5px;
   }
@@ -86,7 +83,7 @@ export default {
     margin-top: 20px;
     padding: 20px;
   }
-  
+
   #username{
     font-weight: bold;
   }

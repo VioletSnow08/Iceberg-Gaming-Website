@@ -1,5 +1,5 @@
 import router from "@/router/router";
-import utils from "../../../utils";
+const utils = require("../../../utils");
 import axios from "axios";
 import store from '../store';
 
@@ -26,11 +26,7 @@ const getters = {
   isCurrentUserOnLOA: (state) => (userID) => {
     let user = state.user;
     if(user.loas[0]) {
-      if(user.loas[0].isDeleted === 0) {
-        return true
-      } else {
-        return false;
-      }
+      return user.loas[0].isDeleted === 0;
     } else {
       return false;
     }
