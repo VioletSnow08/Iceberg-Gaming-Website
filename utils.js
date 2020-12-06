@@ -41,6 +41,9 @@ function alertGeneral() {
   alert("Oops! An error has occurred. Please try again later. If this problem continues, please contact Vinniehat.");
 }
 const doesUserContainRoles = (userRoles, containsRoles) => {
+  return !!userRoles.some(role => containsRoles.includes(role))
+}
+const doesUserContainRolesAuth = (userRoles, containsRoles) => {
   return !!userRoles.some(row => containsRoles.includes(row.role))
 }
 
@@ -49,5 +52,6 @@ module.exports = {
   commonMessages,
   base_url,
   alertGeneral,
-  doesUserContainRoles
+  doesUserContainRoles,
+  doesUserContainRolesAuth
 }
