@@ -250,7 +250,7 @@ router.delete('/logout', async (req, res) => {
     res.sendStatus(200);
     utils.logger.log({
       level: "info",
-      message: "Account deleted",
+      message: "User logged out",
       isLoggedIn: false,
       refreshToken,
       userID: id,
