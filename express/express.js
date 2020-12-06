@@ -5,6 +5,7 @@ const path = require('path');
 const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
+const fs = require("fs")
 
 const app = express()
 const port = 3001
@@ -27,10 +28,15 @@ MYSQL.createConnection({
   app.use('/api/v1/user', require('./modules/user').router);
   app.use('/api/v1/settings', require('./modules/settings').router);
 
-
-// app.get('*', (req,res) => {
-//   res.sendFile(path.join(__dirname, '../dist/index.html'));
-// });
+  fs.access("../dist", function (error) {
+    if (error) {
+      console.log("Directory does not exist.")
+    } else {
+      app.get('*', (req, res) => {
+        res.sendFile(path.join(__dirname, '../dist/index.html'));
+      });
+    }
+  })
 
   app.listen(port, () => {
     console.log(`Example app listening at http://localhost:${port}`)
