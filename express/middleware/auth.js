@@ -72,8 +72,8 @@ async function getUser(con, userID) {
     }
   }).then(async rows => {
     if (!hasReturned && rows[0]) { // If the user has roles... (required)
-      rows.forEach(role => {
-        roles.push(role);
+      rows.forEach(row => {
+        roles.push(row.role);
       })
       user.roles = roles;
       return await con.query(`SELECT * FROM 17th_members WHERE userID = ? ORDER BY createdAt desc`, [userID])

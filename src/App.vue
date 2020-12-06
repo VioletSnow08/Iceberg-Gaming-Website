@@ -45,7 +45,7 @@ export default {
         if (document.body.className.match('theme-semi-dark')) document.body.classList.remove('theme-semi-dark')
       }
     },
-    ...mapActions(['fetchCurrentUser', 'accessTokenTimer']),
+    ...mapActions(['accessTokenTimer']),
     setAppClasses (classesStr) {
       this.vueAppClasses.push(classesStr)
     },
@@ -74,7 +74,6 @@ export default {
 
     window.addEventListener('resize', this.handleWindowResize)
     window.addEventListener('scroll', this.handleScroll)
-    await this.fetchCurrentUser()
     await this.accessTokenTimer()
   },
   destroyed () {
