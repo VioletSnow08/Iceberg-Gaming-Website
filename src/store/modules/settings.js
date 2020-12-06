@@ -29,9 +29,12 @@ const actions = {
     await axios.post(`${utils.base_url}/settings/loa/end`, {
       accessToken: await rootGetters.currentUser.accessToken,
       userID,
-      loaID: loaID
+      loaID
     }).then(async () => {
       await dispatch("fetchCurrentUser");
+      if(userID !== rootGetters.currentUser.id) { // To prevent too many queries ~ Meaning an admin ran this function.
+        await dispatch("fetchUsers");
+      }
     }).catch(error => {
       if(error) {
         utils.alertGeneral()
@@ -64,31 +67,21 @@ const actions = {
     })
     await context.dispatch("fetchCurrentUser");
   },
-  async changeStatus(context, newStatus) {
-    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
-      status: newStatus
+  async changeStatus({dispatch, rootGetters}, [status, userID]) {
+    await axios.post(`${utils.base_url}/settings/status`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      userID,
+      status
     }).then(async () => {
-      utils.logger.log({
-        level: "info",
-        message: "User changed status",
-        newStatus,
-        isLoggedIn: true,
-        userID: firebase.auth().currentUser.uid
-      })
+      await dispatch("fetchCurrentUser");
+      if(userID !== rootGetters.currentUser.id) { // To prevent too many queries ~ Meaning an admin ran this function.
+        await dispatch("fetchUsers");
+      }
     }).catch(error => {
-      if (error) {
-        utils.logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          newStatus,
-          isLoggedIn: true,
-          userID: firebase.auth().currentUser.uid,
-        })
-        alertWarn(0);
+      if(error) {
+        utils.alertGeneral()
       }
     })
-    await context.dispatch("fetchCurrentUser");
   }, async changeIsEmailPublic(context, newIsEmailPublic) {
     await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
       isEmailPublic: newIsEmailPublic

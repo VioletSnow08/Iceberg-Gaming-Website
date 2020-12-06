@@ -20,6 +20,7 @@ router.post('/loa/submit', async (req, res) => {
   let {accessToken, endDate, reason} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
+  const api = "/api/v1/settings/loa/submit"
   if (!accessToken || !endDate || !reason) return res.status(400).send("Bad Request! Please pass in an accessToken, endDate, and reason.")
   endDate = new Date(endDate);
   let loa = {
@@ -47,7 +48,8 @@ router.post('/loa/submit', async (req, res) => {
       loa,
       userID,
       message: "LOA Created",
-      isLoggedIn: true
+      isLoggedIn: true,
+      api
     })
   }).catch(error => {
     if (error) {
@@ -57,7 +59,8 @@ router.post('/loa/submit', async (req, res) => {
         userID,
         message: error.message,
         stack: error.stack,
-        isLoggedIn: true
+        isLoggedIn: true,
+        api
       })
       res.sendStatus(500);
     }
@@ -72,8 +75,8 @@ router.post('/loa/end', async (req, res) => {
   let {accessToken, userID, loaID} = req.body;
   const loggedInUserID = req.user.id;
   const con = req.app.get('con');
+  const api = "/api/v1/settings/loa/end"
   if (!accessToken || !userID || !loaID) return res.status(400).send("Bad Request! Please pass in an accessToken, userID, and loaID.")
-  let loa;
 
   if (userID === loggedInUserID) { // If the logged in user is the same as the user that is on LOA
     con.query(`UPDATE loas SET isDeleted = ? WHERE userID = ? AND id = ?`, [true, userID, loaID]).then(() => {
@@ -83,7 +86,8 @@ router.post('/loa/end', async (req, res) => {
         message: "User ended LOA",
         userID: loggedInUserID,
         loaID,
-        isLoggedIn: true
+        isLoggedIn: true,
+        api
       })
     }).catch(error => {
       if (error) {
@@ -94,7 +98,8 @@ router.post('/loa/end', async (req, res) => {
           isLoggedIn: true,
           userID,
           loaID,
-          accessToken
+          api,
+          accessToken,
         })
         res.sendStatus(500);
       }
@@ -107,10 +112,11 @@ router.post('/loa/end', async (req, res) => {
           level: "info",
           message: "Admin ended LOA",
           userID: loggedInUserID,
-          userOnLOAID: userID,
+          victim: userID,
           loaID,
           isLoggedIn: true,
           roles: req.user.roles,
+          api
         })
       }).catch(error => {
         if (error) {
@@ -119,14 +125,84 @@ router.post('/loa/end', async (req, res) => {
             message: error.message,
             stack: error.stack,
             isLoggedIn: true,
-            userID,
+            userID: loggedInUserID,
+            victim: userID,
             loaID,
+            api,
             accessToken
           })
           res.sendStatus(500);
         }
       })
     }
+  } else res.sendStatus(401);
+})
+
+// POST: /api/v1/settings/status
+// Params: none
+// Body: accessToken, userID, status
+// Return: <status_code>
+router.post('/status', async (req, res) => {
+  let {accessToken, userID, status} = req.body;
+  const loggedInUserID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/settings/status";
+  if (!accessToken || !userID || !status) return res.status(400).send("Bad Request! Please pass in an accessToken, userID, and status.")
+
+  if(userID === loggedInUserID) {
+    con.query(`UPDATE users SET status = ? WHERE id = ?`, [status, loggedInUserID]).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "User changed status",
+        userID: loggedInUserID,
+        status,
+        isLoggedIn: true,
+        api
+      })
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: loggedInUserID,
+          status,
+          api,
+          accessToken
+        })
+        res.sendStatus(500);
+      }
+    })
+  } else if(utils.doesUserContainRoles(req.user.roles, ["[17th] NCO", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Admin"])) {
+    con.query(`UPDATE users SET status = ? WHERE id = ?`, [status, userID]).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Admin changed Status",
+        userID: loggedInUserID,
+        victim: userID,
+        status,
+        isLoggedIn: true,
+        api
+      })
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: loggedInUserID,
+          victim: userID,
+          status,
+          api,
+          accessToken
+        })
+        res.sendStatus(500);
+      }
+    })
   } else res.sendStatus(401);
 })
 

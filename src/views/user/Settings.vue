@@ -157,7 +157,7 @@ export default {
       }
       else{
         if(this.newDiscordID !== ""){this.changeDiscordID(this.newDiscordID)}
-        if(this.newStatus !== ""){this.changeStatus(this.newStatus)}
+        if(this.newStatus !== ""){this.changeStatus([this.newStatus, this.currentUser.id])}
         this.changeIsEmailPublic(this.newIsEmailPublic);
         this.showConfirmationAlert_UserInfo = true;
         this.isDiscord_Invalid = false;
