@@ -27,10 +27,11 @@ MYSQL.createConnection({
 // API Modules
   app.use('/api/v1/user', require('./modules/user').router);
   app.use('/api/v1/settings', require('./modules/settings').router);
+  app.use('/api/v1/applications', require('./modules/applications').router);
 
   fs.access("../dist", function (error) {
     if (error) {
-      console.log("Directory does not exist.")
+      console.log("Directory does not exist. Running in development mode...")
     } else {
       app.get('*', (req, res) => {
         res.sendFile(path.join(__dirname, '../dist/index.html'));
