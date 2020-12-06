@@ -25,13 +25,13 @@ const actions = {
       }
     })
   },
-  async endLOA({rootGetters}, [userID, loaID]) { // Allows admins to end another user's LOA
+  async endLOA({dispatch, rootGetters}, [userID, loaID]) { // Allows admins to end another user's LOA
     await axios.post(`${utils.base_url}/settings/loa/end`, {
       accessToken: await rootGetters.currentUser.accessToken,
       userID,
       loaID: loaID
     }).then(async () => {
-      await context.dispatch("fetchCurrentUser");
+      await dispatch("fetchCurrentUser");
     }).catch(error => {
       if(error) {
         utils.alertGeneral()

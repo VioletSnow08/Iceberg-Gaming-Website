@@ -20,7 +20,7 @@ router.post('/loa/submit', async (req, res) => {
   let {accessToken, endDate, reason} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
-  if(!accessToken || !endDate || !reason) return res.status(400).send("Bad Request! Please pass in an accessToken, endDate, and reason.")
+  if (!accessToken || !endDate || !reason) return res.status(400).send("Bad Request! Please pass in an accessToken, endDate, and reason.")
   endDate = new Date(endDate);
   let loa = {
     startDate: DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss'),
@@ -50,7 +50,7 @@ router.post('/loa/submit', async (req, res) => {
       isLoggedIn: true
     })
   }).catch(error => {
-    if(error) {
+    if (error) {
       utils.logger.log({
         level: "error",
         loa,
@@ -72,40 +72,56 @@ router.post('/loa/end', async (req, res) => {
   let {accessToken, userID, loaID} = req.body;
   const loggedInUserID = req.user.id;
   const con = req.app.get('con');
-  if(!accessToken || !userID || !loaID) return res.status(400).send("Bad Request! Please pass in an accessToken, userID, and loaID.")
+  if (!accessToken || !userID || !loaID) return res.status(400).send("Bad Request! Please pass in an accessToken, userID, and loaID.")
   let loa;
 
-  // if(userID === loggedInUserID) { // If the logged in user is the same as the user that is on LOA
-  //   let loas = req.user.loas;
-  //   if(loas) loa = loas.find(loa => loa.id === loaID);
-  //   if(loa) {
-  //     await con.query(`UPDATE loas SET isDeleted = ? WHERE userID = ? AND id = ?`, [userID, loaID]).then(() => {
-  //       res.sendStatus(200);
-  //     }).catch(error => {
-  //       if(error) {
-  //         utils.logger.log({
-  //           level: "error",
-  //           message: error.message,
-  //           stack: error.stack,
-  //           isLoggedIn: true,
-  //           userID,
-  //           loaID,
-  //           accessToken
-  //         })
-  //         res.sendStatus(500);
-  //       }
-  //     })
-  //   } else {
-  //     res.status(400).send("Invalid LOA and User!");
-  //   }
-  // } else
-  if(req.user.roles) {
-    if(utils.doesUserContainRoles(req.user.roles, ["[17th] NCO", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Admin"])) {
-      console.log("They contain admin roles!");
+  if (userID === loggedInUserID) { // If the logged in user is the same as the user that is on LOA
+    con.query(`UPDATE loas SET isDeleted = ? WHERE userID = ? AND id = ?`, [true, userID, loaID]).then(() => {
+      res.sendStatus(200);
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID,
+          loaID,
+          accessToken
+        })
+        res.sendStatus(500);
+      }
+    })
+  } else if (req.user.roles) {
+    if (utils.doesUserContainRoles(req.user.roles, ["[17th] NCO", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Admin"])) {
+      con.query(`UPDATE loas SET isDeleted = ? WHERE userID = ? AND id = ?`, [true, userID, loaID]).then(() => {
+        res.sendStatus(200);
+        utils.logger.log({
+          level: "info",
+          message: "Admin ended LOA",
+          userID: loggedInUserID,
+          userOnLOAID: userID,
+          loaID,
+          isLoggedIn: true,
+          roles: req.user.roles,
+        })
+      }).catch(error => {
+        if (error) {
+          utils.logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            userID,
+            loaID,
+            accessToken
+          })
+          res.sendStatus(500);
+        }
+      })
     }
-  }
+  } else res.sendStatus(401);
 })
-
 
 
 module.exports = {
