@@ -206,9 +206,9 @@ router.post('/status', async (req, res) => {
   } else res.sendStatus(401);
 })
 
-// POST: /api/v1/settings/status
+// POST: /api/v1/settings/discord
 // Params: none
-// Body: accessToken, userID, status
+// Body: accessToken, userID, discord
 // Return: <status_code>
 router.post('/discord', async (req, res) => {
   let {accessToken, userID, discord} = req.body;
