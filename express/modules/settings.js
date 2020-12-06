@@ -78,6 +78,13 @@ router.post('/loa/end', async (req, res) => {
   if (userID === loggedInUserID) { // If the logged in user is the same as the user that is on LOA
     con.query(`UPDATE loas SET isDeleted = ? WHERE userID = ? AND id = ?`, [true, userID, loaID]).then(() => {
       res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "User ended LOA",
+        userID: loggedInUserID,
+        loaID,
+        isLoggedIn: true
+      })
     }).catch(error => {
       if (error) {
         utils.logger.log({
@@ -92,8 +99,8 @@ router.post('/loa/end', async (req, res) => {
         res.sendStatus(500);
       }
     })
-  } else if (req.user.roles) {
-    if (utils.doesUserContainRoles(req.user.roles, ["[17th] NCO", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Admin"])) {
+  } else if (req.user.roles) { // If the logged in user has roles
+    if (utils.doesUserContainRoles(req.user.roles, ["[17th] NCO", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Admin"])) { // If the logged in user has permission to end an loa...
       con.query(`UPDATE loas SET isDeleted = ? WHERE userID = ? AND id = ?`, [true, userID, loaID]).then(() => {
         res.sendStatus(200);
         utils.logger.log({
