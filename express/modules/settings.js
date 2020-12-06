@@ -206,6 +206,74 @@ router.post('/status', async (req, res) => {
   } else res.sendStatus(401);
 })
 
+// POST: /api/v1/settings/status
+// Params: none
+// Body: accessToken, userID, status
+// Return: <status_code>
+router.post('/discord', async (req, res) => {
+  let {accessToken, userID, discord} = req.body;
+  const loggedInUserID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/settings/discord";
+  if (!accessToken || !userID || !discord) return res.status(400).send("Bad Request! Please pass in an accessToken, userID, and discord.")
+
+  if(userID === loggedInUserID) {
+    con.query(`UPDATE users SET discord = ? WHERE id = ?`, [discord, loggedInUserID]).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "User changed Discord Username & Tag",
+        userID: loggedInUserID,
+        discord,
+        isLoggedIn: true,
+        api
+      })
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: loggedInUserID,
+          discord,
+          api,
+          accessToken
+        })
+        res.sendStatus(500);
+      }
+    })
+  } else if(utils.doesUserContainRoles(req.user.roles, ["[17th] NCO", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Admin"])) {
+    con.query(`UPDATE users SET discord = ? WHERE id = ?`, [discord, userID]).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Admin changed Discord Username & Tag",
+        userID: loggedInUserID,
+        victim: userID,
+        discord,
+        isLoggedIn: true,
+        api
+      })
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: loggedInUserID,
+          victim: userID,
+          discord,
+          api,
+          accessToken
+        })
+        res.sendStatus(500);
+      }
+    })
+  } else res.sendStatus(401);
+})
+
 
 module.exports = {
   router

@@ -41,33 +41,22 @@ const actions = {
       }
     })
   },
-  async changeDiscordID(context, newID) {
-    await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).update({
-      discordID: newID
+  async changeDiscord({dispatch, rootGetters}, [discord, userID]) {
+    await axios.post(`${utils.base_url}/settings/discord`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      userID,
+      discord
     }).then(async () => {
-      utils.logger.log({
-        level: "info",
-        message: "User changed Discord ID",
-        newDiscordID: newID,
-        isLoggedIn: true,
-        userID: firebase.auth().currentUser.uid
-      })
+      await dispatch("fetchCurrentUser");
+      if(userID !== rootGetters.currentUser.id) { // To prevent too many queries ~ Meaning an admin ran this function.
+        await dispatch("fetchUsers");
+      }
     }).catch(error => {
-      if (error) {
-        utils.logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          newDiscordID: newID,
-          isLoggedIn: true,
-          userID: firebase.auth().currentUser.uid
-        })
-        alertWarn(0);
+      if(error) {
+        utils.alertGeneral()
       }
     })
-    await context.dispatch("fetchCurrentUser");
-  },
-  async changeStatus({dispatch, rootGetters}, [status, userID]) {
+  }, async changeStatus({dispatch, rootGetters}, [status, userID]) {
     await axios.post(`${utils.base_url}/settings/status`, {
       accessToken: await rootGetters.currentUser.accessToken,
       userID,

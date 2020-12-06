@@ -135,7 +135,7 @@ export default {
     Datepicker
   },
   methods: {
-    ...mapActions(["submitLOA", "endLOA", "changeDiscordID", "changeStatus", "changeIsEmailPublic"]),
+    ...mapActions(["submitLOA", "endLOA", "changeDiscord", "changeStatus", "changeIsEmailPublic"]),
     verifyLOA() {
       if (!this.date) {
         this.endDateAlert = true;
@@ -156,7 +156,7 @@ export default {
         this.isDiscord_Invalid = true;
       }
       else{
-        if(this.newDiscordID !== ""){this.changeDiscordID(this.newDiscordID)}
+        if(this.newDiscordID !== ""){this.changeDiscord([this.newDiscordID, this.currentUser.id])}
         if(this.newStatus !== ""){this.changeStatus([this.newStatus, this.currentUser.id])}
         this.changeIsEmailPublic(this.newIsEmailPublic);
         this.showConfirmationAlert_UserInfo = true;
