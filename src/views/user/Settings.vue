@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!currentUser || !users">
+    <div v-if="!users">
       <h1>{{ this.$vs.loading({type: "radius", text: "Loading User..."}) }}</h1>
     </div>
     <div v-else>
