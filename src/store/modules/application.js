@@ -1,7 +1,12 @@
 import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import router from '@/router/router'
+import axios from "axios";
 const utils = require("../../../utils");
+
+axios.defaults.headers = {
+  'Content-Type': 'application/json'
+}
 
 const state = {
   applications: null
@@ -129,59 +134,17 @@ const actions = {
     }
   },
 
-  async fetchApplications({commit}) {
-    const newApplications = []
-    // await firebase.firestore().collectionGroup('applications').get().then(function(snapshot) {
-    //   snapshot.forEach((doc) => {
-    //     console.log(doc.data());
-    //   })
-    // }).catch(error => {
-    //   if(error) throw error;
-    // })
-
-    await firebase.firestore().collection('users').get().then(async users => {
-      for (let i = 0; i < users.docs.length; i++) {
-        let user = users.docs[i];
-        await firebase.firestore().collection('users').doc(user.id).collection('applications').get().then(async applications => {
-          for (const application of applications.docs) {
-            const object = {...application.data(), id: application.id}
-            newApplications.unshift(object);
-          }
-        }).catch(error => {
-          if(error) {
-            utils.logger.log({
-              level: "alert",
-              message: error.message,
-              stack: error.stack,
-              isLoggedIn: true,
-              userID: firebase.auth().currentUser.uid
-            })
-            utils.alertGeneral();
-          }
-        })
-      }
-      utils.logger.log({
-        level: "info",
-        message: "Fetched Applications",
-        isLoggedIn: true,
-        userID: firebase.auth().currentUser.uid,
-      })
+  async fetchApplications({commit, rootGetters}) {
+    await axios.post(`${utils.base_url}/applications`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+    }).then(async response => {
+      commit('setApplications', response.data);
     }).catch(error => {
       if(error) {
-        utils.logger.log({
-          level: "alert",
-          message: error.message,
-          stack: error.stack,
-          isLoggedIn: true,
-          userID: firebase.auth().currentUser.uid,
-        })
-        utils.alertGeneral()
+        utils.alertGeneral();
       }
     })
-
-    commit("setApplications", newApplications);
   },
-
   async changeApplicationStatus({commit}, [newStatus, userID, applicationID, division]) {
     if (firebase.auth().currentUser) {
       await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).get().then(async doc => {
