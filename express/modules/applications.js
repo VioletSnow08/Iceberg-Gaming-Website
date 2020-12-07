@@ -19,19 +19,45 @@ router.post('/', async (req, res) => {
   let applications = [];
 
   con.query(`SELECT * FROM iceberg_applications ORDER BY createdAt desc`).then(results => {
+    utils.logger.log({
+      level: "info",
+      message: "Iceberg Applications Fetched",
+      isLoggedIn: true,
+      userID,
+      api,
+      accessToken
+    })
     results.forEach(row => {
+      row.divison = "Iceberg";
       applications.push(row);
     })
     return con.query(`SELECT * FROM 17th_applications ORDER BY createdAt desc`)
   }).then(results => {
+    utils.logger.log({
+      level: "info",
+      message: "17th Applications Fetched",
+      isLoggedIn: true,
+      userID,
+      api,
+      accessToken
+    })
     results.forEach(row => {
+      row.division = "17th";
       applications.push(row);
     })
     res.json(applications);
   }).catch(error => {
     if(error) {
       res.sendStatus(500);
-      console.log(error);
+      utils.logger.log({
+        level: "error",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
+        userID,
+        api,
+        accessToken
+      })
     }
   })
 })
