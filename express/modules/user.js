@@ -181,7 +181,7 @@ router.post('/all', async (req, res, next) => {
       for (let i = 0; i < rows.length; i++) {
         let id = rows[i].id;
         if (hasReturned) break;
-        getUser(con, id).then(user => {
+        await getUser(con, id).then(user => {
           safeUsers.push(user);
         }).catch(() => {})
       }
