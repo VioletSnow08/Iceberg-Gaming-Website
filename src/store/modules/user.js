@@ -91,7 +91,7 @@ const actions = {
       }).then((response) => {
         localStorage.removeItem('refreshToken');
         commit('logoutUser');
-        router.push('/').catch(()=>{});;
+        router.push('/').catch(()=>{});
       }).catch((error) => {
         if (error) utils.alertGeneral();
       })
