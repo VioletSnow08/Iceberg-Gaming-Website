@@ -25,6 +25,9 @@
                        type="gradient" class="w-full mt-6" color="#a8c0ff" gradient-color-secondary="#3f2b96">View
               Application
             </vs-button>
+            <vs-button v-if="app.division === 'CGS'" @click="viewApplication(app.userID, app.id)" type="gradient"
+                       class="w-full mt-6" color="#240b36" gradient-color-secondary="#c31432">View Application
+            </vs-button>
           </vx-card>
         </div>
       </div>
