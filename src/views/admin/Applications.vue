@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!applications">
+    <div v-if="!applications || !users">
       <h1>{{ this.$vs.loading({type: "radius", text: "Loading Applications..."}) }}</h1>
     </div>
 
@@ -43,7 +43,7 @@ export default {
     },
   },
   computed: {
-    ...mapGetters(['applications', 'currentUser', 'user']),
+    ...mapGetters(['applications', 'currentUser', 'user', 'users']),
   },
   async created() {
     await Promise.all([
