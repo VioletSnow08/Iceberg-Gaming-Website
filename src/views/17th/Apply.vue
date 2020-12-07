@@ -18,7 +18,6 @@
           <div class="vx-col md:w-1/2 w-full mt-5">
             <vs-input type="text" label="Age" v-model="age" class="w-full"/>
           </div>
-
         </div>
       </tab-content>
 
