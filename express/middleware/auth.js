@@ -6,7 +6,6 @@ const utils = require("../../utils");
 async function requiresAuth(req, res, next) {
   const accessToken = req.body.accessToken;
   const con = req.app.get('con');
-  console.log(accessToken);
   if (accessToken) {
     jwt.verify(accessToken, jwt_secret, async (error, decodedToken) => {
       if (error) {
@@ -124,7 +123,7 @@ async function getUser(con, userID) {
       })
     }
   })
-  let promise = new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, reject) {
     if (user && !hasReturned) {
       let safeUser = {
         id: user.id,
@@ -143,9 +142,9 @@ async function getUser(con, userID) {
       resolve(safeUser);
     } else {
       reject(caughtError);
-    };
+    }
+    ;
   });
-  return promise;
 }
 
 module.exports = {
