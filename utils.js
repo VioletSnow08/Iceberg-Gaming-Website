@@ -46,6 +46,15 @@ const doesUserContainRoles = (userRoles, containsRoles) => {
 const doesUserContainRolesAuth = (userRoles, containsRoles) => {
   return !!userRoles.some(row => containsRoles.includes(row.role))
 }
+function applicationDivisionDisplay(division) {
+  if(division === "CGS") {
+    return "Chryse Guard Security"
+  } else if(division === "Iceberg") {
+    return "Iceberg Gaming"
+  } else if(division === "17th") {
+    return "17th Brigade Combat Team";
+  }
+}
 
 module.exports = {
   logger,
@@ -53,5 +62,6 @@ module.exports = {
   base_url,
   alertGeneral,
   doesUserContainRoles,
-  doesUserContainRolesAuth
+  doesUserContainRolesAuth,
+  applicationDivisionDisplay
 }

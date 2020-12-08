@@ -8,7 +8,7 @@
         <p class="text-center">Current Status:
           {{ application($route.params.userID, $route.params.applicationID).status }}</p>
         <p class="text-center">Division: {{
-            application($route.params.userID, $route.params.applicationID).division
+            applicationDivisionDisplay(application($route.params.userID, $route.params.applicationID).division)
           }}</p>
         <div
           v-if="application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'waiting' || application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'processing'">
@@ -47,11 +47,13 @@
 import {mapActions, mapGetters} from 'vuex'
 import ApplicationBP17th from "@/layouts/applications/17th";
 import ApplicationBPIceberg from "@/layouts/applications/Iceberg";
+import {applicationDivisionDisplay} from "../../../utils";
 
 export default {
   name: 'Applications',
   methods: {
-    ...mapActions(["changeApplicationStatus"])
+    ...mapActions(["changeApplicationStatus"]),
+    applicationDivisionDisplay
   },
   components: {
     ApplicationBP17th,

@@ -37,6 +37,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
+import {applicationDivisionDisplay} from "../../../utils";
 
 export default {
   name: 'Applications',
@@ -44,15 +45,7 @@ export default {
     viewApplication(userID, applicationID) {
       this.$router.push({name: 'AdminApplication', params: {userID, applicationID}})
     },
-    applicationDivisionDisplay(division) {
-      if(division === "CGS") {
-        return "Chryse Guard Security"
-      } else if(division === "Iceberg") {
-        return "Iceberg Gaming"
-      } else if(division === "17th") {
-        return "17th Brigade Combat Team";
-      }
-    }
+    applicationDivisionDisplay
   },
   computed: {
     ...mapGetters(['applications', 'currentUser', 'user', 'users']),

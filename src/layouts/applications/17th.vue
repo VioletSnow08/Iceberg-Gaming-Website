@@ -39,30 +39,32 @@
       <span>What Hobbies do you like to participate in outside of gaming?</span>
     </div>
     <div class="vx-col sm:w-2/3 w-full">
-      <vs-input class="w-full" disabled :placeholder="application.hobbies"/>
+      <vs-textarea class="w-full" disabled :placeholder="application.hobbies"/>
     </div>
   </div>
   <div class="vx-row mb-6">
     <div class="vx-col sm:w-1/3 w-full">
-      <span>What attracts you to the Arma 3 milsim playstyle?</span>
+      <span>What attracts you to the Arma 3 MilSim playstyle?</span>
     </div>
     <div class="vx-col sm:w-2/3 w-full">
-      <vs-input class="w-full" disabled :placeholder="application.attractmilsim"/>
+      <vs-textarea class="w-full" disabled :placeholder="application.attractmilsim"/>
     </div>
   </div>
   <div class="vx-col md:w-1/2 w-full md:mt-8">
     <div class="demo-alignment">
       <span>What playstyle(s) interest you?</span>
       <div class="flex">
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('Ranger')">Ranger</vs-checkbox>
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('Medic')">Medic</vs-checkbox>
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('Sapper')">Sapper</vs-checkbox>
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('Pilot')">Pilot</vs-checkbox>
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('Tank Crew')">Tank Crew
-        </vs-checkbox>
-        <vs-checkbox disabled v-model="application.interestedRoles.includes('IDF Support')">IDF Support</vs-checkbox>
+        <vs-checkbox disabled v-model="application.ranger">Ranger</vs-checkbox>
+        <vs-checkbox disabled v-model="application.medic">Medic</vs-checkbox>
+        <vs-checkbox disabled v-model="application.sapper">Sapper</vs-checkbox>
+        <vs-checkbox disabled v-model="application.pilot">Pilot</vs-checkbox>
+        <vs-checkbox disabled v-model="application.tank_crew">Tank Crew</vs-checkbox>
+        <vs-checkbox disabled v-model="application.idf">IDF Support</vs-checkbox>
       </div>
     </div>
+  </div>
+  <div class="vx-col sm:w-2/3 w-full md:mt-8">
+    <vs-checkbox class="inline-flex" v-model="application.attendOps">Can you attend weekly Saturday Operations at 7:00pm CST?</vs-checkbox>
   </div>
   <br>
   <h3>Comment</h3>

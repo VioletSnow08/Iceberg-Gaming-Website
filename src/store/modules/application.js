@@ -13,7 +13,7 @@ const state = {
 }
 const getters = {
   application: (state) => (userID, applicationID) => {
-    return state.applications.find(application => (application.userID === userID) && (application.id === applicationID))
+    return state.applications.find(application => (application.userID == userID) && (application.id == applicationID))
   },
   applications: (state) => {
     return state.applications;
