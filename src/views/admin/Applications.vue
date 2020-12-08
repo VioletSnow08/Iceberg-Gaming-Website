@@ -8,7 +8,8 @@
       {{ this.$vs.loading.close() }}
       <h1 class="text-center">Applications</h1>
       <h2 class="text-center">Accept, deny, and process applications here</h2>
-      <div>
+      <br>
+      <div class="vx-row">
         <div v-for="app in applications" v-bind:key="app.id" class="vx-col w-full lg:w-1/4 sm:w-1/2 mb-base">
           <vx-card :title="user(app.userID).username" :subtitle="'Division: ' + applicationDivisionDisplay(app.division)" class="p-2">
             <div class="text-center">
