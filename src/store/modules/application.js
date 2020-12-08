@@ -30,66 +30,30 @@ const getters = {
 }
 
 const actions = {
-  async submit17thApplication({commit}, [steamURL, age, timezone, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
-    if (firebase.auth().currentUser) {
-      const interestedRoles = []
-      if (ranger) {
-        interestedRoles.push('Ranger')
+  async submit17thApplication({commit, rootGetters}, [steamURL, age, timezone, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
+    axios.post(`${utils.base_url}/applications/create/17th`, {
+      steamURL,
+      age,
+      timezone,
+      arma3Hours,
+      hobbies,
+      whyJoin,
+      attractmilsim,
+      ranger,
+      medic,
+      sapper,
+      pilot,
+      tank_crew,
+      idf,
+      attendOps,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(async response => {
+      await this.dispatch('fetchCurrentUser');
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
       }
-      if (medic) {
-        interestedRoles.push('Medic')
-      }
-      if (sapper) {
-        interestedRoles.push('Sapper')
-      }
-      if (pilot) {
-        interestedRoles.push('Pilot')
-      }
-      if (tank_crew) {
-        interestedRoles.push('Tank Crew')
-      }
-      if (idf) {
-        interestedRoles.push('IDF Support')
-      }
-      const application = {
-        steamURL,
-        age,
-        timezone,
-        arma3Hours,
-        hobbies,
-        whyJoin,
-        attractmilsim,
-        attendOps,
-        interestedRoles,
-        status: 'Waiting',
-        comment: "",
-        userID: firebase.auth().currentUser.uid,
-        division: "17th",
-        date: firebase.firestore.Timestamp.now()
-      }
-      await firebase.firestore().collection('users').doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
-        utils.logger.log({
-          level: "info",
-          message: "New Application created",
-          isLoggedIn: true,
-          division: "17th",
-          userID: firebase.auth().currentUser.uid,
-        })
-        await router.push('/user/applications')
-      }).catch(error => {
-        if(error) {
-          utils.logger.log({
-            level: "error",
-            message: error.message,
-            stack: error.stack,
-            isLoggedIn: true,
-            division: "17th",
-            userID: firebase.auth().currentUser.uid
-          })
-          utils.alertGeneral()
-        }
-      })
-    }
+    })
   },
 
   async submitIcebergApplication({commit}, [steamURL, age, hoursInGamesTheyJoinFor, hobbies, areYouInAnyCommunities, whereDidYouHearUsFrom, gamesTheyJoinFor, whyJoin]) {

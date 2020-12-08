@@ -85,13 +85,13 @@ export default {
       hobbies: '',
       whyJoin: '',
       attractmilsim: '',
-      ranger: '',
-      medic: '',
-      sapper: '',
-      pilot: '',
-      tank_crew: '',
-      idf: '',
-      attendOps: ''
+      ranger: false,
+      medic: false,
+      sapper: false,
+      pilot: false,
+      tank_crew: false,
+      idf: false,
+      attendOps: false
     }
   },
   methods: {
