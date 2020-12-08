@@ -10,7 +10,7 @@
       <h2 class="text-center">Accept, deny, and process applications here</h2>
       <div>
         <div v-for="app in applications" v-bind:key="app.id" class="vx-col w-full lg:w-1/4 sm:w-1/2 mb-base">
-          <vx-card :title="user(app.userID).username" :subtitle="'Division: ' + app.division" class="p-2">
+          <vx-card :title="user(app.userID).username" :subtitle="'Division: ' + applicationDivisionDisplay(app.division)" class="p-2">
             <div class="text-center">
               <vs-chip v-if="app.status.toLowerCase() === 'accepted'" color="success">{{ app.status }}</vs-chip>
               <vs-chip v-else-if="app.status.toLowerCase() === 'waiting'" color="warning">{{ app.status }}</vs-chip>
@@ -44,6 +44,15 @@ export default {
     viewApplication(userID, applicationID) {
       this.$router.push({name: 'AdminApplication', params: {userID, applicationID}})
     },
+    applicationDivisionDisplay(division) {
+      if(division === "CGS") {
+        return "Chryse Guard Security"
+      } else if(division === "Iceberg") {
+        return "Iceberg Gaming"
+      } else if(division === "17th") {
+        return "17th Brigade Combat Team";
+      }
+    }
   },
   computed: {
     ...mapGetters(['applications', 'currentUser', 'user', 'users']),
