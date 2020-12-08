@@ -6,7 +6,7 @@ const {requiresAuth} = require("../middleware/auth");
 
 router.use(requiresAuth);
 
-// POST: /api/v1/settings/applications
+// POST: /api/v1/applications
 // Params: none
 // Body: accessToken
 // Return: loa
@@ -60,6 +60,19 @@ router.post('/', async (req, res) => {
       })
     }
   })
+})
+
+// POST: /api/v1/applications/create/<division>
+// Params: division
+// Body: accessToken, questions, userID
+// Return: application
+router.post('/create/:division', async (req, res) => {
+  let {accessToken, division} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/settings/applications/create"
+  if(!accessToken || !division) return res.status(400).send("Bad Request! Please provide an accessToken and a division(17th, Iceberg, or CGS)");
+  
 })
 
 module.exports = {
