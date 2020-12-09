@@ -31,7 +31,7 @@ router.post('/register', async (req, res) => {
     }
   }).then(async row => {
     if (hasReturned === false) {
-      return await con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Member"])
+      return await con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Applicant"])
     }
   }).catch(error => {
     if (error) {

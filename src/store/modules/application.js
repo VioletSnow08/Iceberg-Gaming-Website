@@ -56,46 +56,24 @@ const actions = {
     })
   },
 
-  async submitIcebergApplication({commit}, [steamURL, age, hoursInGamesTheyJoinFor, hobbies, areYouInAnyCommunities, whereDidYouHearUsFrom, gamesTheyJoinFor, whyJoin]) {
-    if (firebase.auth().currentUser) {
-      const application = {
-        steamURL,
-        age,
-        hoursInGamesTheyJoinFor,
-        hobbies,
-        areYouInAnyCommunities,
-        whereDidYouHearUsFrom,
-        gamesTheyJoinFor,
-        whyJoin,
-        status: "Waiting",
-        comment: "",
-        userID: firebase.auth().currentUser.uid,
-        division: "Iceberg",
-        date: firebase.firestore.Timestamp.now()
+  async submitIcebergApplication({commit, rootGetters}, [steamURL, age, hoursInGamesTheyJoinFor, hobbies, areYouInAnyCommunities, whereDidYouHearUsFrom, gamesTheyJoinFor, whyJoin]) {
+    axios.post(`${utils.base_url}/applications/create/iceberg`, {
+      steamURL,
+      age,
+      hoursInGamesTheyJoinFor,
+      hobbies,
+      areYouInAnyCommunities,
+      whereDidYouHearUsFrom,
+      gamesTheyJoinFor,
+      whyJoin,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(async response => {
+      await this.dispatch('fetchCurrentUser');
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
       }
-      await firebase.firestore().collection("users").doc(firebase.auth().currentUser.uid).collection("applications").doc().set(application).then(async () => {
-        utils.logger.log({
-          level: "info",
-          message: "New Application created",
-          isLoggedIn: true,
-          division: "Iceberg",
-          userID: firebase.auth().currentUser.uid,
-        })
-        await router.push('/user/applications')
-      }).catch(error => {
-        if(error) {
-          utils.logger.log({
-            level: "error",
-            message: error.message,
-            stack: error.stack,
-            isLoggedIn: true,
-            division: "Iceberg",
-            userID: firebase.auth().currentUser.uid
-          })
-          utils.alertGeneral();
-        }
-      })
-    }
+    })
   },
 
   async fetchApplications({commit, rootGetters}) {
