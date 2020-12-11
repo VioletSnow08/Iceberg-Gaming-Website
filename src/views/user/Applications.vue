@@ -10,7 +10,7 @@
       <div v-for="app in applicationsFromUser(currentUser.id)" v-bind:key="app.id" class="vx-col w-full lg:w-1/4 sm:w-1/2 mb-base">
         <vx-card :title="applicationDivisionDisplay(app.division)" class="p-2">
           <div class="text-center">
-            <vs-chip v-if="app.status.toLowerCase() === 'accepted'" color="success">{{app.status}}</vs-chip>
+            <vs-chip v-if="app.status.toLowerCase() === 'approved'" color="success">{{app.status}}</vs-chip>
             <vs-chip v-else-if="app.status.toLowerCase() === 'waiting'" color="warning">{{app.status}}</vs-chip>
             <vs-chip v-else-if="app.status.toLowerCase() === 'processing'" color="warning">{{app.status}}</vs-chip>
             <vs-chip v-else-if="app.status.toLowerCase() === 'denied'" color="danger">{{app.status}}</vs-chip>
