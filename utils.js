@@ -41,11 +41,9 @@ function alertGeneral() {
   alert("Oops! An error has occurred. Please try again later. If this problem continues, please contact Vinniehat.");
 }
 const doesUserContainRoles = (userRoles, containsRoles) => {
-  return !!userRoles.some(role => containsRoles.includes(role))
+  return userRoles.some(role => containsRoles.includes(role))
 }
-const doesUserContainRolesAuth = (userRoles, containsRoles) => {
-  return !!userRoles.some(row => containsRoles.includes(row.role))
-}
+
 function applicationDivisionDisplay(division) {
   if(division === "CGS") {
     return "Chryse Guard Security"
@@ -56,12 +54,18 @@ function applicationDivisionDisplay(division) {
   }
 }
 
+const data = {
+  discord: "https://discord.gg/7hDQCEb",
+  teamspeak: "ts3server://ts.iceberg-gaming.com/?port=9987",
+  bct_modpack: "https://steamcommunity.com/sharedfiles/filedetails/?id=1501538330"
+}
+
 module.exports = {
   logger,
   commonMessages,
   base_url,
   alertGeneral,
   doesUserContainRoles,
-  doesUserContainRolesAuth,
-  applicationDivisionDisplay
+  applicationDivisionDisplay,
+  data
 }
