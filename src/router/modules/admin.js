@@ -30,6 +30,15 @@ export default [
           requiresAuth: true,
           roles: ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ']
         },
+      },
+      {
+        path: '/developer/roles',
+        name: 'RolesPage',
+        component: () => import('@/views/developer/RolesPage'),
+        meta: {
+          requiresAuth: true,
+          roles: ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ', '[ICE] Developer']
+        },
       }
     ]
   }
