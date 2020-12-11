@@ -179,6 +179,7 @@ router.delete('/change/', async (req, res) => {
   let comment;
   let status;
   if (!accessToken || !action || !id || !division) return res.status(400).send("Bad Request! Please provide an accessToken, action, division, and id");
+  if(action.toLowerCase() !== "approve" && action.toLowerCase() !== "deny" && action.toLowerCase() !== "process") return res.status(400).send("Bad Request! Please provide a valid action!");
   if (utils.doesUserContainRoles(req.user.roles, ["[ICE] Recruiter", "[ICE] Admin", "[ICE] Owner"])) {
     if (division.toLowerCase() === "17th") {
       if (action.toLowerCase() === "approve") {
@@ -256,7 +257,11 @@ router.delete('/change/', async (req, res) => {
             })
           }
         })
-      } else res.status(400).send("Bad Request! Please provide a valid action!")
+      }
+    } else if(division.toLowerCase() === "iceberg") {
+
+    } else if(division.toLowerCase() === "cgs") {
+
     } else res.status(400).send("Bad Request! Please provide a valid division!");
   } else res.status(401).send("Unauthorized!");
 })
