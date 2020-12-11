@@ -22,6 +22,13 @@
       v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
 
 
+
+
+
+
+
+
+
     <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">17th Brigade Combat Team</span>
 
     <v-nav-menu-item v-if="!currentUser.roles.includes('[17th] Member')" to="/17th/apply"
@@ -33,6 +40,16 @@
       to="/admin/17th/users" icon="SettingsIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
     </v-nav-menu-item>
+
+
+
+    <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Developers</span>
+
+    <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Developer')" to="/developer/roles"
+                     icon="FilePlusIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">Roles</span>
+    </v-nav-menu-item>
+
   </div>
 </template>
 
@@ -49,6 +66,7 @@ export default {
     VNavMenuGroup,
     VNavMenuItem
   },
+  props: ['verticalNavMenuItemsMin'],
   computed: {
     ...mapGetters(['currentUser']),
   }
