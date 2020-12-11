@@ -36,16 +36,16 @@
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Application</span>
     </v-nav-menu-item>
     <v-nav-menu-item
-      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ'].includes(role))"
+      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ', '[ICE] Webmaster'].includes(role))"
       to="/admin/17th/users" icon="SettingsIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
     </v-nav-menu-item>
 
 
 
-    <span v-if="!verticalNavMenuItemsMin && currentUser.roles.includes('[ICE] Developer')" class="navigation-header truncate">Developers</span>
+    <span v-if="!verticalNavMenuItemsMin && currentUser.roles.includes('[ICE] Webmaster')" class="navigation-header truncate">Developers</span>
 
-    <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Developer')" to="/developer/roles"
+    <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Webmaster')" to="/developer/roles"
                      icon="FilePlusIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Roles</span>
     </v-nav-menu-item>
