@@ -68,7 +68,7 @@
   </div>
   <br>
   <h3>Comment</h3>
-  <p>{{ application.comment }}</p>
+  <p style="word-spacing: 3px">{{ application.comment }}</p>
   <br>
 </div>
 </template>
