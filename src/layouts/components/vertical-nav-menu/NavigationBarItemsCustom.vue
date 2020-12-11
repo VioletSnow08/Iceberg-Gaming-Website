@@ -43,7 +43,7 @@
 
 
 
-    <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Developers</span>
+    <span v-if="!verticalNavMenuItemsMin && currentUser.roles.includes('[ICE] Developer')" class="navigation-header truncate">Developers</span>
 
     <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Developer')" to="/developer/roles"
                      icon="FilePlusIcon">
