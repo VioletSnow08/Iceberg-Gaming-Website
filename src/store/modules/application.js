@@ -99,6 +99,9 @@ const actions = {
       }
     }).then(response => {
       this.dispatch('fetchApplications');
+      if(rootGetters.currentUser.id === 27) {
+        alert("Fuk u street i hope u step on a dam lego")
+      }
     }).catch(error => {
       if(error) {
         utils.alertGeneral();
