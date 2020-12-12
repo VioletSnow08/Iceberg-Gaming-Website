@@ -37,7 +37,7 @@
 <script>
 import {AgGridVue} from 'ag-grid-vue'
 import CellRendererLink from './cell-renderer/CellRendererLink.vue'
-import CellRendererActivity from './cell-renderer/CellRendererActivity.vue'
+import CellRendererLOA from './cell-renderer/CellRendererLOA.vue'
 import CellRendererPromotionDemotion from './cell-renderer/CellRendererPromotionDemotion.vue'
 import CellRendererVerified from './cell-renderer/CellRendererVerified.vue'
 import CellRendererActions from './cell-renderer/CellRendererActions.vue'
@@ -49,7 +49,7 @@ export default {
   components: {
     AgGridVue,
     CellRendererLink,
-    CellRendererActivity,
+    CellRendererLOA,
     CellRendererActions,
     CellRendererVerified,
     CellRendererPromotionDemotion,
@@ -76,7 +76,7 @@ export default {
         },
         {headerName: 'Events Attended', field: 'events_attended'},
         {headerName: 'Points', field: 'points'},
-        {headerName: "Activity", field: 'activity', cellRendererFramework: 'CellRendererActivity'}
+        {headerName: "LOA Status", field: 'loa_status', cellRendererFramework: 'CellRendererLOA'}
       ],
       usersData: [
         // {username: 'Vinniehat', discord_id: '1234', events_attended: 0, points: 49, activity: 'On LOA', promo_demo_status: 'Demotable'},
@@ -101,9 +101,9 @@ export default {
         let newUser = {
           username: user.username,
           discord: user.discord,
-          events_attended: this.mostRecent17thApplication(user.id).events_attended,
+          events_attended: this.mostRecent17thApplication(user.id) ? this.mostRecent17thApplication(user.id).events_attended : 'N/A',
           points: 'Not Functional',
-          activity: 'this.isUserOnLOA(user.id)',
+          loa_status: this.isUserOnLOA(user.id) ? 'On LOA' : 'Off LOA',
           promo_demo_status: 'Not Functional'
         }
         users.push(newUser);

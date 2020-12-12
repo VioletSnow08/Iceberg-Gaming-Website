@@ -12,7 +12,12 @@ const state = {
 const getters = {
   isUserOnLOA: (state) => (userID) => {
     let loas = state.loas.filter(loa => loa.userID === userID);
-    return loas[loas.length-1].isDeleted === 0; // 0 means active, 1 means inactive
+    if(loas[0]) { // Check if at least one row exists in the array
+      return loas[loas.length - 1].isDeleted === 0; // 0 means active, 1 means inactive
+    } else {
+      return false;
+    }
+
   },
   loas: (state) => {
     return state.loas;

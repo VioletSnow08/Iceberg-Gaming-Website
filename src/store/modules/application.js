@@ -34,7 +34,7 @@ const getters = {
         applications.push(application);
       }
     })
-    let application = applications.sort((a, b) => b.date - a.date);
+    let application = applications[applications.length-1];
     if(application) {
       return application;
     } else {
