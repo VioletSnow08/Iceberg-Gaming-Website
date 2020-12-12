@@ -6,10 +6,10 @@
     </div>
     <vs-popup title="Edit User" :active.sync="isOriginalPopupOpen">
       <p>All Edits are logged for security purposes.</p>
+      <br>
       <div v-for="role in displayedRoles">
         {{setUserHasRole(role.role, params.data.roles)}}
-        <vs-checkbox v-model="role.doesUserHaveIt">{{ role.role }}</vs-checkbox>
-        <br>
+        <vs-checkbox style="padding-bottom: 10px;" v-model="role.doesUserHaveIt">{{ role.role }}</vs-checkbox>
       </div>
     </vs-popup>
   </div>
