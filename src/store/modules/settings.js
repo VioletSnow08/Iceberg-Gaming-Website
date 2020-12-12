@@ -19,6 +19,10 @@ const getters = {
   },
   LOAsFromUser: (state) => (userID) => {
     return state.loas.filter(loa => loa.userID === userID);
+  },
+  mostRecentLOA: (state) => (userID) => {
+    let loas = state.loas.filter(loa => loa.userID === userID);
+    return loas[loas.length-1];
   }
 }
 const actions = {

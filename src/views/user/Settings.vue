@@ -107,7 +107,7 @@ import Datepicker from 'vuejs-datepicker';
 export default {
   name: "Settings",
   computed: {
-    ...mapGetters(["currentUser", "isUserOnLOA", "users", "loas", "LOAsFromUser"]),
+    ...mapGetters(["currentUser", "isUserOnLOA", "users", "loas", "LOAsFromUser", "mostRecentLOA"]),
   },
   mounted() {
     setTimeout(() => {
@@ -165,7 +165,7 @@ export default {
     },
     confirmEndLOA() {
       this.confirmLOAPopup = false;
-      this.endLOA([this.currentUser.id, this.LOAsFromUser(this.currentUser.id)[this.LOAsFromUser(this.currentUser.id).length-1].id]);
+      this.endLOA([this.currentUser.id, this.mostRecentLOA(this.currentUser.id).id]);
     },
   },
   async created() {
