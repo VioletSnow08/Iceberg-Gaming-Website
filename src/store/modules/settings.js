@@ -6,8 +6,21 @@ const utils = require("../../../utils");
 axios.defaults.headers = {
   'Content-Type': 'application/json'
 }
-
-const getters = {}
+const state = {
+  loas: null
+}
+const getters = {
+  isUserOnLOA: (state) => (userID) => {
+    let loas = state.loas.filter(loa => loa.userID === userID);
+    return loas[loas.length-1].isDeleted === 0; // 0 means active, 1 means inactive
+  },
+  loas: (state) => {
+    return state.loas;
+  },
+  LOAsFromUser: (state) => (userID) => {
+    return state.loas.filter(loa => loa.userID === userID);
+  }
+}
 const actions = {
 // LOAS
 
@@ -18,7 +31,7 @@ const actions = {
       endDate: end_date,
       reason
     }).then(async () => {
-        await context.dispatch("fetchCurrentUser");
+        await context.dispatch("fetchLOAs");
     }).catch(error => {
       if(error) {
         utils.alertGeneral()
@@ -31,10 +44,7 @@ const actions = {
       userID,
       loaID
     }).then(async () => {
-      await dispatch("fetchCurrentUser");
-      if(userID !== rootGetters.currentUser.id) { // To prevent too many queries ~ Meaning an admin ran this function.
-        await dispatch("fetchUsers");
-      }
+      await dispatch("fetchLOAs");
     }).catch(error => {
       if(error) {
         utils.alertGeneral()
@@ -92,14 +102,23 @@ const actions = {
           message: error.message,
           stack: error.stack,
         })
-        alertWarn(0);
+        utils.alertGeneral();
       }
     })
     await context.dispatch("fetchCurrentUser");
   },
+  async fetchLOAs({commit, rootGetters}) {
+    axios.post(`${utils.base_url}/settings/loas`, {accessToken: await rootGetters.currentUser.accessToken}).then(response => {
+      commit('setLOAs', response.data);
+    })
+  }
 }
-const mutations = {}
+const mutations = {
+  setLOAs(state, loas) {
+    state.loas = loas;
+  }
+}
 
 export default {
-  getters, actions, mutations
+  getters, actions, mutations, state
 }

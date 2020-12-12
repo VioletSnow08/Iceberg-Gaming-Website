@@ -23,14 +23,6 @@ const getters = {
   users: state => {
     return state.users;
   },
-  isCurrentUserOnLOA: (state) => (userID) => {
-    let user = state.user;
-    if(user.loas[0]) {
-      return user.loas[0].isDeleted === 0;
-    } else {
-      return false;
-    }
-  }
 }
 
 const actions = {

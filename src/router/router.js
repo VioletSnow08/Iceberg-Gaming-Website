@@ -43,6 +43,7 @@ const router = new Router({
 
 router.beforeEach(async (to, from, next) => {
   await store.dispatch('fetchCurrentUser');
+  await store.dispatch('fetchLOAs');
   const currentUser = store.getters.currentUser;
   if (to.matched.some(record => record.meta.requiresAuth)) { // If the page requires authentication
     if (!currentUser) { // If the user is not signed in

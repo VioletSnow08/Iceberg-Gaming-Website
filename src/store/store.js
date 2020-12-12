@@ -19,7 +19,7 @@ import actions from './actions'
 // Importing Modules...
 import user from './modules/user'
 import application from './modules/application'
-import loa from "./modules/settings";
+import settings from "./modules/settings";
 import calendar from "@/store/modules/channel"
 
 Vue.use(Vuex)
@@ -32,8 +32,8 @@ export default new Vuex.Store({
   modules: {
     user,
     application,
-    loa,
-    calendar,
+    settings,
+    calendar
 
   },
   strict: process.env.NODE_ENV !== 'production'

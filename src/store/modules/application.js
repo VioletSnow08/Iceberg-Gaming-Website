@@ -27,6 +27,20 @@ const getters = {
     })
     return applications;
   },
+  mostRecent17thApplication: (state) => (userID) => {
+    let applications = [];
+    state.applications.forEach(application => {
+      if(application.userID === userID && application.division === "17th") {
+        applications.push(application);
+      }
+    })
+    let application = applications.sort((a, b) => b.date - a.date);
+    if(application) {
+      return application;
+    } else {
+      return false;
+    }
+  }
 }
 
 const actions = {

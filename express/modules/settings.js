@@ -67,6 +67,26 @@ router.post('/loa/submit', async (req, res) => {
   })
 })
 
+// POST: /api/v1/settings/loas
+// Params: none
+// Body: accessToken
+// Return: <status_code>
+router.post('/loas', async (req, res) => {
+  let {accessToken} = req.body;
+  const loggedInUserID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/settings/loa/end"
+  con.query(`SELECT * FROM loas`).then(results => {
+    res.json(results);
+  }).catch(error => {
+    if(error) {
+      res.sendStatus(500);
+    }
+  })
+})
+
+
+
 // POST: /api/v1/settings/loa/end
 // Params: none
 // Body: accessToken, userID, loaID

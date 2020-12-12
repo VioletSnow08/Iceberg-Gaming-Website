@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div v-if="!users">
+    <div v-if="!users || !loas">
       <h1>{{ this.$vs.loading({type: "radius", text: "Loading User..."}) }}</h1>
     </div>
     <div v-else>
@@ -56,7 +56,7 @@
             <h1>Leave of Absence(LOA)</h1>
             <h5>Do you have to take a break from the community? Fill out an LOA!</h5>
             <br>
-            <div v-if="isCurrentUserOnLOA()">
+            <div v-if="isUserOnLOA(currentUser.id)">
               <vs-button @click="confirmLOAPopup=true" color="primary">End LOA</vs-button>
               <vs-popup classContent="popup-example" title="Are you sure you would like to end your current LOA"
                         :active.sync="confirmLOAPopup">
@@ -107,7 +107,7 @@ import Datepicker from 'vuejs-datepicker';
 export default {
   name: "Settings",
   computed: {
-    ...mapGetters(["currentUser", "isCurrentUserOnLOA", "users"]),
+    ...mapGetters(["currentUser", "isUserOnLOA", "users", "loas", "LOAsFromUser"]),
   },
   mounted() {
     setTimeout(() => {
@@ -165,12 +165,13 @@ export default {
     },
     confirmEndLOA() {
       this.confirmLOAPopup = false;
-      this.endLOA([this.currentUser.id, this.currentUser.loas[0].id]);
+      this.endLOA([this.currentUser.id, this.LOAsFromUser(this.currentUser.id)[this.LOAsFromUser(this.currentUser.id).length-1].id]);
     },
   },
   async created() {
     await Promise.all([
       this.$store.dispatch('fetchUsers'),
+      this.$store.dispatch('fetchLOAs')
     ])
   }
 }
