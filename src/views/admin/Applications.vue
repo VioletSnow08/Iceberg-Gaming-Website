@@ -15,7 +15,7 @@
             <div class="text-center">
               <vs-chip v-if="app.status.toLowerCase() === 'approved'" color="success">{{ app.status }}</vs-chip>
               <vs-chip v-else-if="app.status.toLowerCase() === 'waiting'" color="warning">{{ app.status }}</vs-chip>
-              <vs-chip v-else-if="app.status.toLowerCase() === 'processing'" color="warning">{{ app.status }}</vs-chip>
+              <vs-chip v-else-if="app.status.toLowerCase() === 'processed'" color="warning">{{ app.status }}</vs-chip>
               <vs-chip v-else-if="app.status.toLowerCase() === 'denied'" color="danger">{{ app.status }}</vs-chip>
             </div>
             <!--          <vs-avatar :src="user(app.user_id).photoURL" class="mx-auto my-6 block" size="80px"/>-->

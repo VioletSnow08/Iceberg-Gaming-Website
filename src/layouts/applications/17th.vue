@@ -64,7 +64,7 @@
     </div>
   </div>
   <div class="vx-col sm:w-2/3 w-full md:mt-8">
-    <vs-checkbox disabled class="inline-flex" v-model="application.attendOps">Can you attend weekly Saturday Operations at 7:00pm CST?</vs-checkbox>
+    <vs-checkbox disabled class="inline-flex" v-model="application.attendOps">I can attend weekly Saturday Operations at 7:00pm CST</vs-checkbox>
   </div>
   <br>
   <h3>Comment</h3>
