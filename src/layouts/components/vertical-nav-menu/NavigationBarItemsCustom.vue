@@ -1,5 +1,7 @@
 <template>
   <div>
+
+<!--    ICEBERG GAMING      -->
     <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Iceberg Gaming</span>
 
     <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member') || currentUser.roles.includes('[ICE] Applicant')" to="/hub" icon="HomeIcon">
@@ -22,11 +24,7 @@
       v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
 
 
-
-
-
-
-
+<!--    17th BCT      -->
 
 
     <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">17th Brigade Combat Team</span>
