@@ -29,7 +29,7 @@ router.post('/', async (req, res) => {
       accessToken
     })
     results.forEach(row => {
-      row.divison = "Iceberg";
+      row.division = "Iceberg";
       applications.push(row);
     })
     return con.query(`SELECT * FROM 17th_applications ORDER BY createdAt desc`)
@@ -74,7 +74,6 @@ router.post('/create/:division', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/settings/applications/create"
   division = division.toLowerCase();
-  console.log(division)
   if (!accessToken || !division) return res.status(400).send("Bad Request! Please provide an accessToken and a division(17th, Iceberg, or CGS)");
   if (division === "17th" && !utils.doesUserContainRoles(req.user.roles, "[17th] Member")) {
     let {
@@ -171,7 +170,6 @@ router.post('/create/:division', async (req, res) => {
 
 router.delete('/change/', async (req, res) => {
   let {accessToken} = req.body;
-  console.log(req.user.roles);
   let {action, id, division} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
@@ -283,10 +281,43 @@ router.delete('/change/', async (req, res) => {
           "-Staff";
         status = "Denied";
       }
+      if(status && comment) {
+        con.query(`UPDATE iceberg_applications SET comment = ?, status = ? WHERE id = ?`, [comment, status, id]).then(() => {
+          res.sendStatus(200);
+          utils.logger.log({
+            level: "info",
+            message: "Application Status Changed",
+            status,
+            comment,
+            userID,
+            id,
+            division,
+            api,
+            action
+          })
+        }).catch(error => {
+          if(error) {
+            res.sendStatus(500)
+            utils.logger.log({
+              level: "error",
+              message: error.message,
+              error: error.stack,
+              status,
+              comment,
+              userID,
+              id,
+              division,
+              api,
+              action
+            })
+          }
+        })
+      }
     } else if(division.toLowerCase() === "cgs") {
 
     } else res.status(400).send("Bad Request! Please provide a valid division!");
   } else res.status(401).send("Unauthorized!");
+
 })
 
 module.exports = {
