@@ -57,6 +57,7 @@ const actions = {
     await axios.post(`${utils.base_url}/user/login`, {email, password}).then((response) => {
       localStorage.setItem('refreshToken', response.data.refreshToken) // No need to stringify, since it is already a string
       this.dispatch('fetchCurrentUser');
+      this.dispatch('fetchLOAs');
       router.push('/');
     }).catch((error) => {
       if (error) utils.alertGeneral();

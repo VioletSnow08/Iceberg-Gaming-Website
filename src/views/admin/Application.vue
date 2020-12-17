@@ -14,7 +14,7 @@
               applicationDivisionDisplay(application($route.params.userID, $route.params.applicationID).division)
             }}</p>
           <div
-            v-if="application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'waiting' || application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'processing'">
+            v-if="application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'waiting' || application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'processed'">
             <vs-button class="appButton" @click="$router.push('/admin/applications')" color="primary">Back</vs-button>
             <vs-button
               @click="changeApplicationStatus(['approve', $route.params.userID, $route.params.applicationID, (application($route.params.userID, $route.params.applicationID).division)])"

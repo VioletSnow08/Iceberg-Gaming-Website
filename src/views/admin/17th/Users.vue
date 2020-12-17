@@ -36,7 +36,7 @@
 
 <script>
 import {AgGridVue} from 'ag-grid-vue'
-import CellRendererLink from './cell-renderer/CellRendererLink.vue'
+import CellRendererLink from './cell-renderer/CellRendererUsername.vue'
 import CellRendererLOA from './cell-renderer/CellRendererLOA.vue'
 import CellRendererPromotionDemotion from './cell-renderer/CellRendererPromotionDemotion.vue'
 import CellRendererVerified from './cell-renderer/CellRendererVerified.vue'
@@ -78,9 +78,7 @@ export default {
         {headerName: 'Points', field: 'points'},
         {headerName: "LOA Status", field: 'loa_status', cellRendererFramework: 'CellRendererLOA'}
       ],
-      usersData: [
-        // {username: 'Vinniehat', discord_id: '1234', events_attended: 0, points: 49, activity: 'On LOA', promo_demo_status: 'Demotable'},
-      ]
+      usersData: null
     }
   },
   mounted() {
@@ -104,7 +102,10 @@ export default {
           events_attended: this.mostRecent17thApplication(user.id) ? this.mostRecent17thApplication(user.id).events_attended : 'N/A',
           points: 'Not Functional',
           loa_status: this.isUserOnLOA(user.id) ? 'On LOA' : 'Off LOA',
-          promo_demo_status: 'Not Functional'
+          promo_demo_status: 'Not Functional',
+          id: user.id,
+          photoURL: user.photoURL,
+          roles: user.roles
         }
         users.push(newUser);
       })

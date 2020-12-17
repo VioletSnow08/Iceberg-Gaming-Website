@@ -83,7 +83,7 @@ const actions = {
       whyJoin,
       accessToken: await rootGetters.currentUser.accessToken
     }).then(async response => {
-      await this.dispatch('fetchCurrentUser');
+      await this.dispatch('fetchApplications');
       await router.push('/user/applications');
     }).catch(error => {
       if(error) {

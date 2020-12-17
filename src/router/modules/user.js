@@ -8,7 +8,7 @@ export default [{
       component: () => import('@/views/user/Hub.vue'),
       meta: {
         requiresAuth: true,
-        roles: ['[ICE] Member']
+        roles: ['[ICE] Applicant', '[ICE] Member']
       },
     },
     {
@@ -27,7 +27,7 @@ export default [{
       component: () => import('@/views/user/Application.vue'),
       meta: {
         requiresAuth: true,
-        roles: ['[17th] Applicant', '[ICE] Member']
+        roles: ['[ICE] Applicant', '[ICE] Member']
       },
       props: true
     },

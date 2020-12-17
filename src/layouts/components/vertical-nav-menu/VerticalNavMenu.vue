@@ -57,6 +57,16 @@
         <!-- Header Shadow -->
         <div class="shadow-bottom" v-show="showShadowBottom"/>
 
+
+
+        <v-nav-menu-item v-if="!currentUser" to="/pages/login" icon="HomeIcon">
+          <span v-show="!verticalNavMenuItemsMin" class="truncate">Login</span>
+        </v-nav-menu-item>
+        <v-nav-menu-item v-if="!currentUser" to="/pages/register" icon="HomeIcon">
+          <span v-show="!verticalNavMenuItemsMin" class="truncate">Register</span>
+        </v-nav-menu-item>
+
+
         <!-- Menu Items -->
         <component v-if="currentUser" :is="scrollbarTag" ref="verticalNavMenuPs"
                    class="scroll-area-v-nav-menu pt-2" :settings="settings"

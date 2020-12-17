@@ -117,6 +117,7 @@ const actions = {
     await context.dispatch("fetchCurrentUser");
   },
   async fetchLOAs({commit, rootGetters}) {
+    if(!rootGetters.currentUser) return;
     axios.post(`${utils.base_url}/settings/loas`, {accessToken: await rootGetters.currentUser.accessToken}).then(response => {
       commit('setLOAs', response.data);
     })

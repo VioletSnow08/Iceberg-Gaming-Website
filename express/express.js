@@ -28,6 +28,7 @@ MYSQL.createConnection({
   app.use('/api/v1/user', require('./modules/user').router);
   app.use('/api/v1/settings', require('./modules/settings').router);
   app.use('/api/v1/applications', require('./modules/applications').router);
+  app.use('/api/v1/user-management', require('./modules/user-management').router);
 
   fs.access("../dist", function (error) {
     if (error) {
