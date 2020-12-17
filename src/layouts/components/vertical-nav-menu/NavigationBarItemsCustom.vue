@@ -20,7 +20,7 @@
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Application</span>
     </v-nav-menu-item>
 
-    <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE"><span
+    <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE" target="_blank"><span
       v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
 
 
