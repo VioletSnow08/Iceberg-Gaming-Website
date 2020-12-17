@@ -107,7 +107,9 @@ export default {
           photoURL: user.photoURL,
           roles: user.roles
         }
-        users.push(newUser);
+        if(user.roles.includes("[17th] Member")) {
+          users.push(newUser);
+        }
       })
       this.usersData = users;
     },
