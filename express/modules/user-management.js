@@ -13,7 +13,7 @@ const {DateTime} = require("luxon");
 router.use(requiresAuth);
 const VALID_CHANGE_ROLES = { // Combined with canUserChangeRole17th, this is a "table" of what roles can
   NCO: ["[17th] Ranger", "[17th] 32nd LSG"],
-  HQ: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] Ranger NCO", "[17th] 32nd LSG NCO", "[17th] NCO"],
+  OFFICER: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] Ranger NCO", "[17th] 32nd LSG NCO", "[17th] NCO"],
   ALPHA_COMPANY_HQ: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] Ranger NCO", "[17th] 32nd LSG NCO", "[17th] NCO", "[17th] 1st Platoon HQ", "32nd LSG HQ"],
   ICE_OWNER: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] Ranger NCO", "[17th] 32nd LSG NCO", "[17th] NCO", "[17th] 1st Platoon HQ", "32nd LSG HQ", "[17th] Alpha Company HQ"]
 }
@@ -22,11 +22,14 @@ function canUserChangeRole17th(currentRoles, role) {
   let isValid = false;
   if (utils.doesUserContainRoles(currentRoles, ["[17th] NCO"]) && VALID_CHANGE_ROLES.NCO.includes(role)) {
     isValid = true;
-  } else if (utils.doesUserContainRoles(currentRoles, ["[17th] 1st Platoon HQ", "[17th] 32nd LSG HQ"]) && VALID_CHANGE_ROLES.HQ.includes(role)) {
+  }
+  if (utils.doesUserContainRoles(currentRoles, ["[17th] 1st Platoon HQ", "[17th] 32nd LSG HQ"]) && VALID_CHANGE_ROLES.OFFICER.includes(role)) {
     isValid = true;
-  } else if (utils.doesUserContainRoles(currentRoles, ["[17th] Alpha Company HQ"]) && VALID_CHANGE_ROLES.ALPHA_COMPANY_HQ.includes(role)) {
+  }
+  if (utils.doesUserContainRoles(currentRoles, ["[17th] Alpha Company HQ"]) && VALID_CHANGE_ROLES.ALPHA_COMPANY_HQ.includes(role)) {
     isValid = true;
-  } else if (utils.doesUserContainRoles(currentRoles, ["[ICE] Owner"]) && VALID_CHANGE_ROLES.ICE_OWNER.includes(role)) {
+  }
+  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Owner"]) && VALID_CHANGE_ROLES.ICE_OWNER.includes(role)) {
     isValid = true;
   }
   return isValid
