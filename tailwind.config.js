@@ -783,8 +783,8 @@ module.exports = {
   | variants                  https://tailwindcss.com/docs/configuration#modules
   |-----------------------------------------------------------------------------
   |
-  | Here is where you control which modules are generated and what variants are
-  | generated for each of those modules.
+  | Here is where you control which v1-modules are generated and what variants are
+  | generated for each of those v1-modules.
   |
   | Currently supported variants:
   |   - responsive
