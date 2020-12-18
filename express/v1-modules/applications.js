@@ -18,54 +18,55 @@ router.post('/', async (req, res) => {
   const api = "/api/v1/settings/applications"
   if (!accessToken) return res.status(400).send("Bad Request! Please pass in an accessToken.");
   let applications = [];
-
-  con.query(`SELECT * FROM iceberg_applications ORDER BY createdAt desc`).then(results => {
-    utils.logger.log({
-      level: "info",
-      message: "Iceberg Applications Fetched",
-      isLoggedIn: true,
-      userID,
-      api,
-      accessToken
-    })
-    results.forEach(row => {
-      row.division = "Iceberg";
-      applications.push(row);
-    })
-    return con.query(`SELECT * FROM 17th_applications ORDER BY createdAt desc`)
-  }).then(results => {
-    utils.logger.log({
-      level: "info",
-      message: "17th Applications Fetched",
-      isLoggedIn: true,
-      userID,
-      api,
-      accessToken
-    })
-    results.forEach(row => {
+  let initialQueries = {
+    applications: [],
+    bctApplications: [],
+    icebergApplications: []
+  }
+  con.query(`SELECT * FROM applications`).then(rows => {
+    initialQueries.applications = rows;
+    return con.query(`SELECT * FROM 17th_applications`)
+  }).then(rows => {
+    rows.forEach(row => {
       row.division = "17th";
-      applications.push(row);
+      initialQueries.bctApplications.push(row);
     })
-    res.json(applications);
+    return con.query(`SELECT * FROM iceberg_applications`)
+  }).then(rows => {
+    rows.forEach(row => {
+      row.division = "Iceberg";
+      initialQueries.icebergApplications.push(row);
+    })
+    res.json({
+      applications: initialQueries.applications,
+      bct_applications: initialQueries.bctApplications,
+      iceberg_applications: initialQueries.icebergApplications
+    })
+    utils.logger.log({
+      level: "info",
+      message: "Applications Fetched",
+      isLoggedIn: true,
+      userID,
+      accessToken
+    })
   }).catch(error => {
-    if (error) {
-      res.sendStatus(500);
+    if(error) {
       utils.logger.log({
         level: "error",
         message: error.message,
         stack: error.stack,
         isLoggedIn: true,
         userID,
-        api,
-        accessToken
+        accessToken,
       })
+      res.sendStatus(500);
     }
   })
 })
 
 // POST: /api/v1/applications/create/<division>
 // Params: division
-// Body: accessToken, questions, userID
+// Body: accessToken, questions
 // Return: application
 router.post('/create/:division', async (req, res) => {
   let {accessToken} = req.body;
@@ -97,26 +98,17 @@ router.post('/create/:division', async (req, res) => {
     let createdAt = DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss');
     con.query(`INSERT INTO 17th_applications (userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]).then(row => {
       let rowID = row.insertId;
-      let safeApplication = {
-        steamURL,
-        timezone,
-        age,
-        arma3Hours,
-        hobbies,
-        whyJoin,
-        attractmilsim,
-        ranger,
-        medic,
-        sapper,
-        pilot,
-        tank_crew,
-        idf,
-        attendOps,
-        createdAt,
-        id: rowID,
-        status: "Waiting"
-      }
-      res.json(safeApplication);
+      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, division, rowID])
+    }).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Application Created",
+        isLoggedIn: true,
+        userID,
+        api,
+        division
+      })
     }).catch(error => {
       if (error) {
         console.log(error);
@@ -137,24 +129,29 @@ router.post('/create/:division', async (req, res) => {
     let createdAt = DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss');
     con.query(`INSERT INTO iceberg_applications (userID, createdAt, steamURL, age, hobbies, gamesTheyJoinFor, hoursInGamesTheyJoinFor, areYouInAnyCommunities, whyJoin, whereDidYouHearUsFrom) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, createdAt, steamURL, age, hobbies, gamesTheyJoinFor, hoursInGamesTheyJoinFor, areYouInAnyCommunities, whyJoin, whereDidYouHearUsFrom]).then(row => {
       let rowID = row.insertId;
-      let safeApplication = {
-        steamURL,
+      res.sendStatus(200)
+      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, division, rowID])
+    }).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Application Created",
+        isLoggedIn: true,
         userID,
-        id: rowID,
-        createdAt,
-        age,
-        hobbies,
-        gamesTheyJoinFor,
-        hoursInGamesTheyJoinFor,
-        areYouInAnyCommunities,
-        whyJoin,
-        whereDidYouHearUsFrom,
-        status: "Waiting"
-      }
-      res.json(safeApplication)
+        api,
+        division
+      })
     }).catch(error => {
       if (error) {
-        console.log(error);
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID,
+          api,
+          division
+        })
         res.sendStatus(500);
       }
     })
@@ -177,7 +174,7 @@ router.delete('/change/', async (req, res) => {
   let comment;
   let status;
   if (!accessToken || !action || !id || !division) return res.status(400).send("Bad Request! Please provide an accessToken, action, division, and id");
-  if(action.toLowerCase() !== "approve" && action.toLowerCase() !== "deny" && action.toLowerCase() !== "process") return res.status(400).send("Bad Request! Please provide a valid action!");
+  if (action.toLowerCase() !== "approve" && action.toLowerCase() !== "deny" && action.toLowerCase() !== "process") return res.status(400).send("Bad Request! Please provide a valid action!");
   if (utils.doesUserContainRoles(req.user.roles, ["[ICE] Recruiter", "[ICE] Admin", "[ICE] Owner"])) {
     if (division.toLowerCase() === "17th") {
       if (action.toLowerCase() === "approve") {
@@ -224,7 +221,7 @@ router.delete('/change/', async (req, res) => {
           `${req.user.username}`
         status = "Processed";
       }
-      if(status && comment) {
+      if (status && comment) {
         con.query(`UPDATE 17th_applications SET comment = ?, status = ? WHERE id = ?`, [comment, status, id]).then(() => {
           res.sendStatus(200);
           utils.logger.log({
@@ -239,7 +236,7 @@ router.delete('/change/', async (req, res) => {
             action
           })
         }).catch(error => {
-          if(error) {
+          if (error) {
             res.sendStatus(500)
             utils.logger.log({
               level: "error",
@@ -256,8 +253,8 @@ router.delete('/change/', async (req, res) => {
           }
         })
       }
-    } else if(division.toLowerCase() === "iceberg") {
-      if(action.toLowerCase() === "approve") {
+    } else if (division.toLowerCase() === "iceberg") {
+      if (action.toLowerCase() === "approve") {
         comment = "Welcome to Iceberg Gaming! We're glad to have you aboard our community and hope you can feel at home in our community. \n" +
           "\n" +
           `If you haven't already, we highly recommend you join our Teamspeak (${utils.data.teamspeak}) and Discord (${utils.data.discord}) so you can play with the rest of the community. Feel free to chat in any of the channels with all the members of the community, and don't be afraid to explore some of the other games that we play in Iceberg Gaming. Keep yourself updated on the Guilded Calendar for any Iceberg events and don't be afraid to gather some people and schedule something of your own.\n` +
@@ -266,7 +263,7 @@ router.delete('/change/', async (req, res) => {
           "If you have any further questions or issues, you are more than welcome to ask anyone on Teamspeak, Discord, or even Guilded and we will help out as best as we can!\n" +
           "Regards, \n" + req.user.username;
         status = "Approved";
-      } else if(action.toLowerCase() === "process") {
+      } else if (action.toLowerCase() === "process") {
         comment = "Hello,\n" +
           "\n" +
           `Your application has been processed and the recruiter has requested an interview. When you're able to, hop on to the TeamSpeak (${utils.data.teamspeak}) and reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.\n` +
@@ -275,13 +272,13 @@ router.delete('/change/', async (req, res) => {
           "\n" +
           `${req.user.username}`
         status = "Processed";
-      } else if(action.toLowerCase() === "deny") {
+      } else if (action.toLowerCase() === "deny") {
         comment = "We have reviewed your application and we thank you for your interest in joining Iceberg Gaming. However, we are regrettably unable to accept your application at this time. Please feel free to inquire why your application was not approved. You are free to resubmit your application in the future when we may be better able to incorporate you.\n" +
           "All the best.\n" +
           "-Staff";
         status = "Denied";
       }
-      if(status && comment) {
+      if (status && comment) {
         con.query(`UPDATE iceberg_applications SET comment = ?, status = ? WHERE id = ?`, [comment, status, id]).then(() => {
           res.sendStatus(200);
           utils.logger.log({
@@ -296,7 +293,7 @@ router.delete('/change/', async (req, res) => {
             action
           })
         }).catch(error => {
-          if(error) {
+          if (error) {
             res.sendStatus(500)
             utils.logger.log({
               level: "error",
@@ -313,7 +310,7 @@ router.delete('/change/', async (req, res) => {
           }
         })
       }
-    } else if(division.toLowerCase() === "cgs") {
+    } else if (division.toLowerCase() === "cgs") {
 
     } else res.status(400).send("Bad Request! Please provide a valid division!");
   } else res.status(401).send("Unauthorized!");

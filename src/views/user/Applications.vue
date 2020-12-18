@@ -10,10 +10,10 @@
       <div v-for="app in applicationsFromUser(currentUser.id)" v-bind:key="app.id" class="vx-col w-full lg:w-1/4 sm:w-1/2 mb-base">
         <vx-card :title="applicationDivisionDisplay(app.division)" class="p-2">
           <div class="text-center">
-            <vs-chip v-if="app.status.toLowerCase() === 'approved'" color="success">{{app.status}}</vs-chip>
-            <vs-chip v-else-if="app.status.toLowerCase() === 'waiting'" color="warning">{{app.status}}</vs-chip>
-            <vs-chip v-else-if="app.status.toLowerCase() === 'processing'" color="warning">{{app.status}}</vs-chip>
-            <vs-chip v-else-if="app.status.toLowerCase() === 'denied'" color="danger">{{app.status}}</vs-chip>
+            <vs-chip v-if="application(app.id).status.toLowerCase() === 'approved'" color="success">{{application(app.id).status}}</vs-chip>
+            <vs-chip v-else-if="application(app.id).status.toLowerCase() === 'waiting'" color="warning">{{application(app.id).status}}</vs-chip>
+            <vs-chip v-else-if="application(app.id).status.toLowerCase() === 'processing'" color="warning">{{application(app.id).status}}</vs-chip>
+            <vs-chip v-else-if="application(app.id).status.toLowerCase() === 'denied'" color="danger">{{application(app.id).status}}</vs-chip>
           </div>
           <!--          <vs-avatar :src="user(app.user_id).photoURL" class="mx-auto my-6 block" size="80px"/>-->
           <vs-button v-if="app.division === '17th'" @click="viewApplication(app.userID, app.id)" type="gradient" class="w-full mt-6" color="#FF0099" gradient-color-secondary="#493240">View Application</vs-button>
@@ -37,7 +37,7 @@ export default {
     applicationDivisionDisplay
   },
   computed: {
-    ...mapGetters(['applications', 'currentUser', 'user', 'applicationsFromUser'])
+    ...mapGetters(['applications', 'currentUser', 'user', 'applicationsFromUser', 'application'])
   },
   async created () {
     await Promise.all([

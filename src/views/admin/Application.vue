@@ -4,28 +4,28 @@
       <h1>{{ this.$vs.loading({type: "radius", text: "Loading Application..."}) }}</h1>
     </div>
     <div v-else-if="applications && users">
-      <div v-if="application($route.params.userID, $route.params.applicationID) && user($route.params.userID)">
+      <div v-if="application($route.params.applicationID) && user($route.params.userID)">
         <div id="header">
           <span>{{ this.$vs.loading.close() }}</span>
           <h2 class="text-center">Now Viewing: {{ user($route.params.userID).username }}'s Application</h2>
           <p class="text-center">Current Status:
-            {{ application($route.params.userID, $route.params.applicationID).status }}</p>
+            {{ application($route.params.applicationID).status }}</p>
           <p class="text-center">Division: {{
-              applicationDivisionDisplay(application($route.params.userID, $route.params.applicationID).division)
+              applicationDivisionDisplay(application($route.params.applicationID).division)
             }}</p>
           <div
-            v-if="application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'waiting' || application($route.params.userID, $route.params.applicationID).status.toLowerCase() === 'processed'">
+            v-if="application($route.params.applicationID).status.toLowerCase() === 'waiting' || application($route.params.applicationID).status.toLowerCase() === 'processed'">
             <vs-button class="appButton" @click="$router.push('/admin/applications')" color="primary">Back</vs-button>
             <vs-button
-              @click="changeApplicationStatus(['approve', $route.params.userID, $route.params.applicationID, (application($route.params.userID, $route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['approve', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
               class="appButton" color="success" type="filled">Accept
             </vs-button>
             <vs-button
-              @click="changeApplicationStatus(['deny', $route.params.userID, $route.params.applicationID, (application($route.params.userID, $route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['deny', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
               class="appButton" color="danger" type="filled">Decline
             </vs-button>
             <vs-button
-              @click="changeApplicationStatus(['process', $route.params.userID, $route.params.applicationID, (application($route.params.userID, $route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['process', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
               class="appButton" color="warning" type="filled">Process
             </vs-button>
           </div> <!-- If it is accepted or denied -->
@@ -36,11 +36,11 @@
             <vs-button class="appButton" disabled color="warning" type="filled">Process</vs-button>
           </div>
         </div>
-        <ApplicationBP17th v-if="application($route.params.userID, $route.params.applicationID).division === '17th'"
-                           v-bind:application="application($route.params.userID, $route.params.applicationID)"/>
+        <ApplicationBP17th v-if="application($route.params.applicationID).division === '17th'"
+                           v-bind:application="application($route.params.applicationID)"/>
         <ApplicationBPIceberg
-          v-if="application($route.params.userID, $route.params.applicationID).division === 'Iceberg'"
-          v-bind:application="application($route.params.userID, $route.params.applicationID)"/>
+          v-if="application($route.params.applicationID).division === 'Iceberg'"
+          v-bind:application="application($route.params.applicationID)"/>
       </div>
       <div v-else>
         <span>{{ this.$vs.loading.close() }}</span>

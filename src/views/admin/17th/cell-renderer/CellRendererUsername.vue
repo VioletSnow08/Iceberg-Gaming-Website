@@ -5,6 +5,8 @@
       <vs-avatar :src="params.data.photoURL" class="flex-shrink-0 mr-2" size="30px"/>
       <p class="text-inherit hover:text-primary">{{ params.value }}</p>
     </div>
+
+
     <vs-popup title="Edit User" :active.sync="isOriginalPopupOpen">
       <vs-alert :active="alertPopup" color="success">Roles Updated!</vs-alert>
       <br v-if="alertPopup">
@@ -26,6 +28,8 @@
         <br v-if="removeUserAlert">
         <vs-button color="danger" @click="removeUserAlert=true; remove17thUser(params.data.id)">Remove User</vs-button>
       </vs-popup>
+
+
 
     </vs-popup>
   </div>
