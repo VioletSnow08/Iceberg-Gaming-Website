@@ -195,6 +195,19 @@ router.post('/17th/change-roles', async (req, res) => {
   })
 })
 
+// POST: /api/v1/user-management/17th/remove-user
+// Params: none
+// Body: accessToken, userID
+// Return: <status_code>
+router.post('/17th/remove-user', async (req, res) => {
+  // let {accessToken, userID} = req.body;
+  // const con = req.app.get('con');
+  // const api = "/api/v1/user-management/17th/change-roles"
+  // if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken, roles, and a userID.");
+  // let currentRoles = req.user.roles;
+  // con.query()
+})
+
 module.exports = {
   router
 };
