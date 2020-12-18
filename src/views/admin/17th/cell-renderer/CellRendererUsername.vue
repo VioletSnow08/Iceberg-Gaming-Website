@@ -9,12 +9,24 @@
       <vs-alert :active="alertPopup" color="success">Roles Updated!</vs-alert>
       <br v-if="alertPopup">
       <p>All Edits are logged for security purposes.</p>
+
       <div v-if="!displayedRoles" style="color: red; font-weight: bold">Fetching Roles!</div>
       <br>
       <div v-for="role in displayedRoles">
         <vs-checkbox style="padding-bottom: 10px;" :disabled="role.isDisabled" v-model="role.doesUserHaveIt">{{ role.role }}</vs-checkbox>
       </div>
-      <vs-button @click="alertPopup=true; toggle17thRoles([displayedRoles, params.data.id])">Save Roles</vs-button>
+
+      <div class="vs-row">
+        <vs-button style="margin-right: 5px" @click="alertPopup=true; toggle17thRoles([displayedRoles, params.data.id])">Save Roles</vs-button>
+        <vs-button color="warning" @click="isRemoveUserPopupOpen=true">Remove User</vs-button>
+      </div>
+
+      <vs-popup title="Are you sure you want to remove this user?" :active.sync="isRemoveUserPopupOpen">
+        <vs-alert :active="removeUserAlert" color="success">User Removed!</vs-alert>
+        <br v-if="removeUserAlert">
+        <vs-button color="danger" @click="removeUserAlert=true; remove17thUser(params.data.id)">Remove User</vs-button>
+      </vs-popup>
+
     </vs-popup>
   </div>
 
@@ -36,28 +48,19 @@ export default {
     ...mapGetters(["currentUser"]),
   },
   async mounted() {
-    axios.post(`${utils.base_url}/user-management/17th/get-roles`, {
-      userID: this.params.data.id,
-      accessToken: await this.currentUser.accessToken
-    }).then(response => {
-      this.displayedRoles = response.data;
-    }).catch(error => {
-      if(error) {
-        utils.alertGeneral();
-      }
-    })
+    this.displayedRoles = await this.getEditable17thRoles(this.params.data.id)
   },
   methods: {
-    ...mapActions(["toggle17thRoles", "getEditableRoles"]),
+    ...mapActions(["toggle17thRoles", "remove17thUser", "getEditable17thRoles"]),
   },
   data() {
     return {
       isOriginalPopupOpen: false,
-      isKickPopupOpen: false,
-      isBanPopupOpen: false,
+      removeUserAlert: false,
       isChangePasswordPopupOpen: false,
       alertPopup: false,
-      displayedRoles: null
+      displayedRoles: null,
+      isRemoveUserPopupOpen: false
     }
   }
 }

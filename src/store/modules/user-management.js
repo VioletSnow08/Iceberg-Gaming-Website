@@ -21,6 +21,28 @@ const actions = {
     }).catch(error => {
       if(error) alert("Error: Unauthorized or Server Error! Please make sure you are only selecting roles that you can apply.");
     })
+  },
+  async remove17thUser({rootGetters}, userID) {
+    axios.post(`${utils.base_url}/user-management/17th/remove-user`, {
+      userID,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
+  },
+  async getEditable17thRoles({rootGetters}, userID) {
+    return axios.post(`${utils.base_url}/user-management/17th/get-roles`, {
+      userID,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(response => {
+      return response.data;
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
   }
 }
 const mutations = {

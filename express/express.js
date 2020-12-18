@@ -25,10 +25,10 @@ MYSQL.createConnection({
   app.use(bodyParser.json());
 
 // API Modules
-  app.use('/api/v1/user', require('./modules/user').router);
-  app.use('/api/v1/settings', require('./modules/settings').router);
-  app.use('/api/v1/applications', require('./modules/applications').router);
-  app.use('/api/v1/user-management', require('./modules/user-management').router);
+  app.use('/api/v1/user', require('./v1-modules/user').router);
+  app.use('/api/v1/settings', require('./v1-modules/settings').router);
+  app.use('/api/v1/applications', require('./v1-modules/applications').router);
+  app.use('/api/v1/user-management', require('./v1-modules/user-management').router);
 
   fs.access("../dist", function (error) {
     if (error) {

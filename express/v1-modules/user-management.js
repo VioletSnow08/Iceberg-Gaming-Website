@@ -56,11 +56,11 @@ router.post('/17th/get-roles', async (req, res) => {
       roles.push(row.role);
     })
     displayed17thRoles.forEach(role => {
-        returnedRoles.push({
-          role,
-          doesUserHaveIt: utils.doesUserContainRoles(roles, role),
-          isDisabled: !canUserChangeRole17th(currentRoles, role)
-        })
+      returnedRoles.push({
+        role,
+        doesUserHaveIt: utils.doesUserContainRoles(roles, role),
+        isDisabled: !canUserChangeRole17th(currentRoles, role)
+      })
     })
     res.json(returnedRoles);
   })
@@ -200,12 +200,43 @@ router.post('/17th/change-roles', async (req, res) => {
 // Body: accessToken, userID
 // Return: <status_code>
 router.post('/17th/remove-user', async (req, res) => {
-  // let {accessToken, userID} = req.body;
-  // const con = req.app.get('con');
-  // const api = "/api/v1/user-management/17th/change-roles"
-  // if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken, roles, and a userID.");
-  // let currentRoles = req.user.roles;
-  // con.query()
+  let {accessToken, userID} = req.body;
+  const con = req.app.get('con');
+  const api = "/api/v1/user-management/17th/change-roles"
+  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
+  let currentRoles = req.user.roles;
+
+  if (utils.doesUserContainRoles(currentRoles, ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster"])) {
+    con.query(`DELETE FROM 17th_members WHERE userID = ?`, [userID])
+      .then(() => {
+        return con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [userID, "[17th] Member"])
+      }).then(() => {
+      utils.logger.log({
+        level: "info",
+        message: "17th Member Deleted",
+        isLoggedIn: true,
+        userID: req.user.id,
+        removedUser: userID,
+        accessToken,
+        api
+      })
+      res.sendStatus(200);
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: req.user.id,
+          removedUser: userID,
+          accessToken,
+          api
+        })
+        res.sendStatus(400);
+      }
+    })
+  } else res.sendStatus(401);
 })
 
 module.exports = {
