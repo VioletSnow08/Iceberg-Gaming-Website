@@ -17,15 +17,15 @@
             v-if="application($route.params.applicationID).status.toLowerCase() === 'waiting' || application($route.params.applicationID).status.toLowerCase() === 'processed'">
             <vs-button class="appButton" @click="$router.push('/admin/applications')" color="primary">Back</vs-button>
             <vs-button
-              @click="changeApplicationStatus(['approve', $route.params.userID, application($route.params.applicationID).id, (application($route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['approve', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
               class="appButton" color="success" type="filled">Accept
             </vs-button>
             <vs-button
-              @click="changeApplicationStatus(['deny', $route.params.userID, application($route.params.applicationID).id, (application($route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['deny', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
               class="appButton" color="danger" type="filled">Decline
             </vs-button>
             <vs-button
-              @click="changeApplicationStatus(['process', $route.params.userID, application($route.params.applicationID).id, (application($route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['process', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
               class="appButton" color="warning" type="filled">Process
             </vs-button>
           </div> <!-- If it is accepted or denied -->
