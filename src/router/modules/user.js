@@ -96,16 +96,16 @@ export default [{
       },
       props: true
     },
-    {
-      path: '/profile/:userID',
-      name: 'Profile',
-      component: () => import('@/views/user/Profile'),
-      meta: {
-        requiresAuth: true,
-        roles: ['[ICE] Member']
-      },
-      props: true
-    },
+    // {
+    //   path: '/profile/:userID',
+    //   name: 'Profile',
+    //   component: () => import('@/views/user/Profile'),
+    //   meta: {
+    //     requiresAuth: true,
+    //     roles: ['[ICE] Member']
+    //   },
+    //   props: true
+    // },
     {
       path: '/channel/:channelID/:param1/:param2/:param3',
       name: "ViewChannel",

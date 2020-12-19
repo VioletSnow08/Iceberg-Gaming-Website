@@ -15,10 +15,10 @@
       <vs-dropdown-menu class="vx-navbar-dropdown">
         <ul style="min-width: 9rem">
 
-          <li @click="$router.push('/profile/' + currentUser.id)" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
-            <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />
-            <span class="ml-2">My Profile</span>
-          </li>
+<!--          <li @click="$router.push('/profile/' + currentUser.id)" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">-->
+<!--            <feather-icon icon="UserIcon" svgClasses="w-4 h-4" />-->
+<!--            <span class="ml-2">My Profile</span>-->
+<!--          </li>-->
 
           <li @click="$router.push('/applications')" class="flex py-2 px-4 cursor-pointer hover:bg-primary hover:text-white">
             <feather-icon icon="MessageSquareIcon" svgClasses="w-4 h-4" />
