@@ -1,5 +1,8 @@
 <template>
   <div>
+    <div class="text-center">
+      <h1>Now Viewing Your Applications</h1>
+    </div>
     <div v-if="!applications">
       <h1>{{ this.$vs.loading({type: "radius", text: "Loading Applications..."}) }}</h1>
     </div>
@@ -18,6 +21,9 @@
           <!--          <vs-avatar :src="user(app.user_id).photoURL" class="mx-auto my-6 block" size="80px"/>-->
           <vs-button v-if="app.division === '17th'" @click="viewApplication(app.userID, app.id)" type="gradient" class="w-full mt-6" color="#FF0099" gradient-color-secondary="#493240">View Application</vs-button>
           <vs-button v-else-if="app.division === 'Iceberg'" @click="viewApplication(app.userID, app.id)" type="gradient" class="w-full mt-6" color="#a8c0ff" gradient-color-secondary="#3f2b96">View Application</vs-button>
+          <vs-button v-if="app.division === 'CGS'" @click="viewApplication(app.userID, app.id)" type="gradient"
+                     class="w-full mt-6" color="#c31432" gradient-color-secondary="#240b36">View Application
+          </vs-button>
         </vx-card>
       </div>
     </div>

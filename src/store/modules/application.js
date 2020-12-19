@@ -12,16 +12,19 @@ axios.defaults.headers = {
 const state = {
   applications: null,
   bct_applications: null,
-  iceberg_applications: null
+  iceberg_applications: null,
+  cgs_applications: null
 }
 const getters = {
   application: (state) => (applicationID) => {
     let app = state.applications.find(application => application.id == applicationID);
-    if(app) {
+    if (app) {
       if (app.division.toLowerCase() === "17th") {
         return state.bct_applications.find(application => application.id === app.applicationID);
       } else if (app.division.toLowerCase() === "iceberg") {
         return state.iceberg_applications.find(application => application.id === app.applicationID);
+      } else if(app.division.toLowerCase() === "cgs") {
+        return state.cgs_applications.find(application => application.id === app.applicationID);
       }
     }
   },
@@ -55,8 +58,7 @@ const getters = {
 
 const actions = {
   async submit17thApplication({
-                                commit,
-                                rootGetters
+                                commit, rootGetters
                               }, [steamURL, age, timezone, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]) {
     axios.post(`${utils.base_url}/applications/create/17th`, {
       steamURL,
@@ -108,6 +110,28 @@ const actions = {
     })
   },
 
+  async submitCGSApplication({
+                                   commit,
+                                   rootGetters
+                                 }, [steamURL, age, playstyle, whyJoin, squadron, whereDidYouHearAboutUs]) {
+    axios.post(`${utils.base_url}/applications/create/cgs`, {
+      steamURL,
+      age,
+      playstyle,
+      squadron,
+      whereDidYouHearAboutUs,
+      whyJoin,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(async response => {
+      await this.dispatch('fetchApplications');
+      await router.push('/user/applications');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
+
   async fetchApplications({commit, rootGetters}) {
     await axios.post(`${utils.base_url}/applications`, {
       accessToken: await rootGetters.currentUser.accessToken,
@@ -115,6 +139,7 @@ const actions = {
       commit('setApplications', response.data.applications);
       commit('set17thApplications', response.data.bct_applications);
       commit('setIcebergApplications', response.data.iceberg_applications);
+      commit('setCGSApplications', response.data.cgs_applications);
     }).catch(error => {
       if (error) {
         utils.alertGeneral();
@@ -131,9 +156,6 @@ const actions = {
       }
     }).then(response => {
       this.dispatch('fetchApplications');
-      if (rootGetters.currentUser.id === 27) {
-        alert("Fuk u street i hope u step on a dam lego")
-      }
     }).catch(error => {
       if (error) {
         utils.alertGeneral();
@@ -152,6 +174,9 @@ const mutations = {
   },
   setIcebergApplications(state, applications) {
     state.iceberg_applications = applications
+  },
+  setCGSApplications(state, applications) {
+    state.cgs_applications = applications
   },
 }
 

@@ -50,12 +50,21 @@ export default [{
       },
     },
     {
+      path: '/cgs/apply',
+      name: 'CGSApply',
+      component: () => import('@/views/cgs/Apply.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Applicant', '[ICE] Member']
+      },
+    },
+    {
       path: '/settings',
       name: 'Settings',
       component: () => import('@/views/user/Settings.vue'),
       meta: {
         requiresAuth: true,
-        roles: ['[ICE] Member']
+        roles: ['[ICE] Applicant', '[ICE] Member']
       },
     },
     {

@@ -21,7 +21,8 @@ router.post('/', async (req, res) => {
   let initialQueries = {
     applications: [],
     bctApplications: [],
-    icebergApplications: []
+    icebergApplications: [],
+    cgsApplications: []
   }
   con.query(`SELECT * FROM applications`).then(rows => {
     initialQueries.applications = rows;
@@ -37,10 +38,17 @@ router.post('/', async (req, res) => {
       row.division = "Iceberg";
       initialQueries.icebergApplications.push(row);
     })
+    return con.query(`SELECT * FROM cgs_applications`)
+  }).then(rows => {
+    rows.forEach(row => {
+      row.division = "CGS";
+      initialQueries.cgsApplications.push(row);
+    })
     res.json({
       applications: initialQueries.applications,
       bct_applications: initialQueries.bctApplications,
-      iceberg_applications: initialQueries.icebergApplications
+      iceberg_applications: initialQueries.icebergApplications,
+      cgs_applications: initialQueries.cgsApplications
     })
     utils.logger.log({
       level: "info",
@@ -50,7 +58,7 @@ router.post('/', async (req, res) => {
       accessToken
     })
   }).catch(error => {
-    if(error) {
+    if (error) {
       utils.logger.log({
         level: "error",
         message: error.message,
@@ -76,6 +84,7 @@ router.post('/create/:division', async (req, res) => {
   const api = "/api/v1/settings/applications/create"
   division = division.toLowerCase();
   if (!accessToken || !division) return res.status(400).send("Bad Request! Please provide an accessToken and a division(17th, Iceberg, or CGS)");
+  let createdAt = DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss');
   if (division === "17th" && !utils.doesUserContainRoles(req.user.roles, "[17th] Member")) {
     let {
       steamURL,
@@ -95,10 +104,9 @@ router.post('/create/:division', async (req, res) => {
     } = req.body;
     if ((steamURL || timezone || age || arma3Hours || hobbies || whyJoin || attractmilsim || ranger || medic || sapper || pilot || tank_crew || idf || attendOps) === undefined) return res.status(400).send("Bad Request! Please provide ALL questions in the body.");
     if ((ranger || medic || sapper || pilot || tank_crew || idf || attendOps) !== (true || false)) return res.status(400).send("Bad Request! Please provide ALL questions in the body.");
-    let createdAt = DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss');
     con.query(`INSERT INTO 17th_applications (userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]).then(row => {
       let rowID = row.insertId;
-      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, division, rowID])
+      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "17th", rowID])
     }).then(() => {
       res.sendStatus(200);
       utils.logger.log({
@@ -111,7 +119,15 @@ router.post('/create/:division', async (req, res) => {
       })
     }).catch(error => {
       if (error) {
-        console.log(error);
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID,
+          api,
+          division
+        })
         res.sendStatus(500);
       }
     })
@@ -126,11 +142,46 @@ router.post('/create/:division', async (req, res) => {
       whyJoin,
       whereDidYouHearUsFrom
     } = req.body;
-    let createdAt = DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss');
     con.query(`INSERT INTO iceberg_applications (userID, createdAt, steamURL, age, hobbies, gamesTheyJoinFor, hoursInGamesTheyJoinFor, areYouInAnyCommunities, whyJoin, whereDidYouHearUsFrom) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, createdAt, steamURL, age, hobbies, gamesTheyJoinFor, hoursInGamesTheyJoinFor, areYouInAnyCommunities, whyJoin, whereDidYouHearUsFrom]).then(row => {
       let rowID = row.insertId;
-      res.sendStatus(200)
-      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, division, rowID])
+      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "Iceberg", rowID])
+    }).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Application Created",
+        isLoggedIn: true,
+        userID,
+        api,
+        division
+      })
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID,
+          api,
+          division
+        })
+        res.sendStatus(500);
+      }
+    })
+  } else if (division === "cgs" && !utils.doesUserContainRoles(req.user.roles, "[CGS] Member")) {
+    let {
+      steamURL,
+      age,
+      playstyle,
+      whyJoin,
+      squadron,
+      whereDidYouHearAboutUs
+    } = req.body;
+    if ((steamURL || age || whyJoin || playstyle || squadron || whereDidYouHearAboutUs) === undefined) return res.status(400).send("Bad Request! Please provide ALL questions in the body.");
+    con.query(`INSERT INTO cgs_applications (userID, steamURL, age, whyJoin, playstyle, squadron, whereDidYouHearAboutUs, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [userID, steamURL, age, whyJoin, playstyle, squadron, whereDidYouHearAboutUs, createdAt]).then(row => {
+      let rowID = row.insertId;
+      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "CGS", rowID])
     }).then(() => {
       res.sendStatus(200);
       utils.logger.log({

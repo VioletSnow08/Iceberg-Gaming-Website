@@ -17,15 +17,15 @@
             v-if="application($route.params.applicationID).status.toLowerCase() === 'waiting' || application($route.params.applicationID).status.toLowerCase() === 'processed'">
             <vs-button class="appButton" @click="$router.push('/admin/applications')" color="primary">Back</vs-button>
             <vs-button
-              @click="changeApplicationStatus(['approve', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['approve', $route.params.userID, application($route.params.applicationID).id, (application($route.params.applicationID).division)])"
               class="appButton" color="success" type="filled">Accept
             </vs-button>
             <vs-button
-              @click="changeApplicationStatus(['deny', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['deny', $route.params.userID, application($route.params.applicationID).id, (application($route.params.applicationID).division)])"
               class="appButton" color="danger" type="filled">Decline
             </vs-button>
             <vs-button
-              @click="changeApplicationStatus(['process', $route.params.userID, $route.params.applicationID, (application($route.params.applicationID).division)])"
+              @click="changeApplicationStatus(['process', $route.params.userID, application($route.params.applicationID).id, (application($route.params.applicationID).division)])"
               class="appButton" color="warning" type="filled">Process
             </vs-button>
           </div> <!-- If it is accepted or denied -->
@@ -40,6 +40,9 @@
                            v-bind:application="application($route.params.applicationID)"/>
         <ApplicationBPIceberg
           v-if="application($route.params.applicationID).division === 'Iceberg'"
+          v-bind:application="application($route.params.applicationID)"/>
+        <ApplicationBPCGS
+          v-if="application($route.params.applicationID).division === 'CGS'"
           v-bind:application="application($route.params.applicationID)"/>
       </div>
       <div v-else>
@@ -57,6 +60,7 @@
 import {mapActions, mapGetters} from 'vuex'
 import ApplicationBP17th from "@/layouts/applications/17th";
 import ApplicationBPIceberg from "@/layouts/applications/Iceberg";
+import ApplicationBPCGS from "@/layouts/applications/CGS";
 import {applicationDivisionDisplay} from "../../../utils";
 
 export default {
@@ -67,7 +71,8 @@ export default {
   },
   components: {
     ApplicationBP17th,
-    ApplicationBPIceberg
+    ApplicationBPIceberg,
+    ApplicationBPCGS
   },
   computed: {
     ...mapGetters(['application', 'user', 'applications', 'users'])

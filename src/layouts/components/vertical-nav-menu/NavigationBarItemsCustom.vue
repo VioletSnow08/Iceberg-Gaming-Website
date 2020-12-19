@@ -41,13 +41,26 @@
 
 
 
+
+
+    <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Chryse Guard Security</span>
+
+    <v-nav-menu-item v-if="!currentUser.roles.includes('[CGS] Member')" to="/cgs/apply"
+                     icon="FilePlusIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">Application</span>
+    </v-nav-menu-item>
+
+
+
+
+
+
     <span v-if="!verticalNavMenuItemsMin && currentUser.roles.includes('[ICE] Webmaster')" class="navigation-header truncate">Developers</span>
 
     <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Webmaster')" to="/developer/roles"
                      icon="FilePlusIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Roles</span>
     </v-nav-menu-item>
-
   </div>
 </template>
 

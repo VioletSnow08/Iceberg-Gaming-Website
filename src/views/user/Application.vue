@@ -13,6 +13,9 @@
       <vs-button @click="$router.push('/applications')">Back</vs-button>
       <ApplicationBP17th v-if="application($route.params.applicationID).division === '17th'" v-bind:application="application($route.params.applicationID)"/>
       <ApplicationBPIceberg v-if="application($route.params.applicationID).division === 'Iceberg'" v-bind:application="application($route.params.applicationID)"/>
+      <ApplicationBPCGS
+        v-if="application($route.params.applicationID).division === 'CGS'"
+        v-bind:application="application($route.params.applicationID)"/>
     </div>
     <div v-else>
       {{ this.$vs.loading.close() }}
@@ -25,6 +28,7 @@
 import {mapActions, mapGetters} from 'vuex'
 import ApplicationBP17th from "../../layouts/applications/17th.vue";
 import ApplicationBPIceberg from "../../layouts/applications/Iceberg.vue";
+import ApplicationBPCGS from "../../layouts/applications/CGS.vue";
 import {applicationDivisionDisplay} from "../../../utils";
 
 export default {
@@ -37,7 +41,8 @@ export default {
   },
   components: {
     ApplicationBP17th,
-    ApplicationBPIceberg
+    ApplicationBPIceberg,
+    ApplicationBPCGS
   },
   data() {
     return {
