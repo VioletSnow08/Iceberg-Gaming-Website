@@ -23,6 +23,10 @@
                      icon="AlertTriangleIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Disciplinary Action</span>
     </v-nav-menu-item>
+    <v-nav-menu-item v-if="currentUser.roles.some(role =>['[17th] Alpha Company HQ', '[ICE] Owner', '[ICE] Webmaster'].includes(role))" to="/admin/iceberg/disciplinary-action"
+                     icon="ArchiveIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">View Disciplinary Action Forms</span>
+    </v-nav-menu-item>
 
     <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE" target="_blank"><span
       v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
@@ -83,7 +87,7 @@ export default {
   components: {
     VuePerfectScrollbar,
     VNavMenuGroup,
-    VNavMenuItem
+    VNavMenuItem,
   },
   props: ['verticalNavMenuItemsMin'],
   computed: {

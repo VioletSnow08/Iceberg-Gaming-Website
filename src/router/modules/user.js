@@ -88,7 +88,7 @@ export default [{
     },
     {
       path: '/iceberg/disciplinary-action',
-      name: 'ViewEvent',
+      name: 'SubmitDisciplinaryAction',
       component: () => import('@/views/iceberg/Disciplinary-Action.vue'),
       meta: {
         requiresAuth: true,

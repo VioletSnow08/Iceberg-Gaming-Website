@@ -61,7 +61,7 @@ import {mapActions, mapGetters} from 'vuex'
 import ApplicationBP17th from "@/layouts/applications/17th";
 import ApplicationBPIceberg from "@/layouts/applications/Iceberg";
 import ApplicationBPCGS from "@/layouts/applications/CGS";
-import {applicationDivisionDisplay} from "../../../utils";
+import {applicationDivisionDisplay} from "../../../../../utils";
 
 export default {
   name: 'Applications',

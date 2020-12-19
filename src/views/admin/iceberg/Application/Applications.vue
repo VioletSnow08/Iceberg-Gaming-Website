@@ -38,7 +38,7 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import {applicationDivisionDisplay} from "../../../utils";
+import {applicationDivisionDisplay} from "../../../../../utils";
 
 export default {
   name: 'Applications',

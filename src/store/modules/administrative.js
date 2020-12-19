@@ -15,12 +15,15 @@ const state = {
 const getters = {
   disciplinaryActionForms: (state) => {
     return state.disciplinary_action_forms;
+  },
+  disciplinaryActionForm: (state) => (id) => {
+    return state.disciplinary_action_forms.find(form => form.id == id);
   }
 };
 
 const actions = {
   async submitDisciplinaryActionReport({rootGetters}, [offender, division, date, whereDidThisOccur, witnesses, explanation, infraction, whatPunishment, reporter]) {
-    axios.post(`${utils.base_url}/administrative/disciplinary-action`, {
+    axios.post(`${utils.base_url}/administrative/disciplinary-action/submit`, {
       offender,
       division,
       date,
@@ -35,11 +38,34 @@ const actions = {
       this.dispatch('fetchDisciplinaryActionForms');
       router.push('/hub');
     }).catch(error => {
-      if(error) {
+      if (error) {
         utils.alertGeneral();
       }
     })
-  }
+  },
+  async fetchDisciplinaryActionForms({commit, rootGetters}) {
+    axios.post(`${utils.base_url}/administrative/disciplinary-action`, {
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(response => {
+      commit('setDisciplinaryActionForms', response.data);
+    }).catch(error => {
+      if(error) utils.alertGeneral();
+    })
+  },
+  async submitDisciplinaryActionReview({rootGetters}, [punishment, comment, id]) {
+    axios.post(`${utils.base_url}/administrative/disciplinary-action/review`, {
+      punishment,
+      comment,
+      id,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(() => {
+      this.dispatch('fetchDisciplinaryActionForms');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
 }
 
 const mutations = {

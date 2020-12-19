@@ -6,7 +6,7 @@ export default [
       {
         path: '/admin/applications/view/:userID/:applicationID',
         name: 'AdminApplication',
-        component: () => import('@/views/admin/Application.vue'),
+        component: () => import('@/views/admin/iceberg/Application/Application.vue'),
         meta: {
           requiresAuth: true,
           roles: ['[ICE] Recruiter', '[ICE] Owner', "[ICE] Webmaster"]
@@ -16,10 +16,29 @@ export default [
       {
         path: '/admin/applications',
         name: 'AdminApplications',
-        component: () => import('@/views/admin/Applications.vue'),
+        component: () => import('@/views/admin/iceberg/Application/Applications.vue'),
         meta: {
           requiresAuth: true,
           roles: ['[ICE] Recruiter', '[ICE] Owner', "[ICE] Webmaster"]
+        },
+      },
+      {
+        path: '/admin/iceberg/disciplinary-action',
+        name: 'ViewDisciplinaryActionForms',
+        component: () => import('@/views/admin/iceberg/Disciplinary-Action/ViewDisciplinaryActions.vue'),
+        meta: {
+          requiresAuth: true,
+          roles: ['[17th] Alpha Company HQ', '[ICE] Owner', "[ICE] Webmaster"]
+        },
+      },
+      {
+        path: '/admin/iceberg/disciplinary-action/view/:formID',
+        name: 'ViewDisciplinaryActionForm',
+        component: () => import('@/views/admin/iceberg/Disciplinary-Action/ViewDisciplinaryAction.vue'),
+        params: true,
+        meta: {
+          requiresAuth: true,
+          roles: ['[17th] Alpha Company HQ', '[ICE] Owner', "[ICE] Webmaster"]
         },
       },
       {
@@ -43,7 +62,7 @@ export default [
       {
         path: '/developer/lookup',
         name: 'UserLookup',
-        component: () => import('@/views/developer/UserLookup'),
+        component: () => import('@/views/developer/UserLookup/UserLookup'),
         meta: {
           requiresAuth: true,
           roles: ['[ICE] Webmaster']
