@@ -39,6 +39,15 @@ export default [
           requiresAuth: true,
           roles: ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ', "[ICE] Webmaster"]
         },
+      },
+      {
+        path: '/developer/lookup',
+        name: 'UserLookup',
+        component: () => import('@/views/developer/UserLookup'),
+        meta: {
+          requiresAuth: true,
+          roles: ['[ICE] Webmaster']
+        },
       }
     ]
   }

@@ -61,6 +61,10 @@
                      icon="FilePlusIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Roles</span>
     </v-nav-menu-item>
+    <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Webmaster')" to="/developer/lookup"
+                     icon="BookIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">User Lookup</span>
+    </v-nav-menu-item>
   </div>
 </template>
 
