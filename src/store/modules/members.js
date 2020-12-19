@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import router from '@/router/router'
 import axios from "axios";
+
 const utils = require("../../../utils");
 
 axios.defaults.headers = {
@@ -30,7 +31,7 @@ const actions = {
     }).then(response => {
       commit('set17thMembers', response.data);
     }).catch(error => {
-      if(error) utils.alertGeneral();
+      if (error) utils.alertGeneral();
     })
   }
 };

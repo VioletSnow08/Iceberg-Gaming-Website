@@ -87,6 +87,16 @@ export default [{
       props: true
     },
     {
+      path: '/iceberg/disciplinary-action',
+      name: 'ViewEvent',
+      component: () => import('@/views/iceberg/Disciplinary-Action.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+      props: true
+    },
+    {
       path: '/profile/:userID',
       name: 'Profile',
       component: () => import('@/views/user/Profile'),

@@ -19,6 +19,10 @@
                      icon="FilePlusIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Application</span>
     </v-nav-menu-item>
+    <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/iceberg/disciplinary-action"
+                     icon="AlertTriangleIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">Disciplinary Action</span>
+    </v-nav-menu-item>
 
     <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE" target="_blank"><span
       v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>

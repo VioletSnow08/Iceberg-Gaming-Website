@@ -55,7 +55,8 @@ router.post('/', async (req, res) => {
       message: "Applications Fetched",
       isLoggedIn: true,
       userID,
-      accessToken
+      accessToken,
+      api
     })
   }).catch(error => {
     if (error) {
@@ -66,6 +67,7 @@ router.post('/', async (req, res) => {
         isLoggedIn: true,
         userID,
         accessToken,
+        api
       })
       res.sendStatus(500);
     }
