@@ -17,7 +17,7 @@
         <vs-list-header color="teal" title="Iceberg Gaming"></vs-list-header>
         <div v-for="channel in channels">
           <vs-list-item v-if="channel.division.toLowerCase() === 'iceberg'" :title="channel.name" :icon="getChannelIcon(channel.type)">
-            <vs-button class="padButton" color="warning">Edit</vs-button>
+            <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
             <vs-button class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
@@ -29,7 +29,7 @@
         <div v-for="channel in channels">
           <vs-list-item v-if="channel.division.toLowerCase() === '17th'" :icon="getChannelIcon(channel.type)"
                         :title="channel.name">
-            <vs-button class="padButton" color="warning">Edit</vs-button>
+            <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
             <vs-button class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
@@ -40,12 +40,13 @@
         <vs-list-header color="black" title="Chryse Guard Security"></vs-list-header>
         <div v-for="channel in channels">
           <vs-list-item v-if="channel.division.toLowerCase() === 'cgs'" :title="channel.name" :icon="getChannelIcon(channel.type)">
-            <vs-button class="padButton" color="warning">Edit</vs-button>
+            <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
             <vs-button class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
       </vs-list>
 
+<!--      Create Channel Popup      -->
 
       <vs-popup :active.sync="createChannelPopup" title="Test">
         <div class="vx-row">
@@ -63,7 +64,12 @@
         <vs-button @click="createChannel([newChannelName, newChannelType, newChannelDivision]); setNotification(); createChannelPopup=false">Submit</vs-button>
       </vs-popup>
 
-
+<!--      Edit Channel Popup      -->
+      <vs-popup :active.sync="editChannelPopup" title="Test">
+        <vs-input v-if="editChannelPopup" label="Please enter a new channel name." :placeholder="channel(editedChannelID).name" v-model="editedChannelName"></vs-input>
+        <br>
+        <vs-button @click="editChannel([editedChannelName, editedChannelID]); editChannelPopup=false; editedChannelName=''">Submit</vs-button>
+      </vs-popup>
     </div>
   </div>
 </template>
@@ -93,16 +99,19 @@ export default {
     },
     setNotification() {
       this.$vs.notify({
-        title:'Channel Created',
+        title: 'Channel Created',
         text: 'Use the navigation bar to view your new channel!',
         time: 4000
       })
     },
-    ...mapActions(["createChannel"])
+    ...mapActions(["createChannel", "editChannel"])
   },
   data() {
     return {
       createChannelPopup: false,
+      editChannelPopup: false,
+      editedChannelID: null,
+      editedChannelName: '',
       newChannelName: '',
       newChannelType: 'Calendar',
       newChannelTypes: ['Calendar', 'Forum'],
