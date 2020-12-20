@@ -55,6 +55,18 @@ const actions = {
         utils.alertGeneral();
       }
     })
+  },
+  async deleteChannel({rootGetters}, id) {
+    axios.post(`${utils.base_url}/channels/delete`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      id
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
   }
 }
 

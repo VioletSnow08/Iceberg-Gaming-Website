@@ -166,31 +166,66 @@ router.post('/edit', async (req, res) => {
   const api = "/api/v1/channels/edit";
   if (!accessToken || !name || !id) return res.status(400).send("Bad Request! Please pass in an accessToken, name, and id!");
 
-con.query(`SELECT * FROM channels WHERE id = ?`, [id]).then(rows => {
-  if(rows) {
-    let division = rows[0].division;
-    if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
-      con.query(`UPDATE channels SET name = ? WHERE id = ?`, [name, id]).then(() => {
-        res.sendStatus(200);
-      }).catch(error => {
-        if (error) {
-          res.sendStatus(500);
-          utils.logger.log({
-            level: "error",
-            message: error.message,
-            stack: error.stack,
-            isLoggedIn: true,
-            userID,
-            api,
-            name
-          })
-        }
-      })
-    } else return res.sendStatus(401);
-  } else return res.sendStatus(400) // Meaning invalid channel
+  con.query(`SELECT * FROM channels WHERE id = ?`, [id]).then(rows => {
+    if (rows) {
+      let division = rows[0].division;
+      if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
+        con.query(`UPDATE channels SET name = ? WHERE id = ?`, [name, id]).then(() => {
+          res.sendStatus(200);
+        }).catch(error => {
+          if (error) {
+            res.sendStatus(500);
+            utils.logger.log({
+              level: "error",
+              message: error.message,
+              stack: error.stack,
+              isLoggedIn: true,
+              userID,
+              api,
+              name
+            })
+          }
+        })
+      } else return res.sendStatus(401);
+    } else return res.sendStatus(400) // Meaning invalid channel
+  })
+})
+// POST: /api/v1/channels/delete
+// Params: none
+// Body: accessToken, id
+// Return: <status_code>
+router.post('/delete', async (req, res) => {
+  let {accessToken, id} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/delete";
+  if (!accessToken || !id) return res.status(400).send("Bad Request! Please pass in an accessToken and an id!");
+
+  con.query(`SELECT * FROM channels WHERE id = ?`, [id]).then(rows => {
+    if (rows) {
+      let division = rows[0].division;
+      if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
+        con.query(`DELETE FROM  channels WHERE id = ?`, [id]).then(() => {
+          res.sendStatus(200);
+        }).catch(error => {
+          if (error) {
+            res.sendStatus(500);
+            utils.logger.log({
+              level: "error",
+              message: error.message,
+              stack: error.stack,
+              isLoggedIn: true,
+              userID,
+              api,
+              name
+            })
+          }
+        })
+      } else return res.sendStatus(401);
+    } else return res.sendStatus(400) // Meaning invalid channel
+  })
 })
 
-})
 
 
 module.exports = {

@@ -18,7 +18,7 @@
         <div v-for="channel in channels">
           <vs-list-item v-if="channel.division.toLowerCase() === 'iceberg'" :title="channel.name" :icon="getChannelIcon(channel.type)">
             <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
-            <vs-button class="padButton" color="danger">Delete</vs-button>
+            <vs-button @click="deleteChannel(channel.id)" class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
       </vs-list>
@@ -30,7 +30,7 @@
           <vs-list-item v-if="channel.division.toLowerCase() === '17th'" :icon="getChannelIcon(channel.type)"
                         :title="channel.name">
             <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
-            <vs-button class="padButton" color="danger">Delete</vs-button>
+            <vs-button @click="deleteChannel(channel.id)" class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
       </vs-list>
@@ -41,7 +41,7 @@
         <div v-for="channel in channels">
           <vs-list-item v-if="channel.division.toLowerCase() === 'cgs'" :title="channel.name" :icon="getChannelIcon(channel.type)">
             <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
-            <vs-button class="padButton" color="danger">Delete</vs-button>
+            <vs-button @click="deleteChannel(channel.id)" class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
       </vs-list>
@@ -104,7 +104,7 @@ export default {
         time: 4000
       })
     },
-    ...mapActions(["createChannel", "editChannel"])
+    ...mapActions(["createChannel", "editChannel", "deleteChannel"])
   },
   data() {
     return {
