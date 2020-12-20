@@ -29,7 +29,18 @@ const actions = {
     })
   },
   async createChannel({rootGetters}, [name, type, division]) {
-
+    axios.post(`${utils.base_url}/channels/create`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      name,
+      type,
+      division
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
   }
 }
 

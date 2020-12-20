@@ -83,7 +83,7 @@ router.post('/', async (req, res) => {
           }
           if (topic.channelID === channel.id) {
             iq.replies.forEach(reply => {
-              if(reply.topicID === topic.id && reply.channelID === channel.id) {
+              if (reply.topicID === topic.id && reply.channelID === channel.id) {
                 newTopic.replies.push(reply);
               }
             })
@@ -108,6 +108,44 @@ router.post('/', async (req, res) => {
       })
     }
   })
+})
+
+// POST: /api/v1/channels/create
+// Params: none
+// Body: accessToken, division, name, type
+// Return: <status_code>
+router.post('/create', async (req, res) => {
+  let {accessToken, division, name, type} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/create";
+  if (!accessToken || !division || !name || !type) return res.status(400).send("Bad Request! Please pass in an accessToken!")
+  division = division.toLowerCase();
+  type = type.toLowerCase();
+  if (division !== "17th" && division !== "cgs" && division !== "iceberg") return res.sendStatus(400);
+  if (type !== "calendar" && type !== "forum") return res.sendStatus(400);
+
+
+  if (utils.doesUserContainRoles(req.user.roles, ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[17th] Alpha Company HQ', '[17th] Officer'])) {
+    con.query(`INSERT INTO channels (name, division, type) VALUES (?, ?, ?)`, [name, division, type]).then(() => {
+      res.sendStatus(200);
+    }).catch(error => {
+      if(error) {
+        res.sendStatus(500);
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID,
+          api,
+          division,
+          type,
+          name
+        })
+      }
+    })
+  } else return res.sendStatus(401);
 })
 
 
