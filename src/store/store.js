@@ -20,10 +20,9 @@ import actions from './actions'
 import user from './modules/user'
 import application from './modules/application'
 import settings from "./modules/settings";
-import calendar from "@/store/modules/channel";
 import user_management from "@/store/modules/user-management"
-import members from "@/store/modules/members";
 import administrative from "@/store/modules/administrative";
+import channels from "@/store/modules/channels";
 
 Vue.use(Vuex)
 
@@ -36,10 +35,9 @@ export default new Vuex.Store({
     user,
     application,
     settings,
-    calendar,
     user_management,
-    members,
-    administrative
+    administrative,
+    channels
   },
   strict: process.env.NODE_ENV !== 'production'
 })

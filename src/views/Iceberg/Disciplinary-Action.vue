@@ -74,8 +74,13 @@ export default {
   methods: {
     ...mapActions(['submitDisciplinaryActionReport']),
     formSubmitted () {
-      if (this.age < 13) return alert('Invalid Age, unable to submit.')
       this.submitDisciplinaryActionReport([this.offender, this.division, this.date, this.whereDidThisOccur, this.witnesses, this.explanation, this.infraction, this.whatPunishment, this.currentUser.id])
+      this.$vs.notify({
+        title: 'Disciplinary Action Report Form Submitted!',
+        text: 'Administration will take a look at it. Thank you for the report.',
+        color: 'success',
+        time: 4000
+      })
     }
   },
   computed: {

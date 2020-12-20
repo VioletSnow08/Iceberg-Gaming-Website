@@ -1,7 +1,7 @@
 const winston = require("winston");
 const { datadog } = require("./credentials.js");
 const { createLogger, format, transports } = require('winston');
-const base_url = "http://localhost:3001/api/v1"
+const base_url = "http://192.168.1.3:3001/api/v1"
 
 // Winston ~
 const httpTransportOptions = {
