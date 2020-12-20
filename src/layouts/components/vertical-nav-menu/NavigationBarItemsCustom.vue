@@ -11,9 +11,9 @@
                      icon="FileIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Applications</span>
     </v-nav-menu-item>
-    <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member')" to="/iceberg/calendar"
-                     icon="CalendarIcon">
-      <span v-show="!verticalNavMenuItemsMin" class="truncate">Calendar</span>
+    <v-nav-menu-item v-if="currentUser.roles.some(role =>['[ICE] Owner', '[ICE] Admin', '[17th] Alpha Company HQ', '[17th] Officer', '[ICE] Webmaster'].includes(role))" to="/admin/channels"
+                     icon="HashIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">Channel Management</span>
     </v-nav-menu-item>
     <v-nav-menu-item v-if="!currentUser.roles.includes('[ICE] Member')" to="/iceberg/apply"
                      icon="FilePlusIcon">

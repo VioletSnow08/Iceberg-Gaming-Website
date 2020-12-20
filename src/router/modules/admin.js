@@ -67,6 +67,15 @@ export default [
           requiresAuth: true,
           roles: ['[ICE] Webmaster']
         },
+      },
+      {
+        path: '/admin/channels',
+        name: 'Channels',
+        component: () => import('@/views/admin/channel/Channels.vue'),
+        meta: {
+          requiresAuth: true,
+          roles: ['[ICE] Owner', '[ICE] Admin', '[17th] Alpha Company HQ', '[17th] Officer', '[ICE] Webmaster']
+        },
       }
     ]
   }

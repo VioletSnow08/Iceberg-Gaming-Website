@@ -30,6 +30,7 @@ MYSQL.createConnection({
   app.use('/api/v1/applications', require('./v1-modules/applications').router);
   app.use('/api/v1/user-management', require('./v1-modules/user-management').router);
   app.use('/api/v1/administrative', require('./v1-modules/administrative').router);
+  app.use('/api/v1/channels', require('./v1-modules/channels').router);
 
   fs.access("../dist", function (error) {
     if (error) {
