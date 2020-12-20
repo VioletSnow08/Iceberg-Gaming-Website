@@ -4,7 +4,11 @@ const base_api = "/api/v1";
 const utils = require("../../utils.js");
 const {DateTime} = require("luxon");
 const {requiresAuth} = require("../middleware/auth");
-const CHANNEL_EDIT_ROLES = ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[17th] Alpha Company HQ', '[17th] Officer'];
+const CHANNEL_EDIT_ROLES = {
+  bct: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[17th] Alpha Company HQ', '[17th] Officer'],
+  iceberg: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster'],
+  cgs: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[CGS] Owner']
+}
 
 
 router.use(requiresAuth);
@@ -128,8 +132,7 @@ router.post('/create', async (req, res) => {
   if (division !== "17th" && division !== "cgs" && division !== "iceberg") return res.sendStatus(400);
   if (type !== "calendar" && type !== "forum") return res.sendStatus(400);
 
-
-  if (utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES)) {
+  if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
     con.query(`INSERT INTO channels (name, division, type) VALUES (?, ?, ?)`, [name, division, type]).then(() => {
       res.sendStatus(200);
     }).catch(error => {
@@ -163,25 +166,30 @@ router.post('/edit', async (req, res) => {
   const api = "/api/v1/channels/edit";
   if (!accessToken || !name || !id) return res.status(400).send("Bad Request! Please pass in an accessToken, name, and id!");
 
+con.query(`SELECT * FROM channels WHERE id = ?`, [id]).then(rows => {
+  if(rows) {
+    let division = rows[0].division;
+    if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
+      con.query(`UPDATE channels SET name = ? WHERE id = ?`, [name, id]).then(() => {
+        res.sendStatus(200);
+      }).catch(error => {
+        if (error) {
+          res.sendStatus(500);
+          utils.logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            userID,
+            api,
+            name
+          })
+        }
+      })
+    } else return res.sendStatus(401);
+  } else return res.sendStatus(400) // Meaning invalid channel
+})
 
-  if (utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES)) {
-    con.query(`UPDATE channels SET name = ? WHERE id = ?`, [name, id]).then(() => {
-      res.sendStatus(200);
-    }).catch(error => {
-      if (error) {
-        res.sendStatus(500);
-        utils.logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          isLoggedIn: true,
-          userID,
-          api,
-          name
-        })
-      }
-    })
-  } else return res.sendStatus(401);
 })
 
 
