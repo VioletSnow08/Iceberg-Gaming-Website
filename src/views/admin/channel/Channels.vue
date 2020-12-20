@@ -18,7 +18,7 @@
         <div v-for="channel in channels">
           <vs-list-item v-if="channel.division.toLowerCase() === 'iceberg'" :title="channel.name" :icon="getChannelIcon(channel.type)">
             <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
-            <vs-button @click="deleteChannel(channel.id)" class="padButton" color="danger">Delete</vs-button>
+            <vs-button @click="deleteChannelPopup=true; deleteChannelID=channel.id" class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
       </vs-list>
@@ -30,7 +30,7 @@
           <vs-list-item v-if="channel.division.toLowerCase() === '17th'" :icon="getChannelIcon(channel.type)"
                         :title="channel.name">
             <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
-            <vs-button @click="deleteChannel(channel.id)" class="padButton" color="danger">Delete</vs-button>
+            <vs-button @click="deleteChannelPopup=true; deleteChannelID=channel.id" class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
       </vs-list>
@@ -41,7 +41,7 @@
         <div v-for="channel in channels">
           <vs-list-item v-if="channel.division.toLowerCase() === 'cgs'" :title="channel.name" :icon="getChannelIcon(channel.type)">
             <vs-button @click="editChannelPopup=true; editedChannelID=channel.id" class="padButton" color="warning">Edit</vs-button>
-            <vs-button @click="deleteChannel(channel.id)" class="padButton" color="danger">Delete</vs-button>
+            <vs-button @click="deleteChannelPopup=true; deleteChannelID=channel.id" class="padButton" color="danger">Delete</vs-button>
           </vs-list-item>
         </div>
       </vs-list>
@@ -69,6 +69,11 @@
         <vs-input v-if="editChannelPopup" label="Please enter a new channel name." :placeholder="channel(editedChannelID).name" v-model="editedChannelName"></vs-input>
         <br>
         <vs-button @click="editChannel([editedChannelName, editedChannelID]); editChannelPopup=false; editedChannelName=''">Submit</vs-button>
+      </vs-popup>
+
+      <!--      Delete Channel Popup      -->
+      <vs-popup :active.sync="deleteChannelPopup" title="Are you sure you want to delete this channel?">
+        <vs-button @click="deleteChannel(deleteChannelID); deleteChannelPopup=false;" color="danger">Delete Channel</vs-button>
       </vs-popup>
     </div>
   </div>
@@ -110,6 +115,8 @@ export default {
     return {
       createChannelPopup: false,
       editChannelPopup: false,
+      deleteChannelPopup: false,
+      deleteChannelID: null,
       editedChannelID: null,
       editedChannelName: '',
       newChannelName: '',
