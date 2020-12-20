@@ -2,6 +2,8 @@
   <div>
 
 <!--    ICEBERG GAMING      -->
+
+
     <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Iceberg Gaming</span>
 
     <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member') || currentUser.roles.includes('[ICE] Applicant')" to="/hub" icon="HomeIcon">
@@ -27,6 +29,10 @@
                      icon="ArchiveIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">View Disciplinary Action Forms</span>
     </v-nav-menu-item>
+
+      <v-nav-menu-item v-if="channels && currentUser.roles.includes('[ICE] Member') && channel.division.toLowerCase() === 'iceberg'" v-for="channel in channels" :to="'/channels/' + channel.id" :icon="getChannelIcon(channel.type)">
+        <span v-show="!verticalNavMenuItemsMin" class="truncate">{{channel.name}}</span>
+      </v-nav-menu-item>
 
     <v-nav-menu-item icon="MessageSquareIcon" href="https://discord.gg/p3DYJGE" target="_blank"><span
       v-show="!verticalNavMenuItemsMin" class="truncate">Join our Discord!</span></v-nav-menu-item>
@@ -91,7 +97,23 @@ export default {
   },
   props: ['verticalNavMenuItemsMin'],
   computed: {
-    ...mapGetters(['currentUser']),
+    ...mapGetters(['currentUser', 'channels', 'channel']),
+  },
+  methods: {
+    getChannelIcon(type) {
+      type = type.toLowerCase();
+      if (type === "calendar") {
+        return "CalendarIcon";
+      } else if (type === "forum") {
+        return "BoldIcon";
+      }
+    },
+  },
+  async created() {
+    await Promise.all([
+      this.$store.dispatch('fetchChannels'),
+      this.$store.dispatch('fetchUsers')
+    ])
   }
 }
 </script>
