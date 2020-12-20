@@ -41,6 +41,20 @@ const actions = {
         utils.alertGeneral();
       }
     })
+  },
+
+  async editChannel({rootGetters}, [name, id]) {
+    axios.post(`${utils.base_url}/channels/edit`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      name,
+      id
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
   }
 }
 
