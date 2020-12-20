@@ -53,9 +53,11 @@
       <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
     </v-nav-menu-item>
 
+    <v-nav-menu-item v-if="channels && currentUser.roles.includes('[17th] Member') && channel.division.toLowerCase() === '17th'" v-for="channel in channels" :to="'/channels/' + channel.id" :icon="getChannelIcon(channel.type)">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">{{channel.name}}</span>
+    </v-nav-menu-item>
 
-
-
+<!--        CGS       -->
 
     <span v-if="!verticalNavMenuItemsMin" class="navigation-header truncate">Chryse Guard Security</span>
 
@@ -64,6 +66,9 @@
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Application</span>
     </v-nav-menu-item>
 
+    <v-nav-menu-item v-if="channels && currentUser.roles.includes('[CGS] Member') && channel.division.toLowerCase() === 'cgs'" v-for="channel in channels" :to="'/channels/' + channel.id" :icon="getChannelIcon(channel.type)">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">{{channel.name}}</span>
+    </v-nav-menu-item>
 
 
 
