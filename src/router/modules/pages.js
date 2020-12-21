@@ -4,27 +4,27 @@ export default [
     component: () => import('@/layouts/full-page/FullPage.vue'),
     children: [
       {
-        path: '/pages/login',
+        path: '/misc/login',
         name: 'page-login',
-        component: () => import('@/views/pages/Login.vue'),
+        component: () => import('@/views/misc/Login.vue'),
         meta: {
           requiresGuest: true
         }
       },
       {
-        path: '/pages/error-404',
+        path: '/misc/error-404',
         name: 'page-error-404',
-        component: () => import('@/views/pages/Error404.vue')
+        component: () => import('@/views/misc/Error404.vue')
       },
       {
-        path: '/pages/perms',
+        path: '/misc/perms',
         name: 'perms',
-        component: () => import('@/views/pages/perms.vue')
+        component: () => import('@/views/misc/perms.vue')
       },
       {
-        path: '/pages/register',
+        path: '/misc/register',
         name: 'register',
-        component: () => import('@/views/pages/Register.vue'),
+        component: () => import('@/views/misc/Register.vue'),
         meta: {
           requiresGuest: true
         }
@@ -32,7 +32,7 @@ export default [
       {
         path: '/',
         name: 'home',
-        component: () => import('@/views/pages/Home.vue')
+        component: () => import('@/views/misc/Home.vue')
       },
     ]
   },

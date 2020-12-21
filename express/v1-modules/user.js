@@ -7,6 +7,7 @@ const md5 = require("md5");
 const jwt = require("jsonwebtoken");
 const chalk = require('chalk');
 const utils = require("../../utils");
+const {DateTime} = require("luxon");
 const {getUser} = require("../middleware/auth");
 
 // POST: /api/v1/user/register
@@ -27,7 +28,8 @@ router.post('/register', async (req, res) => {
       res.status(400).send("An account with that email already exists!");
       hasReturned = true;
     } else {
-      return await con.query(`INSERT INTO users (createdAt, discord, email, password, username) VALUES (?, ?, ?, ?, ?)`, [new Date(), discord, email, hash, username])
+      let createdAt = DateTime.local().setZone('America/Chicago').toISO();
+      return await con.query(`INSERT INTO users (createdAt, discord, email, password, username) VALUES (?, ?, ?, ?, ?)`, [createdAt, discord, email, hash, username])
     }
   }).then(async row => {
     if (hasReturned === false) {

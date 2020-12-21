@@ -59,10 +59,10 @@
 
 
 
-        <v-nav-menu-item v-if="!currentUser" to="/pages/login" icon="HomeIcon">
+        <v-nav-menu-item v-if="!currentUser" to="/misc/login" icon="HomeIcon">
           <span v-show="!verticalNavMenuItemsMin" class="truncate">Login</span>
         </v-nav-menu-item>
-        <v-nav-menu-item v-if="!currentUser" to="/pages/register" icon="HomeIcon">
+        <v-nav-menu-item v-if="!currentUser" to="/misc/register" icon="HomeIcon">
           <span v-show="!verticalNavMenuItemsMin" class="truncate">Register</span>
         </v-nav-menu-item>
 

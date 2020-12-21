@@ -1,4 +1,5 @@
 const winston = require("winston");
+const {DateTime} = require("luxon");
 const { datadog } = require("./credentials.js");
 const { createLogger, format, transports } = require('winston');
 const base_url = "http://192.168.1.3:3001/api/v1"
@@ -59,6 +60,10 @@ const data = {
   teamspeak: "ts3server://ts.iceberg-gaming.com/?port=9987",
   bct_modpack: "https://steamcommunity.com/sharedfiles/filedetails/?id=1501538330"
 }
+function getCurrentDateISO() {
+  let createdAt = DateTime.local().setZone('America/Chicago').toISO();
+  return createdAt;
+}
 
 module.exports = {
   logger,
@@ -67,5 +72,6 @@ module.exports = {
   alertGeneral,
   doesUserContainRoles,
   applicationDivisionDisplay,
-  data
+  data,
+  getCurrentDateISO
 }

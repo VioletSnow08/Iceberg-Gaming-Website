@@ -48,7 +48,7 @@ const mutations = {
     if (payload.val) {
       state.starredPages.push(state.navbarSearchAndPinList['pages'].data[index])
     } else {
-      // find item index from starred pages
+      // find item index from starred misc
       const index = state.starredPages.findIndex((item) => item.url === payload.url)
 
       // remove item using index

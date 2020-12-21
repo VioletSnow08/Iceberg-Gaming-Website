@@ -87,7 +87,7 @@ router.post('/create/:division', async (req, res) => {
   const api = "/api/v1/settings/applications/create"
   division = division.toLowerCase();
   if (!accessToken || !division) return res.status(400).send("Bad Request! Please provide an accessToken and a division(17th, Iceberg, or CGS)");
-  let createdAt = DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss');
+  let createdAt = DateTime.local().setZone('America/Chicago').toISO();
   if (division === "17th" && !utils.doesUserContainRoles(req.user.roles, "[17th] Member")) {
     let {
       steamURL,
@@ -442,7 +442,7 @@ function bctMessageApprove(req) {
     "\n" +
     "They will be able to help you or find someone to help you with initial assessments and/or training. Basic Training is held weekly on Tuesdays, but don't let that stop you from jumping in during the week and Saturday op to play with us!\n" +
     "\n" +
-    "Finally, please take the time to familiarize yourself with our Code of Conduct, Ranks, and Structure pages. You might also take the time to browse our forums and introduce yourself.\n" +
+    "Finally, please take the time to familiarize yourself with our Code of Conduct, Ranks, and Structure misc. You might also take the time to browse our forums and introduce yourself.\n" +
     "\n" +
     "If you have any further questions or issues, you are more than welcome to ask anyone on Teamspeak, Discord, or even Enjin and we will help out as best as we can!\n" +
     "\n" +

@@ -34,7 +34,7 @@ const router = new Router({
     ...Pages,
     {
       path: '*',
-      redirect: '/pages/error-404'
+      redirect: '/misc/error-404'
     }
   ]
 })
@@ -49,7 +49,7 @@ router.beforeEach(async (to, from, next) => {
     if (!currentUser) { // If the user is not signed in
       await logView(to.path, from.path, "notice", utils.commonMessages.restrictedPage)
       next({
-        path: '/pages/perms',
+        path: '/misc/perms',
         query: {
           redirect: to.fullPath
         }
@@ -70,7 +70,7 @@ router.beforeEach(async (to, from, next) => {
       } else {
         await logView(to.path, from.path, "notice", utils.commonMessages.restrictedPage, null, currentUser.id);
         next({
-          path: '/pages/perms',
+          path: '/misc/perms',
           query: {
             redirect: to.fullPath
           }

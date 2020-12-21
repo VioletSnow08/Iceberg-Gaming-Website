@@ -77,6 +77,16 @@ export default [{
       },
       props: true
     },
+    {
+      path: '/channels/:channelID',
+      name: 'ViewChannel',
+      component: () => import('@/views/channel/ViewChannel.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+      props: true
+    },
     // {
     //   path: '/profile/:userID',
     //   name: 'Profile',

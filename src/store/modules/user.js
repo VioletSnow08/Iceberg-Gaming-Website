@@ -94,7 +94,7 @@ const actions = {
     await axios.post(`${utils.base_url}/user/register`, {
       email, password, discord, username
     }).then(response => {
-      router.push('/pages/login');
+      router.push('/misc/login');
     }).catch((error) => {
       if(error) {
         utils.alertGeneral();

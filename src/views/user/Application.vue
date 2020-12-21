@@ -26,9 +26,9 @@
 
 <script>
 import {mapActions, mapGetters} from 'vuex'
-import ApplicationBP17th from "../../layouts/applications/17th.vue";
-import ApplicationBPIceberg from "../../layouts/applications/Iceberg.vue";
-import ApplicationBPCGS from "../../layouts/applications/CGS.vue";
+import ApplicationBP17th from "../../layouts/blueprints/applications/17th.vue";
+import ApplicationBPIceberg from "../../layouts/blueprints/applications/Iceberg.vue";
+import ApplicationBPCGS from "../../layouts/blueprints/applications/CGS.vue";
 import {applicationDivisionDisplay} from "../../../utils";
 
 export default {

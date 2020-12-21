@@ -16,7 +16,10 @@ const getters = {
     return state.channels;
   },
   channel: (state) => (id) => {
-    return state.channels.find(c => c.id === id);
+    return state.channels.find(c => c.id == id); // Double == is because of the text vs int difference
+  },
+  events: (state) => (channelID) => {
+    return state.channels.find(c => c.id == channelID).events;
   }
 }
 

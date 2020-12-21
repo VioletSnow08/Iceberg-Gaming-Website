@@ -22,18 +22,9 @@ router.post('/loa/submit', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/settings/loa/submit"
   if (!accessToken || !endDate || !reason) return res.status(400).send("Bad Request! Please pass in an accessToken, endDate, and reason.")
-  endDate = new Date(endDate);
   let loa = {
-    startDate: DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss'),
-    endDate: DateTime.fromObject({
-      year: endDate.getFullYear(),
-      month: endDate.getMonth(),
-      day: endDate.getDay(),
-      hour: endDate.getHours(),
-      minutes: endDate.getMinutes(),
-      seconds: endDate.getSeconds(),
-      zone: 'America/Chicago'
-    }).toFormat('yyyy-MM-dd HH:mm:ss'),
+    startDate: DateTime.local().setZone('America/Chicago').toISO(),
+    endDate: DateTime.fromISO(endDate).setZone('America/Chicago').toISO(),
     reason,
     userID
   }

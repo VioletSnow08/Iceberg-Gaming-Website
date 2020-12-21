@@ -190,6 +190,8 @@ router.post('/edit', async (req, res) => {
     } else return res.sendStatus(400) // Meaning invalid channel
   })
 })
+
+
 // POST: /api/v1/channels/delete
 // Params: none
 // Body: accessToken, id
@@ -227,6 +229,53 @@ router.post('/delete', async (req, res) => {
 })
 
 
+
+
+// POST: /api/v1/channels/calendar/event/create
+// Params: none
+// Body: accessToken, startDateTime, endDateTime, color, title, channelID
+// Return: <status_code>
+router.post('/calendar/event/create', async (req, res) => {
+  let {accessToken, startDateTime, endDateTime, color, title, channelID} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/calendar/event/create";
+  if (!accessToken || !startDateTime || !endDateTime || !color || !title || !channelID) return res.status(400).send("Bad Request! Please pass in an accessToken, startDateTime, endDateTime, color, channelID, and title!");
+
+  const createdAt = utils.getCurrentDateISO();
+  const start = DateTime.fromISO(startDateTime).setZone('America/Chicago').toISO();
+  const end = DateTime.fromISO(endDateTime).setZone('America/Chicago').toISO();
+
+  let isChannelValid = false;
+  con.query(`SELECT * FROM channels WHERE id = ? AND type = ?`, [channelID, 'calendar']).then(rows => {
+    if (rows) {
+      isChannelValid = true;
+      return con.query(`INSERT INTO channels_calendar_events (start, end, color, title, createdAt, channelID, userID) VALUES (?, ?, ?, ?, ?, ?, ?)`, [start, end, color, title, createdAt, userID])
+    } else res.sendStatus(400);
+  }).then(() => {
+    if (!res.headersSent) { // Meaning no errors have occurred
+      res.sendStatus(200);
+    }
+  }).catch(error => {
+    if (!res.headersSent) {
+      res.sendStatus(500);
+    }
+    utils.logger.log({
+      level: "error",
+      message: error.message,
+      stack: error.stack,
+      isLoggedIn: true,
+      userID,
+      api,
+      start,
+      end,
+      channelID,
+      color,
+      accessToken
+    })
+  })
+
+})
 
 module.exports = {
   router

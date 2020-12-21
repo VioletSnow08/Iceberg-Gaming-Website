@@ -9,6 +9,10 @@
   },
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.2",
+    "@fullcalendar/core": "^5.5.0",
+    "@fullcalendar/daygrid": "^5.5.0",
+    "@fullcalendar/interaction": "^5.5.0",
+    "@fullcalendar/vue": "^5.5.0",
     "ag-grid-community": "^21.2.2",
     "ag-grid-vue": "^21.2.2",
     "algoliasearch": "^3.33.0",

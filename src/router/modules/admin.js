@@ -71,7 +71,7 @@ export default [
       {
         path: '/admin/channels',
         name: 'Channels',
-        component: () => import('@/views/admin/channel/Channels.vue'),
+        component: () => import('@/views/admin/iceberg/Channel/ChannelManagement.vue'),
         meta: {
           requiresAuth: true,
           roles: ['[ICE] Owner', '[ICE] Admin', '[17th] Alpha Company HQ', '[17th] Officer', '[ICE] Webmaster']

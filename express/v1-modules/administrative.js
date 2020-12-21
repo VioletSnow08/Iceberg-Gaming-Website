@@ -64,7 +64,7 @@ router.post('/disciplinary-action/submit', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/administrative/disciplinary-action/submit"
   if (!accessToken || !offender || !division || !date || !whereDidThisOccur ||!witnesses || !explanation || !infraction || !whatPunishment) return res.status(400).send("Bad Request! Please pass in ALL fields in the body.");
-  let createdAt = DateTime.local().setZone('America/Chicago').toFormat('yyyy-MM-dd HH:mm:ss');
+  let createdAt = DateTime.local().setZone('America/Chicago').toISO();
   con.query(`INSERT INTO disciplinary_action_forms (userID, offender, division, date, whereDidThisOccur, witnesses, explanation, infraction, whatPunishment, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, offender, division, date, whereDidThisOccur, witnesses, explanation, infraction, whatPunishment, createdAt]).then(() => {
     res.sendStatus(200);
     utils.logger.log({

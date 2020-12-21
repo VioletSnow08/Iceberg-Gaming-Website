@@ -71,7 +71,7 @@
 
                   <vs-dropdown-menu class="w-32">
                     <vs-dropdown-item>
-                      <div @click="$router.push('/pages/profile').catch(() => {})" class="flex items-center">
+                      <div @click="$router.push('/misc/profile').catch(() => {})" class="flex items-center">
                         <feather-icon icon="UserIcon" class="inline-block mr-2" svgClasses="w-4 h-4" />
                         <span>Profile</span>
                       </div>
