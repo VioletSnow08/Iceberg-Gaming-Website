@@ -23,11 +23,13 @@
         </div>
       </vs-select>
       <br>
-      <h3 style="text-decoration: underline">Event Details</h3>
-      <h4>Name: {{createEventName}}</h4>
-      <h4>Color: {{createEventColor}}</h4>
-      <h4>Starts At: {{createEventStartDate}}</h4>
-      <h4>Ends At: {{createEventEndDate}}</h4>
+      <flat-pickr :config="configdateTimePicker" v-model="createEventStartDate" placeholder="Start Date & Time" />
+      <br>
+      <br>
+      <flat-pickr :config="configdateTimePicker" v-model="createEventEndDate" placeholder="End Date & Time" />
+      <br>
+      <br>
+      <vs-button @click="createEvent([$route.params.channelID, createEventStartDate, createEventEndDate, createEventColor, createEventName]); createEventPopup=false; sendNotification()">Create Event</vs-button>
     </vs-popup>
   </div>
 
@@ -36,13 +38,16 @@
 import FullCalendar from '@fullcalendar/vue'
 import dayGridPlugin from '@fullcalendar/daygrid'
 import interactionPlugin from '@fullcalendar/interaction'
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
+import flatPickr from 'vue-flatpickr-component';
+import 'flatpickr/dist/flatpickr.css';
 
 export default {
   name: 'Calendar',
   props: ['channelID'],
   components: {
     FullCalendar,
+    flatPickr
   },
   data() {
     return {
@@ -54,6 +59,10 @@ export default {
         eventClick: function (info) {
           this.onClickedEvent(info);
         }
+      },
+      configdateTimePicker: {
+        enableTime: true,
+        dateFormat: 'Z'
       },
       createEventPopup: false,
       createEventName: null,
@@ -68,7 +77,16 @@ export default {
   methods: {
     onClickedEvent(event) {
       console.log(event);
-    }
+    },
+    sendNotification() {
+      this.$vs.notify({
+        title: 'Event Created',
+        text: 'In order to see the event, you need to refresh your page. Sorry! Have fun at the event :)',
+        color: 'success',
+        time: 4000
+      })
+    },
+    ...mapActions(["createEvent"])
   }
 }
 </script>

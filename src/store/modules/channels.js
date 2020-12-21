@@ -70,6 +70,23 @@ const actions = {
         utils.alertGeneral();
       }
     })
+  },
+
+  async createEvent({rootGetters}, [channelID, startDateTime, endDateTime, color, title]) {
+    axios.post(`${utils.base_url}/channels/calendar/event/create`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      startDateTime,
+      endDateTime,
+      color,
+      title
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
   }
 }
 

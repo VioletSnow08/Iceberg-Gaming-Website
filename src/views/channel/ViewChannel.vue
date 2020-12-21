@@ -9,7 +9,7 @@
     </div>
     <div v-else-if="channel($route.params.channelID) && channel($route.params.channelID).division.toLowerCase() === '17th'">
       {{ this.$vs.loading.close() }}
-      <CalendarBP v-bind:channelID="$route.params.channelID"></CalendarBP>
+      <CalendarBP v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></CalendarBP>
     </div>
     <div v-else>
       {{ this.$vs.loading.close() }}

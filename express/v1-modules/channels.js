@@ -250,7 +250,7 @@ router.post('/calendar/event/create', async (req, res) => {
   con.query(`SELECT * FROM channels WHERE id = ? AND type = ?`, [channelID, 'calendar']).then(rows => {
     if (rows) {
       isChannelValid = true;
-      return con.query(`INSERT INTO channels_calendar_events (start, end, color, title, createdAt, channelID, userID) VALUES (?, ?, ?, ?, ?, ?, ?)`, [start, end, color, title, createdAt, userID])
+      return con.query(`INSERT INTO channels_calendar_events (start, end, color, title, createdAt, channelID, userID) VALUES (?, ?, ?, ?, ?, ?, ?)`, [start, end, color, title, createdAt, channelID, userID])
     } else res.sendStatus(400);
   }).then(() => {
     if (!res.headersSent) { // Meaning no errors have occurred
