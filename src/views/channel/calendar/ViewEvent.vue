@@ -22,20 +22,18 @@
         <vs-divider/>
 
 
-        <vs-table search :data="attendees">
+        <vs-table :search="true" :data="attendees">
           <template slot="header"><h3>Attendance</h3></template>
 
           <template slot="thead">
             <vs-th sort-key="username">Username</vs-th>
             <vs-th sort-key="status">Status</vs-th>
           </template>
-
-
-          <vs-tr :key="index"
-                 :state="getStateColor(attendee.status)" v-for="(attendee, index) in attendees">
-            <vs-td>{{ user(attendee.userID).username }}</vs-td>
-            <vs-td>{{ attendee.status }}</vs-td>
-          </vs-tr>
+            <vs-tr :key="index"
+                   :state="getStateColor(attendee.status)" v-for="(attendee, index) in attendees">
+              <vs-td>{{ user(attendee.userID).username }}</vs-td>
+              <vs-td>{{ attendee.status }}</vs-td>
+            </vs-tr>
         </vs-table>
       </div>
     </div>
@@ -48,7 +46,7 @@ import {mapGetters} from "vuex";
 export default {
   name: "ViewEvent",
   computed: {
-    ...mapGetters(["channels", "channel", "events", "event", "users", "user", "currentUser"]),
+    ...mapGetters(["channels", "channel", "events", "event", "users", "user", "currentUser"])
   },
   data() {
     return {
@@ -74,16 +72,21 @@ export default {
     ])
   },
   watch: {
-    channels: function (val) {
-      let newAttendees = [];
-      val.forEach(channel => {
-        if(channel.id == this.$route.params.channelID) {
-
+    channels: function () {
+      if (this.channels) {
+        console.log(1);
+        if (this.channel(this.$route.params.channelID)) {
+          console.log(2);
+          if (this.channel(this.$route.params.channelID).events) {
+            console.log(3);
+            if (this.event(this.$route.params.channelID, this.$route.params.eventID)) {
+              this.attendees = this.event(this.$route.params.channelID, this.$route.params.eventID).attendance
+            }
+          }
         }
       }
     }
   }
-
 }
 </script>
 
