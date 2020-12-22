@@ -3,8 +3,10 @@
     <div v-if="!channels || !users">
       <h1>{{ this.$vs.loading({type: "sound", text: "Loading Event..."}) }}</h1>
     </div>
-    <div v-else-if="channel($route.params.channelID) && events && event($route.params.channelID, $route.params.eventID)">
-      <div v-if="(channel($route.params.channelID).division.toLowerCase() === 'iceberg' && currentUser.roles.includes('[ICE] Member')) || (channel($route.params.channelID).division.toLowerCase() === '17th' && currentUser.roles.includes('[17th] Member'))">
+    <div
+      v-else-if="channel($route.params.channelID) && events && event($route.params.channelID, $route.params.eventID)">
+      <div
+        v-if="(channel($route.params.channelID).division.toLowerCase() === 'iceberg' && currentUser.roles.includes('[ICE] Member')) || (channel($route.params.channelID).division.toLowerCase() === '17th' && currentUser.roles.includes('[17th] Member'))">
         {{ this.$vs.loading.close() }}
         <h1 style="text-decoration: underline">Event Details</h1>
         <vx-list
@@ -15,8 +17,26 @@
           icon="StopCircleIcon"/>
         <vx-list :list="['Host: ' + user(event($route.params.channelID, $route.params.eventID).userID).username]"
                  icon="UserIcon"/>
-        <vs-divider />
+        <vs-divider/>
         <div v-html="event($route.params.channelID, $route.params.eventID).description"></div>
+        <vs-divider/>
+
+
+        <vs-table search :data="attendees">
+          <template slot="header"><h3>Attendance</h3></template>
+
+          <template slot="thead">
+            <vs-th sort-key="username">Username</vs-th>
+            <vs-th sort-key="status">Status</vs-th>
+          </template>
+
+
+          <vs-tr :key="index"
+                 :state="getStateColor(attendee.status)" v-for="(attendee, index) in attendees">
+            <vs-td>{{ user(attendee.userID).username }}</vs-td>
+            <vs-td>{{ attendee.status }}</vs-td>
+          </vs-tr>
+        </vs-table>
       </div>
     </div>
   </div>
@@ -28,11 +48,23 @@ import {mapGetters} from "vuex";
 export default {
   name: "ViewEvent",
   computed: {
-    ...mapGetters(["channels", "channel", "events", "event", "users", "user", "currentUser"])
+    ...mapGetters(["channels", "channel", "events", "event", "users", "user", "currentUser"]),
   },
   data() {
     return {
-      content: ''
+      content: '',
+      attendees: []
+    }
+  },
+  methods: {
+    getStateColor(status) {
+      if (status.toLowerCase() === "going") {
+        return "success";
+      } else if (status.toLowerCase() === "maybe") {
+        return "warning"
+      } else if (status.toLowerCase() === "declined") {
+        return "danger";
+      }
     }
   },
   async created() {
@@ -41,6 +73,16 @@ export default {
       this.$store.dispatch('fetchUsers')
     ])
   },
+  watch: {
+    channels: function (val) {
+      let newAttendees = [];
+      val.forEach(channel => {
+        if(channel.id == this.$route.params.channelID) {
+
+        }
+      }
+    }
+  }
 
 }
 </script>
