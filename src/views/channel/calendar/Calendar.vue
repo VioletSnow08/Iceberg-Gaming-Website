@@ -6,7 +6,7 @@
       <vs-button @click="createEventPopup=true">Create Event</vs-button>
     </div>
     <FullCalendar :options="calendarOptions"/>
-    <vs-popup :active.sync="createEventPopup" title="Create Event">
+    <vs-popup fullscreen :active.sync="createEventPopup" title="Create Event">
       <vs-input v-model="createEventName" label="Event Name"></vs-input>
       <vs-select label="Event Color" v-model="createEventColor">
         <div v-if="channel($route.params.channelID).division === 'iceberg'">
@@ -23,13 +23,19 @@
         </div>
       </vs-select>
       <br>
-      <flat-pickr :config="configdateTimePicker" v-model="createEventStartDate" placeholder="Start Date & Time" />
+      <flat-pickr :config="configdateTimePicker" v-model="createEventStartDate" placeholder="Start Date & Time"/>
       <br>
       <br>
-      <flat-pickr :config="configdateTimePicker" v-model="createEventEndDate" placeholder="End Date & Time" />
+      <flat-pickr :config="configdateTimePicker" v-model="createEventEndDate" placeholder="End Date & Time"/>
       <br>
       <br>
-      <vs-button @click="createEvent([$route.params.channelID, createEventStartDate, createEventEndDate, createEventColor, createEventName]); createEventPopup=false; sendNotification()">Create Event</vs-button>
+      <p>Event Description</p>
+      <quill-editor v-model="createEventDescription" :options="quillOptions"/>
+      <br>
+      <vs-button
+        @click="createEvent([$route.params.channelID, createEventStartDate, createEventEndDate, createEventColor, createEventName, createEventDescription]); createEventPopup=false; sendNotification()">
+        Create Event
+      </vs-button>
     </vs-popup>
   </div>
 
@@ -68,7 +74,13 @@ export default {
       createEventName: null,
       createEventColor: null,
       createEventStartDate: null,
-      createEventEndDate: null
+      createEventEndDate: null,
+      createEventDescription: '',
+      quillOptions: {
+        modules: {
+          toolbar: [['bold', 'italic', 'code', 'strike', 'underline'], [{'header' : 1}, { 'header': 2}, {'list': 'ordered'}, {'list': 'bullet'}, 'align',], [{'header': [1, 2, 3, 4, 5, 6, false]}]]
+        }
+      }
     }
   },
   computed: {

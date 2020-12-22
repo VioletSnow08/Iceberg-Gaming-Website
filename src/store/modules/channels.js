@@ -1,4 +1,5 @@
 import router from "@/router/router";
+
 const utils = require("../../../utils");
 import axios from "axios";
 import store from '../store';
@@ -20,6 +21,9 @@ const getters = {
   },
   events: (state) => (channelID) => {
     return state.channels.find(c => c.id == channelID).events;
+  },
+  event: (state) => (channelID, eventID) => {
+    return state.channels.find(c => c.id == channelID).events.find(e => e.id == eventID);
   }
 }
 
@@ -40,7 +44,7 @@ const actions = {
     }).then(() => {
       this.dispatch('fetchChannels');
     }).catch(error => {
-      if(error) {
+      if (error) {
         utils.alertGeneral();
       }
     })
@@ -54,7 +58,7 @@ const actions = {
     }).then(() => {
       this.dispatch('fetchChannels');
     }).catch(error => {
-      if(error) {
+      if (error) {
         utils.alertGeneral();
       }
     })
@@ -66,24 +70,38 @@ const actions = {
     }).then(() => {
       this.dispatch('fetchChannels');
     }).catch(error => {
-      if(error) {
+      if (error) {
         utils.alertGeneral();
       }
     })
   },
 
-  async createEvent({rootGetters}, [channelID, startDateTime, endDateTime, color, title]) {
+  async createEvent({rootGetters}, [channelID, startDateTime, endDateTime, color, title, description]) {
     axios.post(`${utils.base_url}/channels/calendar/event/create`, {
       accessToken: await rootGetters.currentUser.accessToken,
       channelID,
       startDateTime,
       endDateTime,
       color,
-      title
+      title,
+      description
     }).then(() => {
       this.dispatch('fetchChannels');
     }).catch(error => {
-      if(error) {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
+  async deleteEvent({rootGetters}, [channelID, eventID]) {
+    axios.post(`${utils.base_url}/channels/calendar/event/delete`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      eventID
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
         utils.alertGeneral();
       }
     })

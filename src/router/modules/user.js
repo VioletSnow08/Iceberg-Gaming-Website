@@ -87,6 +87,16 @@ export default [{
       },
       props: true
     },
+    {
+      path: '/channels/:channelID/events/:eventID',
+      name: 'ViewEvent',
+      component: () => import('@/views/channel/calendar/ViewEvent.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+      props: true
+    },
     // {
     //   path: '/profile/:userID',
     //   name: 'Profile',
