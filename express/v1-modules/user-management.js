@@ -62,6 +62,17 @@ router.post('/17th/get-roles', async (req, res) => {
         isDisabled: !canUserChangeRole17th(currentRoles, role)
       })
     })
+    utils.logger.log({
+      level: "info",
+      message: "User's Roles Fetched",
+      userID: req.user.id,
+      passedInUserID: userID,
+      accessToken,
+      currentRoles,
+      returnedRoles,
+      isLoggedIn: true,
+      api
+    })
     res.json(returnedRoles);
   })
 })

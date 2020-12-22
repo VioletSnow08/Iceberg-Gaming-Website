@@ -24,6 +24,13 @@ router.post('/register', async (req, res) => {
   }
   const hash = md5(password);
   await con.query(`SELECT * FROM users WHERE email = ?`, [email]).then(async rows => {
+    utils.logger.log({
+      level: "info",
+      message: "Fetched User",
+      email,
+      api,
+      isLoggedIn: false
+    })
     if (rows[0]) {
       res.status(400).send("An account with that email already exists!");
       hasReturned = true;
@@ -55,6 +62,14 @@ router.post('/register', async (req, res) => {
   })
   if (hasReturned === false) {
     res.send();
+    utils.logger.log({
+      level: "info",
+      message: "Registered User",
+      email,
+      username,
+      isLoggedIn: false,
+      api
+    })
   }
 })
 // POST: /api/v1/user/login
@@ -76,6 +91,13 @@ router.post('/login', async (req, res) => {
   await con.query(`SELECT * FROM users WHERE email = ? AND password = ?`, [email, hash]).then(async rows => {
     if (rows[0]) {
       userID = rows[0].id;
+      utils.logger.log({
+        level: "info",
+        message: "Fetched User",
+        email,
+        api,
+        isLoggedIn: false
+      })
       return await con.query(`SELECT * FROM tokens WHERE id = ?`, [userID]) // Check if they have an existing token...
     } else {
       res.status(401).send("Please provide a valid email and password!"); // Invalid Credentials
@@ -89,6 +111,13 @@ router.post('/login', async (req, res) => {
       refreshToken = jwt.sign(userID, jwt_refresh_secret);
       return await con.query(`INSERT INTO tokens (token, id) VALUES (?, ?)`, [refreshToken, userID])
     }
+    utils.logger.log({
+      level: "info",
+      message: "User Logged In",
+      email,
+      api,
+      isLoggedIn: false
+    })
     res.json({accessToken, refreshToken})
     hasReturned = true;
   }).catch(error => {

@@ -249,6 +249,16 @@ router.post('/calendar/event/create', async (req, res) => {
 
   let isChannelValid = false;
   con.query(`SELECT * FROM channels WHERE id = ? AND type = ?`, [channelID, 'calendar']).then(rows => {
+    utils.logger.log({
+      level: "info",
+      message: "Fetched Channel",
+      id,
+      type: 'calendar',
+      userID,
+      api,
+      isLoggedIn: true,
+      channelID
+    })
     if (rows) {
       isChannelValid = true;
       return con.query(`INSERT INTO channels_calendar_events (start, end, color, title, createdAt, channelID, userID, description) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [start, end, color, title, createdAt, channelID, userID, description])
@@ -256,6 +266,17 @@ router.post('/calendar/event/create', async (req, res) => {
   }).then(() => {
     if (!res.headersSent) { // Meaning no errors have occurred
       res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Created Channel",
+        id,
+        type: 'calendar',
+        userID,
+        api,
+        isLoggedIn: true,
+        title,
+        channelID
+      })
     }
   }).catch(error => {
     if (!res.headersSent) {
@@ -290,6 +311,17 @@ router.post('/calendar/event/delete', async (req, res) => {
   if (!accessToken || !eventID || !channelID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, and an eventID!");
 
   con.query(`DELETE * FROM channels_calendar_events WHERE userID = ? AND id = ? AND channelID = ?`, [userID, eventID, channelID]).then(() => {
+    utils.logger.log({
+      level: "info",
+      message: "Deleted Event",
+      id,
+      type: 'calendar',
+      userID,
+      api,
+      isLoggedIn: true,
+      eventID,
+      channelID
+    })
     res.sendStatus(200);
   }).catch(error => {
     if(error) {

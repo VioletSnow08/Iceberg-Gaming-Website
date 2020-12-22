@@ -64,10 +64,17 @@ router.post('/loa/submit', async (req, res) => {
 // Return: <status_code>
 router.post('/loas', async (req, res) => {
   let {accessToken} = req.body;
-  const loggedInUserID = req.user.id;
+  const userID = req.user.id;
   const con = req.app.get('con');
-  const api = "/api/v1/settings/loa/end"
+  const api = "/api/v1/settings/loas"
   con.query(`SELECT * FROM loas`).then(results => {
+    utils.logger.log({
+      level: "info",
+      message: "LOAs Fetched",
+      userID,
+      api,
+      isLoggedIn: true
+    })
     res.json(results);
   }).catch(error => {
     if(error) {

@@ -18,7 +18,6 @@ router.post('/', async (req, res) => {
   const api = "/api/v1/settings/applications"
   if (!accessToken) return res.status(400).send("Bad Request! Please pass in an accessToken.");
   if(!utils.doesUserContainRoles(req.user.roles, ['[ICE] Recruiter', '[ICE] Owner', '[ICE] Webmaster'])) return res.sendStatus(401);
-  let applications = [];
   let initialQueries = {
     applications: [],
     bctApplications: [],
@@ -27,20 +26,52 @@ router.post('/', async (req, res) => {
   }
   con.query(`SELECT * FROM applications`).then(rows => {
     initialQueries.applications = rows;
+    utils.logger.log({
+      level: "info",
+      message: "Applications Fetched",
+      isLoggedIn: true,
+      userID,
+      accessToken,
+      api
+    })
     return con.query(`SELECT * FROM 17th_applications`)
   }).then(rows => {
+    utils.logger.log({
+      level: "info",
+      message: "17th Applications Fetched",
+      isLoggedIn: true,
+      userID,
+      accessToken,
+      api
+    })
     rows.forEach(row => {
       row.division = "17th";
       initialQueries.bctApplications.push(row);
     })
     return con.query(`SELECT * FROM iceberg_applications`)
   }).then(rows => {
+    utils.logger.log({
+      level: "info",
+      message: "Iceberg Applications Fetched",
+      isLoggedIn: true,
+      userID,
+      accessToken,
+      api
+    })
     rows.forEach(row => {
       row.division = "Iceberg";
       initialQueries.icebergApplications.push(row);
     })
     return con.query(`SELECT * FROM cgs_applications`)
   }).then(rows => {
+    utils.logger.log({
+      level: "info",
+      message: "CGS Applications Fetched",
+      isLoggedIn: true,
+      userID,
+      accessToken,
+      api
+    })
     rows.forEach(row => {
       row.division = "CGS";
       initialQueries.cgsApplications.push(row);
@@ -53,7 +84,7 @@ router.post('/', async (req, res) => {
     })
     utils.logger.log({
       level: "info",
-      message: "Applications Fetched",
+      message: "Applications Completed",
       isLoggedIn: true,
       userID,
       accessToken,
@@ -240,7 +271,7 @@ router.delete('/change/', async (req, res) => {
       subApplicationID = rows[0].applicationID;
       utils.logger.log({
         level: "info",
-        message: "Applications Fetched",
+        message: "Application Fetched",
         api,
         userID,
         applicantID,
@@ -254,12 +285,56 @@ router.delete('/change/', async (req, res) => {
         comment = bctMessageApprove(req);
         status = "Approved";
         con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [applicantID, '[ICE] Applicant']).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Deleted Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [applicantID, '[ICE] Member'])
         }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Created Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [applicantID, '[17th] Member'])
         }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Created Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           return con.query(`UPDATE 17th_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID])
         }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           res.sendStatus(200);
         }).catch(error => {
           if (error) {
@@ -283,6 +358,17 @@ router.delete('/change/', async (req, res) => {
         comment = bctMessageProcess(req);
         status = "Processed";
         con.query(`UPDATE 17th_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID]).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           res.sendStatus(200);
         }).catch(error => {
           if (error) {
@@ -306,6 +392,17 @@ router.delete('/change/', async (req, res) => {
         comment = bctMessageDeny(req);
         status = "Denied";
         con.query(`UPDATE 17th_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID]).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           res.sendStatus(200);
         }).catch(error => {
           if (error) {
@@ -329,10 +426,43 @@ router.delete('/change/', async (req, res) => {
         comment = icebergMessageApprove(req);
         status = "Approved";
         con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [applicantID, '[ICE] Applicant']).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Deleted Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [applicantID, '[ICE] Member'])
         }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Created Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           return con.query(`UPDATE iceberg_applications SET status = ?, comment = ? WHERE id = ? AND userID = ?`, [status, comment, subApplicationID, applicantID])
         }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           res.sendStatus(200)
         }).catch(error => {
           if(error) {
@@ -355,6 +485,17 @@ router.delete('/change/', async (req, res) => {
         comment = icebergMessageProcess(req);
         status = "Processed";
         con.query(`UPDATE iceberg_applications SET status = ?, comment = ? WHERE id = ? AND userID = ?`, [status, comment, subApplicationID, applicantID]).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           res.sendStatus(200);
         }).catch(error => {
           if(error) {
@@ -377,6 +518,17 @@ router.delete('/change/', async (req, res) => {
         comment = icebergMessageDeny(req);
         status = "Denied";
         con.query(`UPDATE iceberg_applications SET status = ?, comment = ? WHERE id = ? AND userID = ?`, [status, comment, subApplicationID, applicantID]).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
           res.sendStatus(200);
         }).catch(error => {
           if(error) {
