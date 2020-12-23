@@ -98,6 +98,11 @@ router.post('/', async (req, res) => {
           }
         })
         channels.push(newChannel);
+      } else if(channel.type.toLowerCase() === "documents") {
+        let newChannel = {
+          ...channel,
+        }
+        channels.push(newChannel);
       }
     })
     res.json(channels);

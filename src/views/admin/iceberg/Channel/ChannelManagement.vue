@@ -100,11 +100,13 @@ export default {
         return "calendar_today";
       } else if (type === "forum") {
         return "forum";
+      } else if(type === "documents") {
+        return "description"
       }
     },
     setNotification() {
       this.$vs.notify({
-        title: 'channel Created',
+        title: 'Channel Created',
         text: 'Use the navigation bar to view your new channel!',
         time: 4000
       })

@@ -111,6 +111,8 @@ export default {
         return "CalendarIcon";
       } else if (type === "forum") {
         return "BoldIcon";
+      } else if(type === "documents") {
+        return "FileTextIcon";
       }
     },
   },
