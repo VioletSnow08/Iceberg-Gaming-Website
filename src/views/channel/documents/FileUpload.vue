@@ -1,5 +1,7 @@
 <template>
   <div class="file-upload">
+    <vs-input label="Document Title" v-model="name"></vs-input>
+    <br>
     <input type="file" @change="onFileChange" />
     <br>
     <br>
@@ -17,6 +19,7 @@ export default {
   data() {
     return {
       selectedFile: "",
+      name: null
     };
   },
   computed: {
@@ -39,7 +42,7 @@ export default {
       this.$vs.notify({
         color: 'danger',
         title: "Unable to upload file!",
-        text: "Please make sure that the file type is a PDF.",
+        text: "Please make sure that the file type is a PDF or that the file doesn't already exist.",
         time: 4000
       })
     },
@@ -48,6 +51,7 @@ export default {
       formData.append("file", this.selectedFile);  // appending file
       formData.append('channelID', this.$route.params.channelID);
       formData.append('accessToken', await this.currentUser.accessToken)
+      formData.append('name', this.name);
       await this.uploadDocument([formData]).then(() => {
         this.$store.dispatch('fetchChannels');
         this.sendSuccessNotification();

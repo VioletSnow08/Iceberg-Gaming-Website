@@ -453,23 +453,57 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
 // Body: accessToken, formData
 // Return: <status_code>
 router.post('/documents/create', async (req, res) => {
-  let {accessToken} = req.body;
-  const loggedInUserID = req.user.id;
+  let {accessToken, name} = req.body;
+  const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/documents/create";
-
+  if(!name) return res.sendStatus(400);
   if (!req.files) {
     return res.status(500).send({ msg: "File Not Found!" })
   }
-  const myFile = req.files.file;
 
-  await myFile.mv(`${__dirname}/../documents/${myFile.name}`, function (err) {
-    if (err) {
-      console.log(err)
-      return res.status(500).send({ msg: "Error occurred" });
+  const file = req.files.file;
+  con.query(`SELECT * FROM channels_documents_pdfs WHERE filename = ?`, [file.name]).then(rows => {
+    if(rows[0]) {
+      res.sendStatus(400);
+    } else {
+      return file.mv(`${__dirname}/../documents/${file.name}`)
     }
-    return res.send({name: myFile.name, path: `/${myFile.name}`});
-  });
+  }).then(() => {
+    if(!res.headersSent) {
+      return con.query(`INSERT INTO channels_documents_pdfs (userID, filename, name) VALUES (?, ?, ?)`, [userID, file.name, name])
+    }
+  }).then(() => {
+    if(!res.headersSent) {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Document Uploaded",
+        api,
+        userID,
+        accessToken,
+        name,
+        filename: file.name,
+        isLoggedIn: true
+      })
+    }
+  }).catch(error => {
+    if(error) {
+      if(!res.headersSent) res.sendStatus(500);
+      utils.logger.log({
+        level: "info",
+        message: error.message,
+        stack: error.stack,
+        api,
+        userID,
+        accessToken,
+        name,
+        filename: file.name,
+        isLoggedIn: true
+      })
+    }
+  })
+
 })
 module.exports = {
   router
