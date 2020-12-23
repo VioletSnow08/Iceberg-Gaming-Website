@@ -17,6 +17,11 @@
           icon="StopCircleIcon"/>
         <vx-list :list="['Host: ' + user(event($route.params.channelID, $route.params.eventID).userID).username]"
                  icon="UserIcon"/>
+        <div class="vx-row">
+          <vs-button style="margin: 0 20px" @click="editEvent" icon="edit" color="warning">Edit Event</vs-button>
+          <vs-button @click="isDeletePopupOpen=true" icon="delete" color="danger">Delete Event</vs-button>
+        </div>
+
         <vs-divider/>
         <div v-html="event($route.params.channelID, $route.params.eventID).description"></div>
         <vs-divider/>
@@ -35,13 +40,15 @@
               <vs-td>{{ attendee.status }}</vs-td>
             </vs-tr>
         </vs-table>
+
+        <vs-popup :active.sync="isDeletePopupOpen" title="Are you sure you want to delete this?"><p>Deleting this is permanent and non-recoverable.</p><vs-button @click="deleteEvent([$route.params.channelID, $route.params.eventID]); isDeletePopupOpen=false">Delete Event</vs-button></vs-popup>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 
 export default {
   name: "ViewEvent",
@@ -51,10 +58,12 @@ export default {
   data() {
     return {
       content: '',
-      attendees: []
+      attendees: [],
+      isDeletePopupOpen: false
     }
   },
   methods: {
+    ...mapActions(["deleteEvent", "editEvent"]),
     getStateColor(status) {
       if (status.toLowerCase() === "going") {
         return "success";
