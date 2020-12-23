@@ -124,6 +124,21 @@ const actions = {
       }
     })
   },
+  async setAttendance({rootGetters}, [channelID, eventID, userID, status]) {
+    axios.post(`${utils.base_url}/channels/calendar/event/set-attendance`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      eventID,
+      userID,
+      status
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  }
 }
 
 const mutations = {
