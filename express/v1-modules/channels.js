@@ -379,17 +379,19 @@ router.post('/calendar/event/delete', async (req, res) => {
     }
   })
 })
+
+
 // POST: /api/v1/channels/calendar/event/set-attendance
 // Params: none
 // Body: accessToken, eventID, channelID, status
 // Return: <status_code>
-router.post('/calendar/event/attendance', async (req, res) => {
+router.post('/calendar/event/set-attendance', async (req, res) => {
   let {accessToken, channelID, eventID, status} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/calendar/event/set-attendance";
   if (!accessToken || !eventID || !channelID || !status) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, status, and an eventID!");
-  if(status !== "Going" || status !== "Maybe" || status !== "Declined") return res.sendStatus(400); // Makes sure that the statuses are correct
+  if(status !== "Going" && status !== "Maybe" && status !== "Declined") return res.sendStatus(400); // Makes sure that the statuses are correct
   con.query(`SELECT * FROM channels_calendar_attendance WHERE userID = ? AND eventID = ? AND channelID = ?`, [userID, eventID, channelID]).then(rows => { // Checks if user has any attendance for this current event already set
     if(rows) {
       return con.query(`DELETE FROM channels_calendar_attendance WHERE userID = ? AND eventID = ? AND channelID = ?`, [userID, eventID, channelID]) // If so, then remove it
