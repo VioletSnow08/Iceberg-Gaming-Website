@@ -27,9 +27,8 @@
         <vs-divider/>
 
 
-        <vs-table :search="true" :data="attendees">
+        <vs-table :data="attendees">
           <template slot="header"><h3>Attendance</h3></template>
-
           <template slot="thead">
             <vs-th sort-key="username">Username</vs-th>
             <vs-th sort-key="status">Status</vs-th>
