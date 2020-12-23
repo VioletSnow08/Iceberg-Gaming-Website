@@ -141,14 +141,7 @@ const actions = {
   },
 
   async uploadDocument({rootGetters}, [formData]) {
-    axios.post(`${utils.base_url}/channels/documents/create`, formData
-    ).then(() => {
-      this.dispatch('fetchChannels');
-    }).catch(error => {
-      if (error) {
-        utils.alertGeneral();
-      }
-    })
+    return axios.post(`${utils.base_url}/channels/documents/create`, formData)
   }
 }
 

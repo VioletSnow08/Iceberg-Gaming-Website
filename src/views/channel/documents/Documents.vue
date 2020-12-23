@@ -4,7 +4,7 @@
       <vs-button icon="add" @click="openFileUpload=true">Upload Document</vs-button>
     </div>
 
-    
+
     <vs-popup :active.sync="openFileUpload" title="Upload Document">
       <FileUpload v-bind:channelID="$route.params.channelID"></FileUpload>
     </vs-popup>
