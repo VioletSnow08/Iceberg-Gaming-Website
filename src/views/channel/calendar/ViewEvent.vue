@@ -18,8 +18,8 @@
         <vx-list :list="['Host: ' + user(event($route.params.channelID, $route.params.eventID).userID).username]"
                  icon="UserIcon"/>
         <div class="vx-row">
-          <vs-button style="margin: 0 20px" @click="editEvent" icon="edit" color="warning">Edit Event</vs-button>
-          <vs-button @click="isDeletePopupOpen=true" icon="delete" color="danger">Delete Event</vs-button>
+          <vs-button :disabled="(currentUser.id !== event($route.params.channelID, $route.params.eventID).userID) ? true : false" style="margin: 0 20px" @click="editEvent" icon="edit" color="warning">Edit Event</vs-button>
+          <vs-button :disabled="(currentUser.id !== event($route.params.channelID, $route.params.eventID).userID) ? true : false" @click="isDeletePopupOpen=true" icon="delete" color="danger">Delete Event</vs-button>
         </div>
 
         <vs-divider/>
