@@ -29,6 +29,18 @@
             :disabled="(currentUser.id !== event($route.params.channelID, $route.params.eventID).userID) ? true : false"
             @click="isDeletePopupOpen=true" icon="delete" color="danger">Delete Event
           </vs-button>
+          <vs-button
+            @click="setAttendance($route.params.channelID, $route.params.eventID, currentUser.id, 'Going')" style="margin: 0 20px" icon="done" color="success">Going
+          </vs-button>
+
+          <vs-button
+            @click="setAttendance($route.params.channelID, $route.params.eventID, currentUser.id, 'Going')" icon="help" color="warning">Maybe
+          </vs-button>
+
+          <vs-button
+            @click="setAttendance($route.params.channelID, $route.params.eventID, currentUser.id, 'Going')" style="margin: 0 20px" icon="priority_high" color="danger">Not Going
+          </vs-button>
+
         </div>
 
         <vs-divider/>
@@ -138,7 +150,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["deleteEvent", "editEvent"]),
+    ...mapActions(["deleteEvent", "editEvent", "setAttendance"]),
     getStateColor(status) {
       if (status.toLowerCase() === "going") {
         return "success";
