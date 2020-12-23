@@ -97,6 +97,16 @@ export default [{
       },
       props: true
     },
+    {
+      path: '/channels/:channelID/document/:documentID',
+      name: 'ViewEvent',
+      component: () => import('@/views/channel/documents/ViewDocument.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+      props: true
+    },
     // {
     //   path: '/profile/:userID',
     //   name: 'Profile',
