@@ -5,11 +5,19 @@
     </div>
     <div v-else-if="channel($route.params.channelID) && channel($route.params.channelID).division.toLowerCase() === 'iceberg' && currentUser.roles.includes('[ICE] Member')">
       {{ this.$vs.loading.close() }}
+      <div class="text-center">
+        <h1>Now Viewing: {{ channel($route.params.channelID).name }}</h1>
+        <p>Channel Division: {{ channel($route.params.channelID).division }}</p>
+        </div>
       <CalendarBP v-if="channel($route.params.channelID).type === 'calendar'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></CalendarBP>
       <DocumentsBP v-if="channel($route.params.channelID).type === 'documents'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></DocumentsBP>
     </div>
     <div v-else-if="channel($route.params.channelID) && channel($route.params.channelID).division.toLowerCase() === '17th' && currentUser.roles.includes('[17th] Member')">
       {{ this.$vs.loading.close() }}
+      <div class="text-center">
+        <h1>Now Viewing: {{ channel($route.params.channelID).name }}</h1>
+        <p>Channel Division: {{ channel($route.params.channelID).division }}</p>
+      </div>
       <CalendarBP v-if="channel($route.params.channelID).type === 'calendar'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></CalendarBP>
       <DocumentsBP v-if="channel($route.params.channelID).type === 'documents'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></DocumentsBP>
     </div>

@@ -1,8 +1,6 @@
 <template>
   <div>
     <div class="text-center">
-      <h1>Now Viewing: {{ channel($route.params.channelID).name }}</h1>
-      <p>Channel Division: {{ channel($route.params.channelID).division }}</p>
       <vs-button @click="createEventPopup=true">Create Event</vs-button>
     </div>
     <FullCalendar :options="calendarOptions"/>
