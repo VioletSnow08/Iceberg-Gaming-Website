@@ -4,13 +4,14 @@ const base_api = "/api/v1";
 const utils = require("../../utils.js");
 const {DateTime} = require("luxon");
 const {requiresAuth} = require("../middleware/auth");
+const fileUpload = require('express-fileupload');
 const CHANNEL_EDIT_ROLES = {
   bct: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[17th] Alpha Company HQ', '[17th] Officer'],
   iceberg: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster'],
   cgs: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[CGS] Owner']
 }
 
-
+router.use(fileUpload());
 router.use(requiresAuth);
 
 
@@ -447,7 +448,29 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
   })
 })
 
+// POST: /api/v1/channels/documents/create
+// Params: none
+// Body: accessToken, formData
+// Return: <status_code>
+router.post('/documents/create', async (req, res) => {
+  let {accessToken} = req.body;
+  const loggedInUserID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/documents/create";
 
+  if (!req.files) {
+    return res.status(500).send({ msg: "File Not Found!" })
+  }
+  const myFile = req.files.file;
+
+  await myFile.mv(`${__dirname}/../documents/${myFile.name}`, function (err) {
+    if (err) {
+      console.log(err)
+      return res.status(500).send({ msg: "Error occurred" });
+    }
+    return res.send({name: myFile.name, path: `/${myFile.name}`});
+  });
+})
 module.exports = {
   router
 };

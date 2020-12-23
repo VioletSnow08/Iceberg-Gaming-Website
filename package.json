@@ -28,6 +28,7 @@
     "cors": "^2.8.5",
     "echarts": "^4.2.1",
     "express": "^4.17.1",
+    "express-fileupload": "^1.2.0",
     "express-winston": "^4.0.5",
     "file-saver": "2.0.1",
     "firebase": "^7.22.0",
