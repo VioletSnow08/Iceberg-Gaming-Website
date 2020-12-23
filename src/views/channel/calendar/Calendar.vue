@@ -62,9 +62,7 @@ export default {
         initialView: 'dayGridMonth',
         events: this.$store.getters.events(this.$route.params.channelID),
         height: 950,
-        eventClick: function (info) {
-          this.onClickedEvent(info);
-        }
+        eventClick: this.handleEventClick,
       },
       configdateTimePicker: {
         enableTime: true,
@@ -87,8 +85,8 @@ export default {
     ...mapGetters(["channel", "events"]),
   },
   methods: {
-    onClickedEvent(event) {
-      console.log(event);
+    handleEventClick: function(info) {
+      this.$router.push('/channels/' + this.$route.params.channelID + '/events/' + info.event.id);
     },
     sendNotification() {
       this.$vs.notify({
