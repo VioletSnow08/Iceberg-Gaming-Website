@@ -250,7 +250,6 @@ router.post('/calendar/event/create', async (req, res) => {
     utils.logger.log({
       level: "info",
       message: "Fetched Channel",
-      id,
       type: 'calendar',
       userID,
       api,
@@ -267,7 +266,6 @@ router.post('/calendar/event/create', async (req, res) => {
       utils.logger.log({
         level: "info",
         message: "Created Event",
-        id,
         type: 'calendar',
         userID,
         api,
