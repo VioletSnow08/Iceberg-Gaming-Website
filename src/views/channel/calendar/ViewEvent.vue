@@ -52,7 +52,7 @@
         <vs-popup :active.sync="isDeletePopupOpen" title="Are you sure you want to delete this?"><p>Deleting this is
           permanent and non-recoverable.</p>
           <vs-button
-            @click="deleteEvent([$route.params.channelID, $route.params.eventID]); isDeletePopupOpen=false; $router.push('/channels/' + $route.params.channelID)">
+            @click="deleteEvent([$route.params.channelID, $route.params.eventID]); isDeletePopupOpen=false; $router.push('/channels/' + $route.params.channelID); sendDeleteNotification()">
             Delete Event
           </vs-button>
         </vs-popup>
@@ -84,8 +84,8 @@
           <quill-editor v-model="newEventDescription" :options="quillOptions"/>
           <br>
           <vs-button
-            @click="editEvent([$route.params.channelID, newEventStartDate, newEventEndDate, newEventColor, newEventTitle, newEventDescription, $route.params.eventID]); isEditPopupOpen=false; sendNotification()">
-            Create Event
+            @click="editEvent([$route.params.channelID, newEventStartDate, newEventEndDate, newEventColor, newEventTitle, newEventDescription, $route.params.eventID]); isEditPopupOpen=false; sendEditNotification()">
+            Edit Event
           </vs-button>
         </vs-popup>
 
@@ -148,10 +148,18 @@ export default {
         return "danger";
       }
     },
-    sendNotification() {
+    sendEditNotification() {
       this.$vs.notify({
         title: 'Event Edited',
         text: 'In order to see the edited event, you may need to refresh your page. Sorry! Have fun at the event :)',
+        color: 'success',
+        time: 4000
+      })
+    },
+    sendDeleteNotification() {
+      this.$vs.notify({
+        title: 'Event Deleted',
+        text: 'In order for the calendar to be updated, please refresh the page. Sorry :(',
         color: 'success',
         time: 4000
       })
