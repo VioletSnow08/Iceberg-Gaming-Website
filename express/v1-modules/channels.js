@@ -230,8 +230,6 @@ router.post('/delete', async (req, res) => {
 })
 
 
-
-
 // POST: /api/v1/channels/calendar/event/create
 // Params: none
 // Body: accessToken, startDateTime, endDateTime, color, title, channelID
@@ -326,7 +324,7 @@ router.post('/calendar/event/edit', async (req, res) => {
     })
     res.sendStatus(200);
   }).catch(error => {
-    if(error) {
+    if (error) {
       res.sendStatus(500);
       utils.logger.log({
         level: "error",
@@ -342,46 +340,103 @@ router.post('/calendar/event/edit', async (req, res) => {
     }
   })
 })
+
 // POST: /api/v1/channels/calendar/event/delete
 // Params: none
 // Body: accessToken, startDateTime, endDateTime, color, title, channelID
 // Return: <status_code>
-  router.post('/calendar/event/delete', async (req, res) => {
-    let {accessToken, channelID, eventID} = req.body;
-    const userID = req.user.id;
-    const con = req.app.get('con');
-    const api = "/api/v1/channels/calendar/event/delete";
-    if (!accessToken || !eventID || !channelID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, and an eventID!");
+router.post('/calendar/event/delete', async (req, res) => {
+  let {accessToken, channelID, eventID} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/calendar/event/delete";
+  if (!accessToken || !eventID || !channelID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, and an eventID!");
 
-    con.query(`DELETE FROM channels_calendar_events WHERE userID = ? AND id = ? AND channelID = ?`, [userID, eventID, channelID]).then(() => {
+  con.query(`DELETE FROM channels_calendar_events WHERE userID = ? AND id = ? AND channelID = ?`, [userID, eventID, channelID]).then(() => {
+    utils.logger.log({
+      level: "info",
+      message: "Deleted Event",
+      type: 'calendar',
+      userID,
+      api,
+      isLoggedIn: true,
+      eventID,
+      channelID
+    })
+    res.sendStatus(200);
+  }).catch(error => {
+    if (error) {
+      res.sendStatus(500);
       utils.logger.log({
-        level: "info",
-        message: "Deleted Event",
-        type: 'calendar',
+        level: "error",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
         userID,
         api,
-        isLoggedIn: true,
+        channelID,
         eventID,
-        channelID
+        accessToken
       })
-      res.sendStatus(200);
-    }).catch(error => {
-      if(error) {
-        res.sendStatus(500);
-        utils.logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          isLoggedIn: true,
-          userID,
-          api,
-          channelID,
-          eventID,
-          accessToken
-        })
-      }
-    })
+    }
   })
+})
+// POST: /api/v1/channels/calendar/event/set-attendance
+// Params: none
+// Body: accessToken, eventID, channelID, status
+// Return: <status_code>
+router.post('/calendar/event/attendance', async (req, res) => {
+  let {accessToken, channelID, eventID, status} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/calendar/event/set-attendance";
+  if (!accessToken || !eventID || !channelID || !status) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, status, and an eventID!");
+  if(status !== "Going" || status !== "Maybe" || status !== "Declined") return res.sendStatus(400); // Makes sure that the statuses are correct
+  con.query(`SELECT * FROM channels_calendar_attendance WHERE userID = ? AND eventID = ? AND channelID = ?`, [userID, eventID, channelID]).then(rows => { // Checks if user has any attendance for this current event already set
+    if(rows) {
+      return con.query(`DELETE FROM channels_calendar_attendance WHERE userID = ? AND eventID = ? AND channelID = ?`, [userID, eventID, channelID]) // If so, then remove it
+    }
+  }).then(() => {
+    utils.logger.log({
+      level: "info",
+      message: "Deleted Attendance",
+      userID,
+      accessToken,
+      eventID,
+      channelID,
+      status,
+      api
+    })
+    return con.query(`INSERT INTO channels_calendar_attendance (userID, eventID, channelID, status)`, [userID, eventID, channelID, status]) // Then either way, insert their new attendance
+  }).then(() => {
+    utils.logger.log({
+      level: "info",
+      message: "Set Attendance",
+      type: 'calendar',
+      userID,
+      api,
+      isLoggedIn: true,
+      eventID,
+      channelID
+    })
+    res.sendStatus(200);
+  }).catch(error => {
+    if (error) {
+      res.sendStatus(500);
+      utils.logger.log({
+        level: "error",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
+        userID,
+        api,
+        channelID,
+        eventID,
+        accessToken
+      })
+    }
+  })
+})
 
 
 module.exports = {
