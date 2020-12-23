@@ -62,7 +62,7 @@ export default {
         initialView: 'dayGridMonth',
         events: this.$store.getters.events(this.$route.params.channelID),
         height: 950,
-        eventClick: this.handleEventClick,
+        eventClick: this.handleEventClick
       },
       configdateTimePicker: {
         enableTime: true,
@@ -102,7 +102,7 @@ export default {
 </script>
 
 <style>
-* {
+.fc, .fc-col-header-cell-cushion,  .fc-daygrid-day-number, .fc-event-time, .fc-event-title{
   color: white !important;
 }
 </style>

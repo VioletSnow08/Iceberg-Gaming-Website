@@ -268,7 +268,7 @@ router.post('/calendar/event/create', async (req, res) => {
       res.sendStatus(200);
       utils.logger.log({
         level: "info",
-        message: "Created Channel",
+        message: "Created Event",
         id,
         type: 'calendar',
         userID,
@@ -299,21 +299,24 @@ router.post('/calendar/event/create', async (req, res) => {
   })
 })
 
-// POST: /api/v1/channels/calendar/event/delete
+// POST: /api/v1/channels/calendar/event/edit
 // Params: none
-// Body: accessToken, startDateTime, endDateTime, color, title, channelID
+// Body: accessToken, channelID
 // Return: <status_code>
-router.post('/calendar/event/delete', async (req, res) => {
-  let {accessToken, channelID, eventID} = req.body;
+router.post('/calendar/event/edit', async (req, res) => {
+  let {accessToken, startDateTime, endDateTime, color, title, channelID, description, eventID} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
-  const api = "/api/v1/channels/calendar/event/delete";
-  if (!accessToken || !eventID || !channelID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, and an eventID!");
+  const api = "/api/v1/channels/calendar/event/edit";
+  if (!accessToken || !startDateTime || !endDateTime || !color || !title || !channelID || !description) return res.status(400).send("Bad Request! Please pass in an accessToken, startDateTime, endDateTime, color, description, eventID, channelID, and title!");
 
-  con.query(`DELETE FROM channels_calendar_events WHERE userID = ? AND id = ? AND channelID = ?`, [userID, eventID, channelID]).then(() => {
+  const start = DateTime.fromISO(startDateTime).setZone('America/Chicago').toISO();
+  const end = DateTime.fromISO(endDateTime).setZone('America/Chicago').toISO();
+
+  con.query(`UPDATE channels_calendar_events SET start = ?, end = ?, color = ?, title = ?, description = ? WHERE userID = ? AND id = ? AND channelID = ?`, [start, end, color, title, description, userID, eventID, channelID]).then(() => {
     utils.logger.log({
       level: "info",
-      message: "Deleted Event",
+      message: "Edited Event",
       type: 'calendar',
       userID,
       api,
@@ -339,6 +342,47 @@ router.post('/calendar/event/delete', async (req, res) => {
     }
   })
 })
+// POST: /api/v1/channels/calendar/event/delete
+// Params: none
+// Body: accessToken, startDateTime, endDateTime, color, title, channelID
+// Return: <status_code>
+  router.post('/calendar/event/delete', async (req, res) => {
+    let {accessToken, channelID, eventID} = req.body;
+    const userID = req.user.id;
+    const con = req.app.get('con');
+    const api = "/api/v1/channels/calendar/event/delete";
+    if (!accessToken || !eventID || !channelID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, and an eventID!");
+
+    con.query(`DELETE FROM channels_calendar_events WHERE userID = ? AND id = ? AND channelID = ?`, [userID, eventID, channelID]).then(() => {
+      utils.logger.log({
+        level: "info",
+        message: "Deleted Event",
+        type: 'calendar',
+        userID,
+        api,
+        isLoggedIn: true,
+        eventID,
+        channelID
+      })
+      res.sendStatus(200);
+    }).catch(error => {
+      if(error) {
+        res.sendStatus(500);
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID,
+          api,
+          channelID,
+          eventID,
+          accessToken
+        })
+      }
+    })
+  })
+
 
 module.exports = {
   router

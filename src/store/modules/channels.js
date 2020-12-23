@@ -105,7 +105,25 @@ const actions = {
         utils.alertGeneral();
       }
     })
-  }
+  },
+  async editEvent({rootGetters}, [channelID, startDateTime, endDateTime, color, title, description, eventID]) {
+    axios.post(`${utils.base_url}/channels/calendar/event/edit`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      startDateTime,
+      endDateTime,
+      color,
+      title,
+      description,
+      eventID
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
 }
 
 const mutations = {
