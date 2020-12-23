@@ -383,14 +383,14 @@ router.post('/calendar/event/delete', async (req, res) => {
 
 // POST: /api/v1/channels/calendar/event/set-attendance
 // Params: none
-// Body: accessToken, eventID, channelID, status
+// Body: accessToken, eventID, channelID, status, userID
 // Return: <status_code>
 router.post('/calendar/event/set-attendance', async (req, res) => {
-  let {accessToken, channelID, eventID, status} = req.body;
-  const userID = req.user.id;
+  let {accessToken, channelID, eventID, status, userID} = req.body;
+  const loggedInUserID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/calendar/event/set-attendance";
-  if (!accessToken || !eventID || !channelID || !status) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, status, and an eventID!");
+  if (!accessToken || !eventID || !channelID || !status || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, userID, status, and an eventID!");
   if(status !== "Going" && status !== "Maybe" && status !== "Declined") return res.sendStatus(400); // Makes sure that the statuses are correct
   con.query(`SELECT * FROM channels_calendar_attendance WHERE userID = ? AND eventID = ? AND channelID = ?`, [userID, eventID, channelID]).then(rows => { // Checks if user has any attendance for this current event already set
     if(rows) {
@@ -405,9 +405,10 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
       eventID,
       channelID,
       status,
-      api
+      api,
+      loggedInUserID
     })
-    return con.query(`INSERT INTO channels_calendar_attendance (userID, eventID, channelID, status)`, [userID, eventID, channelID, status]) // Then either way, insert their new attendance
+    return con.query(`INSERT INTO channels_calendar_attendance (userID, eventID, channelID, status) VALUES (?, ?, ?, ?)`, [userID, eventID, channelID, status]) // Then either way, insert their new attendance
   }).then(() => {
     utils.logger.log({
       level: "info",
@@ -417,7 +418,8 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
       api,
       isLoggedIn: true,
       eventID,
-      channelID
+      channelID,
+      loggedInUserID
     })
     res.sendStatus(200);
   }).catch(error => {
@@ -432,7 +434,8 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
         api,
         channelID,
         eventID,
-        accessToken
+        accessToken,
+        loggedInUserID
       })
     }
   })

@@ -30,15 +30,15 @@
             @click="isDeletePopupOpen=true" icon="delete" color="danger">Delete Event
           </vs-button>
           <vs-button
-            @click="setAttendance($route.params.channelID, $route.params.eventID, currentUser.id, 'Going')" style="margin: 0 20px" icon="done" color="success">Going
+            @click="setAttendance([$route.params.channelID, $route.params.eventID, currentUser.id, 'Going'])" style="margin: 0 20px" icon="done" color="success">Going
           </vs-button>
 
           <vs-button
-            @click="setAttendance($route.params.channelID, $route.params.eventID, currentUser.id, 'Going')" icon="help" color="warning">Maybe
+            @click="setAttendance([$route.params.channelID, $route.params.eventID, currentUser.id, 'Maybe'])" icon="help" color="warning">Maybe
           </vs-button>
 
           <vs-button
-            @click="setAttendance($route.params.channelID, $route.params.eventID, currentUser.id, 'Going')" style="margin: 0 20px" icon="priority_high" color="danger">Not Going
+            @click="setAttendance([$route.params.channelID, $route.params.eventID, currentUser.id, 'Declined'])" style="margin: 0 20px" icon="priority_high" color="danger">Not Going
           </vs-button>
 
         </div>
