@@ -120,8 +120,8 @@ export default {
       editedChannelID: null,
       editedChannelName: '',
       newChannelName: '',
-      newChannelType: 'calendar',
-      newChannelTypes: ['calendar', 'Forum'],
+      newChannelType: 'Calendar',
+      newChannelTypes: ['Calendar', 'Forum', 'Documents'],
       newChannelDivision: 'Iceberg',
       newChannelDivisions: ['Iceberg', '17th']
     }

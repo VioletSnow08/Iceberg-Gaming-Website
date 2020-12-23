@@ -131,7 +131,7 @@ router.post('/create', async (req, res) => {
   division = division.toLowerCase();
   type = type.toLowerCase();
   if (division !== "17th" && division !== "cgs" && division !== "iceberg") return res.sendStatus(400);
-  if (type !== "calendar" && type !== "forum") return res.sendStatus(400);
+  if (type !== "calendar" && type !== "forum" && type !== "documents") return res.sendStatus(400);
 
   if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
     con.query(`INSERT INTO channels (name, division, type) VALUES (?, ?, ?)`, [name, oldDivision, type]).then(() => {
