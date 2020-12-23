@@ -239,6 +239,7 @@ router.post('/calendar/event/create', async (req, res) => {
   const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/calendar/event/create";
+  if(!description) description = "<p>No Description</p>"
   if (!accessToken || !startDateTime || !endDateTime || !color || !title || !channelID || !description) return res.status(400).send("Bad Request! Please pass in an accessToken, startDateTime, endDateTime, color, description, channelID, and title!");
 
   const createdAt = utils.getCurrentDateISO();
