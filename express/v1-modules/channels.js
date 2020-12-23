@@ -310,11 +310,10 @@ router.post('/calendar/event/delete', async (req, res) => {
   const api = "/api/v1/channels/calendar/event/delete";
   if (!accessToken || !eventID || !channelID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, and an eventID!");
 
-  con.query(`DELETE * FROM channels_calendar_events WHERE userID = ? AND id = ? AND channelID = ?`, [userID, eventID, channelID]).then(() => {
+  con.query(`DELETE FROM channels_calendar_events WHERE userID = ? AND id = ? AND channelID = ?`, [userID, eventID, channelID]).then(() => {
     utils.logger.log({
       level: "info",
       message: "Deleted Event",
-      id,
       type: 'calendar',
       userID,
       api,

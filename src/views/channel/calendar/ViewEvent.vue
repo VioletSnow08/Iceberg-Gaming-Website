@@ -41,8 +41,16 @@
             </vs-tr>
         </vs-table>
 
-        <vs-popup :active.sync="isDeletePopupOpen" title="Are you sure you want to delete this?"><p>Deleting this is permanent and non-recoverable.</p><vs-button @click="deleteEvent([$route.params.channelID, $route.params.eventID]); isDeletePopupOpen=false">Delete Event</vs-button></vs-popup>
+        <vs-popup :active.sync="isDeletePopupOpen" title="Are you sure you want to delete this?"><p>Deleting this is permanent and non-recoverable.</p><vs-button @click="deleteEvent([$route.params.channelID, $route.params.eventID]); isDeletePopupOpen=false; $router.push('/channels/' + $route.params.channelID)">Delete Event</vs-button></vs-popup>
       </div>
+      <div v-else>
+        {{ this.$vs.loading.close() }}
+        <vs-alert color="danger">Error: Invalid Permissions!</vs-alert>
+      </div>
+    </div>
+    <div v-else>
+      {{ this.$vs.loading.close() }}
+      <vs-alert color="danger">Error: Channel/Event not found!</vs-alert>
     </div>
   </div>
 </template>
@@ -83,11 +91,8 @@ export default {
   watch: {
     channels: function () {
       if (this.channels) {
-        console.log(1);
         if (this.channel(this.$route.params.channelID)) {
-          console.log(2);
           if (this.channel(this.$route.params.channelID).events) {
-            console.log(3);
             if (this.event(this.$route.params.channelID, this.$route.params.eventID)) {
               this.attendees = this.event(this.$route.params.channelID, this.$route.params.eventID).attendance
             }
