@@ -52,7 +52,7 @@ export default [
       },
       {
         path: '/admin/iceberg/users',
-        name: 'Admin17thUsers',
+        name: 'AdminIcebergUsers',
         component: () => import('@/views/admin/17th/Users.vue'),
         meta: {
           requiresAuth: true,
