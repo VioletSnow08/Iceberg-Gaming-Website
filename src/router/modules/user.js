@@ -99,7 +99,7 @@ export default [{
     },
     {
       path: '/channels/:channelID/documents/:documentID',
-      name: 'ViewEvent',
+      name: 'ViewDocument',
       component: () => import('@/views/channel/documents/ViewDocument.vue'),
       meta: {
         requiresAuth: true,
