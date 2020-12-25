@@ -25,12 +25,13 @@ router.post('/', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/channels";
   if (!accessToken) return res.status(400).send("Bad Request! Please pass in an accessToken!")
-  let iq = {
-    channels: [],
-    events: [],
-    attendance: [],
+  let iq = { // IQ = Initial Queries
+    channels: [], // I mean...
+    events: [], // Ok, really dude?
+    attendance: [], // Attendance for each event
     topics: [], // Basically posts,
-    replies: [] // Basically comments or responses
+    replies: [], // Basically comments or responses,
+    documents: [] // PDFs
   }
   con.query(`SELECT * FROM channels`).then(rows => {
     rows.forEach(row => {
@@ -56,7 +57,14 @@ router.post('/', async (req, res) => {
     rows.forEach(row => {
       iq.replies.push(row);
     })
+    return con.query(`SELECT * FROM channels_documents_pdfs`)
+  }).then(rows => {
+    rows.forEach(row => {
+      iq.documents.push(row);
+    })
+
     let channels = []
+
     iq.channels.forEach(channel => {
       if (channel.type.toLowerCase() === "calendar") {
         let newChannel = {
@@ -99,10 +107,16 @@ router.post('/', async (req, res) => {
           }
         })
         channels.push(newChannel);
-      } else if(channel.type.toLowerCase() === "documents") {
+      } else if (channel.type.toLowerCase() === "documents") {
         let newChannel = {
           ...channel,
+          documents: []
         }
+        iq.documents.forEach(document => {
+          if(channel.id === document.channelID) {
+            newChannel.documents.push(document);
+          }
+        })
         channels.push(newChannel);
       }
     })
@@ -245,7 +259,7 @@ router.post('/calendar/event/create', async (req, res) => {
   const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/calendar/event/create";
-  if(!description) description = "<p>No Description</p>"
+  if (!description) description = "<p>No Description</p>"
   if (!accessToken || !startDateTime || !endDateTime || !color || !title || !channelID || !description) return res.status(400).send("Bad Request! Please pass in an accessToken, startDateTime, endDateTime, color, description, channelID, and title!");
 
   const createdAt = utils.getCurrentDateISO();
@@ -398,9 +412,9 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/channels/calendar/event/set-attendance";
   if (!accessToken || !eventID || !channelID || !status || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken, channelID, userID, status, and an eventID!");
-  if(status !== "Going" && status !== "Maybe" && status !== "Declined") return res.sendStatus(400); // Makes sure that the statuses are correct
+  if (status !== "Going" && status !== "Maybe" && status !== "Declined") return res.sendStatus(400); // Makes sure that the statuses are correct
   con.query(`SELECT * FROM channels_calendar_attendance WHERE userID = ? AND eventID = ? AND channelID = ?`, [userID, eventID, channelID]).then(rows => { // Checks if user has any attendance for this current event already set
-    if(rows) {
+    if (rows) {
       return con.query(`DELETE FROM channels_calendar_attendance WHERE userID = ? AND eventID = ? AND channelID = ?`, [userID, eventID, channelID]) // If so, then remove it
     }
   }).then(() => {
@@ -453,28 +467,28 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
 // Body: accessToken, formData
 // Return: <status_code>
 router.post('/documents/create', async (req, res) => {
-  let {accessToken, name} = req.body;
+  let {accessToken, name, channelID} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/documents/create";
-  if(!name) return res.sendStatus(400);
+  if (!name || !channelID) return res.sendStatus(400);
   if (!req.files) {
-    return res.status(500).send({ msg: "File Not Found!" })
+    return res.status(500).send({msg: "File Not Found!"})
   }
 
   const file = req.files.file;
   con.query(`SELECT * FROM channels_documents_pdfs WHERE filename = ?`, [file.name]).then(rows => {
-    if(rows[0]) {
+    if (rows[0]) {
       res.sendStatus(400);
     } else {
       return file.mv(`${__dirname}/../documents/${file.name}`)
     }
   }).then(() => {
-    if(!res.headersSent) {
-      return con.query(`INSERT INTO channels_documents_pdfs (userID, filename, name) VALUES (?, ?, ?)`, [userID, file.name, name])
+    if (!res.headersSent) {
+      return con.query(`INSERT INTO channels_documents_pdfs (userID, filename, name, channelID) VALUES (?, ?, ?, ?)`, [userID, file.name, name, channelID])
     }
   }).then(() => {
-    if(!res.headersSent) {
+    if (!res.headersSent) {
       res.sendStatus(200);
       utils.logger.log({
         level: "info",
@@ -484,12 +498,13 @@ router.post('/documents/create', async (req, res) => {
         accessToken,
         name,
         filename: file.name,
-        isLoggedIn: true
+        isLoggedIn: true,
+        channelID
       })
     }
   }).catch(error => {
-    if(error) {
-      if(!res.headersSent) res.sendStatus(500);
+    if (error) {
+      if (!res.headersSent) res.sendStatus(500);
       utils.logger.log({
         level: "info",
         message: error.message,
@@ -499,7 +514,8 @@ router.post('/documents/create', async (req, res) => {
         accessToken,
         name,
         filename: file.name,
-        isLoggedIn: true
+        isLoggedIn: true,
+        channelID
       })
     }
   })
