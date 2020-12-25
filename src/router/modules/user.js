@@ -98,7 +98,7 @@ export default [{
       props: true
     },
     {
-      path: '/channels/:channelID/document/:documentID',
+      path: '/channels/:channelID/documents/:documentID',
       name: 'ViewEvent',
       component: () => import('@/views/channel/documents/ViewDocument.vue'),
       meta: {
