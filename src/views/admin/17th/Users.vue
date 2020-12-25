@@ -79,7 +79,7 @@ export default {
     this.gridApi = this.gridOptions.api;
   },
   computed: {
-    ...mapGetters(["users", "isUserOnLOA", "mostRecent17thApplication", "applications"])
+    ...mapGetters(["users", "isUserOnLOA", "mostRecent17thApplication", "applications"]),
   },
   methods: {
     updateSearchQuery(val) {
@@ -95,6 +95,8 @@ export default {
           discord: user.discord,
           points: 'Not Functional... yet ;D',
           loa_status: this.isUserOnLOA(user.id) ? 'On LOA' : 'Off LOA',
+          // Most Recent 17th Application getter would go here. This is what would cause the error because users would have been set and fetched, but not applications.
+          // The fix is to make usersData a function that checks if this.users and this.applications exist. If so, then create and push the user.
           id: user.id,
           photoURL: user.photoURL,
           roles: user.roles
