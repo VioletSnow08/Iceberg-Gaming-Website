@@ -68,9 +68,7 @@ export default {
       },
       columnDefs: [
         {headerName: 'Username', field: 'username', cellRendererFramework: 'CellRendererLink'},
-        {headerName: 'Email', field: 'email'},
         {headerName: 'Discord ID', field: 'discord'},
-        {headerName: 'Events Attended', field: 'events_attended'},
         {headerName: "LOA Status", field: 'loa_status', cellRendererFramework: 'CellRendererLOA'}
       ],
       usersData: null
@@ -80,7 +78,7 @@ export default {
     this.gridApi = this.gridOptions.api;
   },
   computed: {
-    ...mapGetters(["users", "isUserOnLOA", "member", "applications"])
+    ...mapGetters(["users", "isUserOnLOA", "applications"])
   },
   methods: {
     updateSearchQuery(val) {
@@ -94,15 +92,12 @@ export default {
         let newUser = {
           username: user.username,
           discord: user.discord,
-          events_attended: this.mostRecent17thApplication(user.id) ? this.mostRecent17thApplication(user.id).events_attended : 'N/A',
-          points: 'Not Functional',
           loa_status: this.isUserOnLOA(user.id) ? 'On LOA' : 'Off LOA',
-          promo_demo_status: 'Not Functional',
           id: user.id,
           photoURL: user.photoURL,
           roles: user.roles
         }
-        if(user.roles.includes("[17th] Member")) {
+        if(user.roles.includes("[ICE] Member")) {
           users.push(newUser);
         }
       })

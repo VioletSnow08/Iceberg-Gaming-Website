@@ -69,12 +69,6 @@ export default {
       columnDefs: [
         {headerName: 'Username', field: 'username', cellRendererFramework: 'CellRendererLink'},
         {headerName: 'Discord ID', field: 'discord'},
-        {
-          headerName: "Promotion Status",
-          field: 'promo_demo_status',
-          cellRendererFramework: 'CellRendererPromotionDemotion'
-        },
-        {headerName: 'Events Attended', field: 'events_attended'},
         {headerName: 'Points', field: 'points'},
         {headerName: "LOA Status", field: 'loa_status', cellRendererFramework: 'CellRendererLOA'}
       ],
@@ -93,16 +87,14 @@ export default {
     },
   },
   watch: {
-    users: function () {
+    users: function (val) {
       let users = [];
-      this.users.forEach(user => {
+      val.forEach(user => {
         let newUser = {
           username: user.username,
           discord: user.discord,
-          events_attended: this.mostRecent17thApplication(user.id) ? this.mostRecent17thApplication(user.id).events_attended : 'N/A',
-          points: 'Not Functional',
+          points: 'Not Functional... yet ;D',
           loa_status: this.isUserOnLOA(user.id) ? 'On LOA' : 'Off LOA',
-          promo_demo_status: 'Not Functional',
           id: user.id,
           photoURL: user.photoURL,
           roles: user.roles
