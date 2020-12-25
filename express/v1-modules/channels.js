@@ -10,6 +10,7 @@ const CHANNEL_EDIT_ROLES = {
   iceberg: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster'],
   cgs: ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[CGS] Owner']
 }
+const CDN_DIRECTORY = __dirname + '/../documents';
 
 router.use(fileUpload());
 router.use(requiresAuth);
@@ -481,7 +482,7 @@ router.post('/documents/create', async (req, res) => {
     if (rows[0]) {
       res.sendStatus(400);
     } else {
-      return file.mv(`${__dirname}/../documents/${file.name}`)
+      return file.mv(`${CDN_DIRECTORY}/${file.name}`)
     }
   }).then(() => {
     if (!res.headersSent) {
@@ -519,6 +520,27 @@ router.post('/documents/create', async (req, res) => {
       })
     }
   })
+
+})
+
+// POST: /api/v1/channels/document
+// Params: none
+// Body: accessToken, channelID, documentID, filename
+// Return: <status_code>
+router.post('/document', async (req, res) => {
+  let {accessToken, channelID, documentID, filename} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/document";
+  if(!channelID || !documentID || !filename) return res.sendStatus(400);
+
+  const fs = require("fs");
+  const path = require("path");
+  if(fs.existsSync(`${CDN_DIRECTORY}/${filename}`)) {
+    res.sendFile(path.resolve(`${CDN_DIRECTORY}/${filename}`));
+  } else {
+    res.sendStatus(400);
+  }
 
 })
 module.exports = {

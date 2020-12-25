@@ -148,6 +148,21 @@ const actions = {
 
   async uploadDocument({rootGetters}, [formData]) {
     return axios.post(`${utils.base_url}/channels/documents/create`, formData) // Returns a promise only because there is a higher chance of failure with files, so I want error handling to be dealt with within the component.
+  },
+  async fetchDocument({rootGetters}, [channelID, documentID, filename]) {
+    axios.post(`${utils.base_url}/channels/document`, {
+      channelID,
+      documentID,
+      filename,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(response => {
+      return response.data;
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+        return;
+      }
+    })
   }
 }
 
