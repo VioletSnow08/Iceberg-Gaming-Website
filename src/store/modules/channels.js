@@ -24,6 +24,12 @@ const getters = {
   },
   event: (state) => (channelID, eventID) => {
     return state.channels.find(c => c.id == channelID).events.find(e => e.id == eventID);
+  },
+  documents: (state) => (channelID) => {
+    return state.channels.find(c => c.id === channelID).documents;
+  },
+  document: (state) => (channelID, documentID) => {
+    return state.channels.find(c => c.id == channelID).documents.find(d => d.id == documentID);
   }
 }
 
