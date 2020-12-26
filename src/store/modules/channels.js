@@ -179,7 +179,7 @@ const actions = {
     })
   },
   async deleteDocument({rootGetters}, [channelID, documentID, filename]) {
-    axios.post(`${utils.base_url}/channels/documents/edit`, {
+    axios.post(`${utils.base_url}/channels/documents/delete`, {
       accessToken: await rootGetters.currentUser.accessToken,
       channelID,
       documentID,

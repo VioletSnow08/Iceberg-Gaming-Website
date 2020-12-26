@@ -10,11 +10,11 @@
         {{ this.user(this.document(this.$route.params.channelID, this.$route.params.documentID).userID).username }}</p>
       <vs-button
         :disabled="this.document(this.$route.params.channelID, this.$route.params.documentID).userID !== currentUser.id"
-        style="margin-right: 15px;" color="warning" @click="editDocument">Edit Document
+        style="margin-right: 15px;" color="warning" @click="isEditPopupOpen=true">Edit Document
       </vs-button>
       <vs-button
         :disabled="this.document(this.$route.params.channelID, this.$route.params.documentID).userID !== currentUser.id"
-        color="danger" @click="deleteDocument">Delete Document
+        color="danger" @click="deleteDocument([$route.params.channelID, $route.params.documentID, document($route.params.channelID, $route.params.documentID).filename])">Delete Document
       </vs-button>
     </div>
     <br>
@@ -30,6 +30,12 @@
       ></pdf>
     </div>
 
+    <vs-popup :active.sync="isEditPopupOpen" title="Edit Document">
+      <vs-input label="Document Name" v-model="newDocumentName"></vs-input>
+      <br>
+      <vs-button @click="editDocument([$route.params.channelID, $route.params.documentID, document($route.params.channelID, $route.params.documentID).filename, newDocumentName]); isEditPopupOpen=false">Submit</vs-button>
+    </vs-popup>
+
   </div>
 </template>
 
@@ -42,7 +48,7 @@ import utils from "../../../../utils"
 export default {
   name: "ViewDocument",
   methods: {
-    ...mapActions(["fetchDocument"])
+    ...mapActions(["fetchDocument", "deleteDocument", "editDocument"])
   },
   components: {
     pdf
@@ -59,7 +65,9 @@ export default {
   },
   data() {
     return {
-      numPages: null
+      numPages: null,
+      newDocumentName: null,
+      isEditPopupOpen: false
     }
   },
   async created() {

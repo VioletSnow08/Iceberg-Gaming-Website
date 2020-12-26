@@ -15,6 +15,7 @@ const CDN_DIRECTORY = __dirname + '/../documents';
 router.use(fileUpload());
 router.use(requiresAuth);
 
+// ---------- CHANNELS -----------
 
 // POST: /api/v1/channels
 // Params: none
@@ -250,6 +251,7 @@ router.post('/delete', async (req, res) => {
   })
 })
 
+// ---------- EVENTS -----------
 
 // POST: /api/v1/channels/calendar/event/create
 // Params: none
@@ -463,6 +465,8 @@ router.post('/calendar/event/set-attendance', async (req, res) => {
   })
 })
 
+// ---------- DOCUMENTS -----------
+
 // POST: /api/v1/channels/documents/create
 // Params: none
 // Body: accessToken, formData
@@ -541,8 +545,60 @@ router.post('/document', async (req, res) => {
   } else {
     res.sendStatus(400);
   }
-
 })
+
+
+// POST: /api/v1/channels/documents/edit
+// Params: none
+// Body: accessToken, channelID, documentID, filename, name
+// Return: <status_code>
+router.post('/documents/edit', async (req, res) => {
+  let {accessToken, channelID, documentID, filename, name} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/documents/edit";
+  if (!channelID || !documentID || !filename || !name) return res.sendStatus(400);
+
+  con.query(`SELECT * FROM channels_documents_pdfs WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [userID, documentID, channelID, filename]).then(rows => {
+    if(rows) {
+      return con.query(`UPDATE channels_documents_pdfs SET name = ? WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [name, userID, documentID, channelID, filename])
+    } else {
+      res.sendStatus(400);
+    }
+  }).then(() => {
+    if(!res.headersSent) {
+      res.sendStatus(200);
+    }
+    utils.logger.log({
+      level: "info",
+      message: "Edited Document",
+      name,
+      channelID,
+      userID,
+      documentID,
+      filename,
+      api,
+      isLoggedIn: true
+    })
+  }).catch(error => {
+    if(error) {
+      res.sendStatus(400);
+    }
+    utils.logger.log({
+      level: "error",
+      message: error.message,
+      stack: error.stack,
+      name,
+      channelID,
+      userID,
+      documentID,
+      filename,
+      api,
+      isLoggedIn: true
+    })
+  })
+})
+
 module.exports = {
   router
 };
