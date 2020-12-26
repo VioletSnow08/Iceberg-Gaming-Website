@@ -29,10 +29,10 @@ function canUserChangeRole17th(currentRoles, role) {
   if (utils.doesUserContainRoles(currentRoles, ["[17th] Alpha Company HQ"]) && VALID_CHANGE_ROLES.ALPHA_COMPANY_HQ.includes(role)) {
     isValid = true;
   }
-  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Owner"]) && VALID_CHANGE_ROLES.ICE_OWNER.includes(role)) {
+  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Owner", "[ICE] Admin"]) && VALID_CHANGE_ROLES.ICE_OWNER.includes(role)) {
     isValid = true;
   }
-  // if(utils.doesUserContainRoles(currentRoles, ["[ICE] Webmaster"])) isValid = true;
+  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Webmaster"])) isValid = true;
   return isValid
 }
 
@@ -217,7 +217,7 @@ router.post('/17th/remove-user', async (req, res) => {
   if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
   let currentRoles = req.user.roles;
 
-  if (utils.doesUserContainRoles(currentRoles, ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster"])) {
+  if (utils.doesUserContainRoles(currentRoles, ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster", "[ICE] Admin"])) {
     con.query(`DELETE FROM 17th_members WHERE userID = ?`, [userID])
       .then(() => {
         return con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [userID, "[17th] Member"])
@@ -231,6 +231,49 @@ router.post('/17th/remove-user', async (req, res) => {
         accessToken,
         api
       })
+      res.sendStatus(200);
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: req.user.id,
+          removedUser: userID,
+          accessToken,
+          api
+        })
+        res.sendStatus(400);
+      }
+    })
+  } else res.sendStatus(401);
+})
+
+// POST: /api/v1/user-management/iceberg/remove-user
+// Params: none
+// Body: accessToken, userID
+// Return: <status_code>
+router.post('/iceberg/remove-user', async (req, res) => {
+  let {accessToken, userID} = req.body;
+  const con = req.app.get('con');
+  const api = "/api/v1/user-management/17th/change-roles"
+  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
+  let currentRoles = req.user.roles;
+
+  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Admin", "[ICE] Owner", "[ICE] Webmaster"])) {
+    con.query(`DELETE FROM user_roles WHERE userID = ?`, [userID]).then(() => {
+      utils.logger.log({
+        level: "info",
+        message: "Iceberg Member Deleted",
+        isLoggedIn: true,
+        userID: req.user.id,
+        removedUser: userID,
+        accessToken,
+        api
+      })
+      return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [userID, '[ICE] Applicant'])
+    }).then(() => {
       res.sendStatus(200);
     }).catch(error => {
       if (error) {
