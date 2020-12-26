@@ -599,6 +599,54 @@ router.post('/documents/edit', async (req, res) => {
   })
 })
 
+// POST: /api/v1/channels/documents/de;ete
+// Params: none
+// Body: accessToken, channelID, documentID, filename
+// Return: <status_code>
+router.post('/documents/delete', async (req, res) => {
+  let {accessToken, channelID, documentID, filename} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/documents/delete";
+  if (!channelID || !documentID || !filename) return res.sendStatus(400);
+
+  con.query(`SELECT * FROM channels_documents_pdfs WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [userID, documentID, channelID, filename]).then(rows => {
+    if(rows) {
+      return con.query(`DELETE FROM channels_documents_pdfs WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [userID, documentID, channelID, filename])
+    } else {
+      res.sendStatus(400);
+    }
+  }).then(() => {
+    if(!res.headersSent) {
+      res.sendStatus(200);
+    }
+    utils.logger.log({
+      level: "info",
+      message: "Deleted Document",
+      channelID,
+      userID,
+      documentID,
+      filename,
+      api,
+      isLoggedIn: true
+    })
+  }).catch(error => {
+    if(error) {
+      res.sendStatus(400);
+    }
+    utils.logger.log({
+      level: "error",
+      message: error.message,
+      stack: error.stack,
+      channelID,
+      userID,
+      documentID,
+      filename,
+      api,
+      isLoggedIn: true
+    })
+  })
+})
 module.exports = {
   router
 };
