@@ -38,7 +38,7 @@
 
 <script>
 import {mapActions, mapGetters} from "vuex";
-import utils, {doesUserContainRoles} from "../../../../../utils";
+import utils, {doesUserContainRoles} from "../../../../../../utils";
 import axios from "axios";
 
 export default {
