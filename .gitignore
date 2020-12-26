@@ -18,3 +18,5 @@ vuexy-shell-scripts
 src/firebaseConfig.js
 
 credentials.js
+
+express/documents/
