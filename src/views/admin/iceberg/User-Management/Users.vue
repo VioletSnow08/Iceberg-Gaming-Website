@@ -37,10 +37,8 @@
 <script>
 import {AgGridVue} from 'ag-grid-vue'
 import CellRendererLink from './cell-renderer/CellRendererUsername.vue'
-import CellRendererLOA from './cell-renderer/CellRendererLOA.vue'
-import CellRendererPromotionDemotion from './cell-renderer/CellRendererPromotionDemotion.vue'
 import CellRendererVerified from './cell-renderer/CellRendererVerified.vue'
-import CellRendererActions from './cell-renderer/CellRendererActions.vue'
+import CellRendererJoined from './cell-renderer/CellRendererJoined.vue'
 import vSelect from 'vue-select'
 import {mapGetters} from "vuex";
 
@@ -49,10 +47,8 @@ export default {
   components: {
     AgGridVue,
     CellRendererLink,
-    CellRendererLOA,
-    CellRendererActions,
     CellRendererVerified,
-    CellRendererPromotionDemotion,
+    CellRendererJoined,
     vSelect
   },
   data() {
@@ -69,7 +65,7 @@ export default {
       columnDefs: [
         {headerName: 'Username', field: 'username', cellRendererFramework: 'CellRendererLink'},
         {headerName: 'Discord ID', field: 'discord'},
-        {headerName: "LOA Status", field: 'loa_status', cellRendererFramework: 'CellRendererLOA'}
+        {headerName: "Joined On", field: 'createdAt', width: 400}
       ],
       usersData: null
     }
@@ -95,7 +91,8 @@ export default {
           loa_status: this.isUserOnLOA(user.id) ? 'On LOA' : 'Off LOA',
           id: user.id,
           photoURL: user.photoURL,
-          roles: user.roles
+          roles: user.roles,
+          createdAt: new Date(user.createdAt).toLocaleDateString("en-US", { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' })
         }
         if(user.roles.includes("[ICE] Member")) {
           users.push(newUser);
