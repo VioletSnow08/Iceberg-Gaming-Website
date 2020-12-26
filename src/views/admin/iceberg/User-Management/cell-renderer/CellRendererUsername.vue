@@ -8,25 +8,19 @@
 
 
     <vs-popup title="Edit User" :active.sync="isOriginalPopupOpen">
-      <vs-alert :active="alertPopup" color="success">Roles Updated!</vs-alert>
+      <vs-alert :active="alertPopup" color="success">Removed User!</vs-alert>
       <br v-if="alertPopup">
       <p>All Edits are logged for security purposes.</p>
 
-      <div v-if="!displayedRoles" style="color: red; font-weight: bold">Fetching Roles!</div>
-      <br>
-      <div v-for="role in displayedRoles">
-        <vs-checkbox style="padding-bottom: 10px;" :disabled="role.isDisabled" v-model="role.doesUserHaveIt">{{ role.role }}</vs-checkbox>
-      </div>
 
       <div class="vs-row">
-        <vs-button style="margin-right: 5px" @click="alertPopup=true; toggle17thRoles([displayedRoles, params.data.id])">Save Roles</vs-button>
         <vs-button color="warning" @click="isRemoveUserPopupOpen=true">Remove User</vs-button>
       </div>
 
       <vs-popup title="Are you sure you want to remove this user?" :active.sync="isRemoveUserPopupOpen">
         <vs-alert :active="removeUserAlert" color="success">User Removed!</vs-alert>
         <br v-if="removeUserAlert">
-        <vs-button color="danger" @click="removeUserAlert=true; remove17thUser(params.data.id)">Remove User</vs-button>
+        <vs-button color="danger" @click="removeUserAlert=true; removeIcebergUser(params.data.id)">Remove User</vs-button>
       </vs-popup>
 
 
@@ -51,11 +45,8 @@ export default {
     },
     ...mapGetters(["currentUser"]),
   },
-  async mounted() {
-    this.displayedRoles = await this.getEditable17thRoles(this.params.data.id)
-  },
   methods: {
-    ...mapActions(["toggle17thRoles", "remove17thUser", "getEditable17thRoles"]),
+    ...mapActions(["removeIcebergUser"]),
   },
   data() {
     return {
@@ -63,7 +54,6 @@ export default {
       removeUserAlert: false,
       isChangePasswordPopupOpen: false,
       alertPopup: false,
-      displayedRoles: null,
       isRemoveUserPopupOpen: false
     }
   }
