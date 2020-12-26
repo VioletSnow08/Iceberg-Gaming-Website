@@ -192,6 +192,7 @@ router.post('/edit', async (req, res) => {
   con.query(`SELECT * FROM channels WHERE id = ?`, [id]).then(rows => {
     if (rows) {
       let division = rows[0].division;
+      division = division.toLowerCase();
       if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
         con.query(`UPDATE channels SET name = ? WHERE id = ?`, [name, id]).then(() => {
           res.sendStatus(200);
@@ -229,8 +230,9 @@ router.post('/delete', async (req, res) => {
   con.query(`SELECT * FROM channels WHERE id = ?`, [id]).then(rows => {
     if (rows) {
       let division = rows[0].division;
+      division = division.toLowerCase();
       if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
-        con.query(`DELETE FROM  channels WHERE id = ?`, [id]).then(() => {
+        con.query(`DELETE FROM channels WHERE id = ?`, [id]).then(() => {
           res.sendStatus(200);
         }).catch(error => {
           if (error) {
