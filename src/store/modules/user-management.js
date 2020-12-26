@@ -32,6 +32,16 @@ const actions = {
       }
     })
   },
+  async removeIcebergUser({rootGetters}, userID) {
+    axios.post(`${utils.base_url}/user-management/iceberg/remove-user`, {
+      userID,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
+  },
   async getEditable17thRoles({rootGetters}, userID) {
     return axios.post(`${utils.base_url}/user-management/17th/get-roles`, {
       userID,
