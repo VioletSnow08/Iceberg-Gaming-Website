@@ -44,7 +44,7 @@ export default [
       {
         path: '/admin/17th/users',
         name: 'Admin17thUsers',
-        component: () => import('@/views/admin/17th/Users.vue'),
+        component: () => import('@/views/admin/17th/User-Management/Users.vue'),
         meta: {
           requiresAuth: true,
           roles: ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ', "[ICE] Webmaster"]
@@ -53,7 +53,7 @@ export default [
       {
         path: '/admin/iceberg/users',
         name: 'AdminIcebergUsers',
-        component: () => import('@/views/admin/17th/Users.vue'),
+        component: () => import('@/views/admin/iceberg/User-Management/Users.vue'),
         meta: {
           requiresAuth: true,
           roles: ['[ICE] Owner', '[ICE] Recruiter', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ', "[ICE] Webmaster"]
