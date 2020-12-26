@@ -482,6 +482,7 @@ router.post('/documents/create', async (req, res) => {
   }
 
   const file = req.files.file;
+  if(!file.name.toLowerCase().endsWith('.pdf')) return res.sendStatus(400);
   con.query(`SELECT * FROM channels_documents_pdfs WHERE filename = ?`, [file.name]).then(rows => {
     if (rows[0]) {
       res.sendStatus(400);
@@ -599,7 +600,7 @@ router.post('/documents/edit', async (req, res) => {
   })
 })
 
-// POST: /api/v1/channels/documents/de;ete
+// POST: /api/v1/channels/documents/delete
 // Params: none
 // Body: accessToken, channelID, documentID, filename
 // Return: <status_code>
