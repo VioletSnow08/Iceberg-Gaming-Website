@@ -40,7 +40,7 @@ import VueQuillEditor from 'vue-quill-editor'
 import 'quill/dist/quill.core.css' // import styles
 import 'quill/dist/quill.snow.css' // for snow theme
 import 'quill/dist/quill.bubble.css' // for bubble theme
-
+import AsyncComputed from 'vue-async-computed'
 Vue.use(VueQuillEditor, /* { default global options } */)
 Vue.use(Vuesax)
 Vue.use(VueHammer)
@@ -49,7 +49,7 @@ Vue.prototype.$http = axios;
 Vue.config.productionTip = false
 Vue.use(Vuesax)
 Vue.use(VueHammer)
-
+Vue.use(AsyncComputed);
 const token = localStorage.getItem('token')
 if (token) {
   Vue.prototype.$http.defaults.headers.common['Authorization'] = token
