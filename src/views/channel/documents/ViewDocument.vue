@@ -34,13 +34,16 @@
 </template>
 
 <script>
-import {mapGetters} from "vuex";
+import {mapActions, mapGetters} from "vuex";
 import pdf from 'vue-pdf'
 import axios from "axios";
 import utils from "../../../../utils"
 
 export default {
   name: "ViewDocument",
+  methods: {
+    ...mapActions(["fetchDocument"])
+  },
   components: {
     pdf
   },
@@ -50,19 +53,7 @@ export default {
   asyncComputed: {
     src: async function () {
       if (this.channels) {
-        let resp;
-        return pdf.createLoadingTask(await axios.post(`${utils.base_url}/channels/document`, {
-          channelID: this.$route.params.channelID,
-          documentID: this.$route.params.documentID,
-          filename: this.document(this.$route.params.channelID, this.$route.params.documentID).filename,
-          accessToken: await this.currentUser.accessToken
-        }, {
-          responseType: 'arraybuffer',
-          headers: {
-            'Content-Type': 'application/json',
-            'Accept': 'application/pdf'
-          }
-        }))
+        return pdf.createLoadingTask(await this.fetchDocument([this.$route.params.channelID, this.$route.params.documentID, this.document(this.$route.params.channelID, this.$route.params.documentID).filename]))
       }
     }
   },
