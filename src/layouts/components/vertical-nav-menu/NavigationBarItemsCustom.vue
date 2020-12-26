@@ -9,7 +9,12 @@
     <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Member') || currentUser.roles.includes('[ICE] Applicant')" to="/hub" icon="HomeIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">The Hub</span>
     </v-nav-menu-item>
-    <v-nav-menu-item v-if="currentUser.roles.includes('[ICE] Recruiter')" to="/admin/applications"
+    <v-nav-menu-item
+      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster'].includes(role))"
+      to="/admin/iceberg/users" icon="SettingsIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
+    </v-nav-menu-item>
+    <v-nav-menu-item v-if="currentUser.roles.some(role => ['[ICE] Recruiter', '[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster'].includes(role))" to="/admin/applications"
                      icon="FileIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Applications</span>
     </v-nav-menu-item>
@@ -25,7 +30,7 @@
                      icon="AlertTriangleIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Disciplinary Action</span>
     </v-nav-menu-item>
-    <v-nav-menu-item v-if="currentUser.roles.some(role =>['[17th] Alpha Company HQ', '[ICE] Owner', '[ICE] Webmaster'].includes(role))" to="/admin/iceberg/disciplinary-action"
+    <v-nav-menu-item v-if="currentUser.roles.some(role =>['[ICE] Admin', '[ICE] Owner', '[ICE] Webmaster'].includes(role))" to="/admin/iceberg/disciplinary-action"
                      icon="ArchiveIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">View Disciplinary Action Forms</span>
     </v-nav-menu-item>
@@ -48,7 +53,7 @@
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Application</span>
     </v-nav-menu-item>
     <v-nav-menu-item
-      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ', '[ICE] Webmaster'].includes(role))"
+      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[ICE] Admin', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] 1st Platoon HQ', '[17th] 32nd LSG HQ', '[ICE] Webmaster'].includes(role))"
       to="/admin/17th/users" icon="SettingsIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
     </v-nav-menu-item>
