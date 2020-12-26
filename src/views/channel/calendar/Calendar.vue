@@ -7,11 +7,11 @@
     <vs-popup fullscreen :active.sync="createEventPopup" title="Create Event">
       <vs-input v-model="createEventName" label="Event Name"></vs-input>
       <vs-select label="Event Color" v-model="createEventColor">
-        <div v-if="channel($route.params.channelID).division === 'iceberg'">
+        <div v-if="channel($route.params.channelID).division.toLowerCase() === 'iceberg'">
           <vs-select-item value="#3B81BA" text="Dark Blue"></vs-select-item>
           <vs-select-item value="#8DE2FA" text="Light Blue"></vs-select-item>
         </div>
-        <div v-else-if="channel($route.params.channelID).division === '17th'">
+        <div v-else-if="channel($route.params.channelID).division.toLowerCase() === '17th'">
           <vs-select-item value="#72A0C1" text="Gray"></vs-select-item>
           <vs-select-item value="#D40000" text="Red"></vs-select-item>
           <vs-select-item value="#014421" text="Dark Green"></vs-select-item>

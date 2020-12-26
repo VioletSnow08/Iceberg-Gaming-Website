@@ -115,7 +115,7 @@ router.post('/', async (req, res) => {
           documents: []
         }
         iq.documents.forEach(document => {
-          if(channel.id === document.channelID) {
+          if (channel.id === document.channelID) {
             newChannel.documents.push(document);
           }
         })
@@ -226,13 +226,40 @@ router.post('/delete', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/channels/delete";
   if (!accessToken || !id) return res.status(400).send("Bad Request! Please pass in an accessToken and an id!");
-
+  const fs = require("fs");
   con.query(`SELECT * FROM channels WHERE id = ?`, [id]).then(rows => {
     if (rows) {
       let division = rows[0].division;
       division = division.toLowerCase();
       if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
-        con.query(`DELETE FROM channels WHERE id = ?`, [id]).then(() => {
+        con.query(`DELETE FROM channels_calendar_attendance WHERE channelID = ?`, [id]).then(() => {
+          return con.query(`DELETE FROM channels_calendar_events WHERE channelID = ?`, [id])
+        }).then(() => {
+          return con.query(`SELECT * FROM channels_documents_pdfs WHERE channelID = ?`, [id])
+        }).then(rows => {
+          if (rows) {
+            rows.forEach(async row => {
+              await fs.unlinkSync(`${CDN_DIRECTORY}/${row.filename}`); // Removes the physical file from the directory
+            })
+          }
+          return con.query(`DELETE FROM channels_documents_pdfs WHERE channelID = ?`, [id])
+        }).then(() => {
+          return con.query(`DELETE FROM channels_forums_replies WHERE channelID = ?`, [id])
+        }).then(() => {
+          return con.query(`DELETE FROM channels_forums_topics WHERE channelID = ?`, [id])
+        }).then(() => {
+          return con.query(`DELETE FROM channels WHERE id = ?`, [id])
+        }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Deleted Channel",
+            isLoggedIn: true,
+            userID,
+            api,
+            id,
+            accessToken,
+            division: rows[0].division
+          })
           res.sendStatus(200);
         }).catch(error => {
           if (error) {
@@ -244,7 +271,7 @@ router.post('/delete', async (req, res) => {
               isLoggedIn: true,
               userID,
               api,
-              name
+              id
             })
           }
         })
@@ -484,7 +511,7 @@ router.post('/documents/create', async (req, res) => {
   }
 
   const file = req.files.file;
-  if(!file.name.toLowerCase().endsWith('.pdf')) return res.sendStatus(400);
+  if (!file.name.toLowerCase().endsWith('.pdf')) return res.sendStatus(400);
   con.query(`SELECT * FROM channels_documents_pdfs WHERE filename = ?`, [file.name]).then(rows => {
     if (rows[0]) {
       res.sendStatus(400);
@@ -539,11 +566,11 @@ router.post('/document', async (req, res) => {
   const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/document";
-  if(!channelID || !documentID || !filename) return res.sendStatus(400);
+  if (!channelID || !documentID || !filename) return res.sendStatus(400);
 
   const fs = require("fs");
   const path = require("path");
-  if(fs.existsSync(`${CDN_DIRECTORY}/${filename}`)) {
+  if (fs.existsSync(`${CDN_DIRECTORY}/${filename}`)) {
     res.sendFile(path.resolve(`${CDN_DIRECTORY}/${filename}`));
   } else {
     res.sendStatus(400);
@@ -563,13 +590,13 @@ router.post('/documents/edit', async (req, res) => {
   if (!channelID || !documentID || !filename || !name) return res.sendStatus(400);
 
   con.query(`SELECT * FROM channels_documents_pdfs WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [userID, documentID, channelID, filename]).then(rows => {
-    if(rows) {
+    if (rows) {
       return con.query(`UPDATE channels_documents_pdfs SET name = ? WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [name, userID, documentID, channelID, filename])
     } else {
       res.sendStatus(400);
     }
   }).then(() => {
-    if(!res.headersSent) {
+    if (!res.headersSent) {
       res.sendStatus(200);
     }
     utils.logger.log({
@@ -584,7 +611,7 @@ router.post('/documents/edit', async (req, res) => {
       isLoggedIn: true
     })
   }).catch(error => {
-    if(error) {
+    if (error) {
       res.sendStatus(400);
     }
     utils.logger.log({
@@ -614,13 +641,13 @@ router.post('/documents/delete', async (req, res) => {
   if (!channelID || !documentID || !filename) return res.sendStatus(400);
 
   con.query(`SELECT * FROM channels_documents_pdfs WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [userID, documentID, channelID, filename]).then(rows => {
-    if(rows) {
+    if (rows) {
       return con.query(`DELETE FROM channels_documents_pdfs WHERE userID = ? AND id = ? AND channelID = ? AND filename = ?`, [userID, documentID, channelID, filename])
     } else {
       res.sendStatus(400);
     }
   }).then(() => {
-    if(!res.headersSent) {
+    if (!res.headersSent) {
       res.sendStatus(200);
     }
     utils.logger.log({
@@ -634,7 +661,7 @@ router.post('/documents/delete', async (req, res) => {
       isLoggedIn: true
     })
   }).catch(error => {
-    if(error) {
+    if (error) {
       res.sendStatus(400);
     }
     utils.logger.log({
