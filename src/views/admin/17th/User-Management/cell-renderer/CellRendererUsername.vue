@@ -19,7 +19,7 @@
       </div>
 
       <div class="vs-row">
-        <vs-button style="margin-right: 5px" @click="alertPopup=true; toggle17thRoles([displayedRoles, params.data.id])">Save Roles</vs-button>
+        <vs-button style="margin-right: 5px" @click="alertPopup=true; toggleRoles([displayedRoles, params.data.id])">Save Roles</vs-button>
         <vs-button color="warning" @click="isRemoveUserPopupOpen=true">Remove User</vs-button>
       </div>
 
@@ -55,7 +55,7 @@ export default {
     this.displayedRoles = await this.getEditableRoles([this.params.data.id, "17th"])
   },
   methods: {
-    ...mapActions(["toggle17thRoles", "remove17thUser", "getEditableRoles"]),
+    ...mapActions(["toggleRoles", "remove17thUser", "getEditableRoles"]),
   },
   data() {
     return {

@@ -106,7 +106,7 @@ router.post('/get-editable-roles', async (req, res) => {
   })
 })
 
-// POST: /api/v1/user-management/17th/change-roles
+// POST: /api/v1/user-management/change-roles
 // Params: none
 // Body: accessToken, role, newRoleStatus, id, userID
 // Return: <status_code>

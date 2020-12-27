@@ -13,8 +13,8 @@ const getters = {
 
 }
 const actions = {
-  async toggle17thRoles({commit, rootGetters}, [roles, userID]) {
-    axios.post(`${utils.base_url}/user-management/17th/change-roles`, {
+  async toggleRoles({commit, rootGetters}, [roles, userID]) {
+    axios.post(`${utils.base_url}/user-management/change-roles`, {
       roles,
       userID,
       accessToken: await rootGetters.currentUser.accessToken
