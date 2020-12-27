@@ -56,7 +56,7 @@ const WHO_CAN_REMOVE_ICEBERG_USERS = ["[ICE] Owner", "[ICE] Admin", "[ICE] Webma
 const WHO_CAN_REMOVE_17th_USERS = ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster", "[ICE] Admin"]; // Roles that can remove a 17th User
 
 
-// POST: /api/v1/user-management/17th/get-roles
+// POST: /api/v1/user-management/get-editable-roles
 // Params: none
 // Body: accessToken, userID, division
 // Return: roles
