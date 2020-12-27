@@ -52,10 +52,10 @@ export default {
     ...mapGetters(["currentUser"]),
   },
   async mounted() {
-    this.displayedRoles = await this.getEditable17thRoles(this.params.data.id)
+    this.displayedRoles = await this.getEditableRoles([this.params.data.id, "17th"])
   },
   methods: {
-    ...mapActions(["toggle17thRoles", "remove17thUser", "getEditable17thRoles"]),
+    ...mapActions(["toggle17thRoles", "remove17thUser", "getEditableRoles"]),
   },
   data() {
     return {
