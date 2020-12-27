@@ -13,6 +13,9 @@
         <vs-button @click="createChannelPopup=true">Create Channel</vs-button>
       </div>
       <h3 style="text-decoration: underline">Channels you can manage</h3>
+
+
+
       <vs-list v-if="currentUser.roles.some(r => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster'].includes(r))">
         <vs-list-header color="teal" title="Iceberg Gaming"></vs-list-header>
         <div v-for="channel in channels">
@@ -22,6 +25,8 @@
           </vs-list-item>
         </div>
       </vs-list>
+
+
 
       <vs-list
         v-if="currentUser.roles.some(r => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[17th] Alpha Company HQ', '[17th] Officer'].includes(r))">
@@ -34,6 +39,8 @@
           </vs-list-item>
         </div>
       </vs-list>
+
+
 
       <vs-list
         v-if="currentUser.roles.some(r => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[CGS] Owner'].includes(r))">
