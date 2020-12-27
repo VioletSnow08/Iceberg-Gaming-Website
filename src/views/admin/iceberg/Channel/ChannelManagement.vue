@@ -125,7 +125,7 @@ export default {
       newChannelType: 'Calendar',
       newChannelTypes: ['Calendar', 'Forum', 'Documents'],
       newChannelDivision: 'Iceberg',
-      newChannelDivisions: ['Iceberg', '17th']
+      newChannelDivisions: ['Iceberg', '17th', 'CGS']
     }
   }
 }
