@@ -12,56 +12,85 @@ const {DateTime} = require("luxon");
 
 router.use(requiresAuth);
 const VALID_CHANGE_ROLES = { // Combined with canUserChangeRole17th, this is a "table" of what roles can
-  NCO: ["[17th] Ranger", "[17th] 32nd LSG"],
-  OFFICER: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO"],
-  ALPHA_COMPANY_HQ: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer"],
-  ICE_OWNER: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"]
+  BCT_NCO: ["[17th] Ranger", "[17th] 32nd LSG"],
+  BCT_OFFICER: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO"],
+  BCT_ALPHA_COMPANY_HQ: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer"],
+  BCT_ICE_OWNER: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"],
+  CGS_OFFICER: ["[CGS] Member"],
+  CGS_OWNER: ["[CGS] Owner"]
 }
 
 function canUserChangeRole17th(currentRoles, role) {
   let isValid = false;
-  if (utils.doesUserContainRoles(currentRoles, ["[17th] NCO"]) && VALID_CHANGE_ROLES.NCO.includes(role)) {
+  if (utils.doesUserContainRoles(currentRoles, ["[17th] NCO"]) && VALID_CHANGE_ROLES.BCT_NCO.includes(role)) {
     isValid = true;
   }
-  if (utils.doesUserContainRoles(currentRoles, ["[17th] 1st Platoon HQ", "[17th] 32nd LSG HQ"]) && VALID_CHANGE_ROLES.OFFICER.includes(role)) {
+  if (utils.doesUserContainRoles(currentRoles, ["[17th] 1st Platoon HQ", "[17th] 32nd LSG HQ"]) && VALID_CHANGE_ROLES.BCT_OFFICER.includes(role)) {
     isValid = true;
   }
-  if (utils.doesUserContainRoles(currentRoles, ["[17th] Alpha Company HQ"]) && VALID_CHANGE_ROLES.ALPHA_COMPANY_HQ.includes(role)) {
+  if (utils.doesUserContainRoles(currentRoles, ["[17th] Alpha Company HQ"]) && VALID_CHANGE_ROLES.BCT_ALPHA_COMPANY_HQ.includes(role)) {
     isValid = true;
   }
-  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Owner", "[ICE] Admin"]) && VALID_CHANGE_ROLES.ICE_OWNER.includes(role)) {
+  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Owner", "[ICE] Admin"]) && VALID_CHANGE_ROLES.BCT_ICE_OWNER.includes(role)) {
     isValid = true;
   }
   if (utils.doesUserContainRoles(currentRoles, ["[ICE] Webmaster"])) isValid = true;
   return isValid
 }
 
-const displayed17thRoles = ["[17th] Member", "[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"];
+function canUserChangeRoleCGS(currentRoles, role) {
+  let isValid = false;
+  if (utils.doesUserContainRoles(currentRoles, ["[CGS] Officer"]) && VALID_CHANGE_ROLES.CGS_OFFICER.includes(role)) {
+    isValid = true;
+  }
+  if (utils.doesUserContainRoles(currentRoles, ["[CGS] Owner"]) && VALID_CHANGE_ROLES.CGS_OWNER.includes(role)) {
+    isValid = true;
+  }
+  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Webmaster"])) isValid = true;
+  return isValid
+}
+
+const displayed17thRoles = ["[17th] Member", "[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"]; // Roles that are displayed to the admin when editing a user's roles
+const displayedCGSRoles = ["[CGS] Owner", "[CGS Officer]", "[CGS] Member"]; // Roles that are displayed to the admin when editing a user's roles
+const WHO_CAN_REMOVE_ICEBERG_USERS = ["[ICE] Owner", "[ICE] Admin", "[ICE] Webmaster"]; // Roles that can remove an iceberg user
+const WHO_CAN_REMOVE_17th_USERS = ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster", "[ICE] Admin"]; // Roles that can remove a 17th User
 
 
 // POST: /api/v1/user-management/17th/get-roles
 // Params: none
-// Body: accessToken, userID
+// Body: accessToken, userID, division
 // Return: roles
-router.post('/17th/get-roles', async (req, res) => {
-  let {accessToken, userID} = req.body;
+router.post('/get-editable-roles', async (req, res) => {
+  let {accessToken, userID, division} = req.body;
   const con = req.app.get('con');
   const api = "/api/v1/user-management/17th/change-roles"
-  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
-  let currentRoles = req.user.roles;
+  if (!accessToken || !userID || !division) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
+  if(division.toLowerCase() !== "17th" && division.toLowerCase() !== "cgs") return res.sendStatus(400);
+  const currentRoles = req.user.roles;
   let returnedRoles = [];
   con.query(`SELECT * FROM user_roles WHERE userID = ?`, [userID]).then(rows => {
     let roles = [];
     rows.forEach(row => {
       roles.push(row.role);
     })
-    displayed17thRoles.forEach(role => {
-      returnedRoles.push({
-        role,
-        doesUserHaveIt: utils.doesUserContainRoles(roles, role),
-        isDisabled: !canUserChangeRole17th(currentRoles, role)
+    if(division.toLowerCase() === "17th") {
+      displayed17thRoles.forEach(role => {
+        returnedRoles.push({
+          role,
+          doesUserHaveIt: utils.doesUserContainRoles(roles, role),
+          isDisabled: !canUserChangeRole17th(currentRoles, role)
+        })
       })
-    })
+    } else if(division.toLowerCase() === "cgs") {
+      displayedCGSRoles.forEach(role => {
+        returnedRoles.push({
+          role,
+          doesUserHaveIt: utils.doesUserContainRoles(roles, role),
+          isDisabled: !canUserChangeRole17th(currentRoles, role)
+        })
+      })
+    }
+
     utils.logger.log({
       level: "info",
       message: "User's Roles Fetched",
@@ -217,7 +246,7 @@ router.post('/17th/remove-user', async (req, res) => {
   if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
   let currentRoles = req.user.roles;
 
-  if (utils.doesUserContainRoles(currentRoles, ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster", "[ICE] Admin"])) {
+  if (utils.doesUserContainRoles(currentRoles, WHO_CAN_REMOVE_17th_USERS)) {
     con.query(`DELETE FROM 17th_members WHERE userID = ?`, [userID])
       .then(() => {
         return con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [userID, "[17th] Member"])
@@ -255,13 +284,13 @@ router.post('/17th/remove-user', async (req, res) => {
 // Body: accessToken, userID
 // Return: <status_code>
 router.post('/iceberg/remove-user', async (req, res) => {
-  let {accessToken, userID} = req.body;
+  const {accessToken, userID} = req.body;
   const con = req.app.get('con');
   const api = "/api/v1/user-management/17th/change-roles"
-  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
-  let currentRoles = req.user.roles;
 
-  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Admin", "[ICE] Owner", "[ICE] Webmaster"])) {
+  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
+  const currentRoles = req.user.roles;
+  if (utils.doesUserContainRoles(currentRoles, WHO_CAN_REMOVE_ICEBERG_USERS)) {
     con.query(`DELETE FROM user_roles WHERE userID = ?`, [userID]).then(() => {
       utils.logger.log({
         level: "info",
