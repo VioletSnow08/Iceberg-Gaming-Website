@@ -63,7 +63,7 @@ const WHO_CAN_REMOVE_17th_USERS = ["[17th] Officer", "[17th] Alpha Company HQ", 
 router.post('/get-editable-roles', async (req, res) => {
   let {accessToken, userID, division} = req.body;
   const con = req.app.get('con');
-  const api = "/api/v1/user-management/17th/change-roles"
+  const api = "/api/v1/user-management/get-editable-roles"
   if (!accessToken || !userID || !division) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
   if(division.toLowerCase() !== "17th" && division.toLowerCase() !== "cgs") return res.sendStatus(400);
   const currentRoles = req.user.roles;
@@ -110,10 +110,10 @@ router.post('/get-editable-roles', async (req, res) => {
 // Params: none
 // Body: accessToken, role, newRoleStatus, id, userID
 // Return: <status_code>
-router.post('/17th/change-roles', async (req, res) => {
+router.post('/change-roles', async (req, res) => {
   let {accessToken, roles, userID} = req.body;
   const con = req.app.get('con');
-  const api = "/api/v1/user-management/17th/change-roles"
+  const api = "/api/v1/user-management/change-roles"
   if (!accessToken || !roles || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken, roles, and a userID.");
   let currentRoles = req.user.roles;
   let wasReturned = false;
@@ -123,7 +123,7 @@ router.post('/17th/change-roles', async (req, res) => {
       rolesTheUserHas.push(row.role);
     })
     roles.forEach(role => {
-      if (canUserChangeRole17th(currentRoles, role.role)) {
+      if (canUserChangeRole17th(currentRoles, role.role) || canUserChangeRoleCGS(currentRoles, role.role)) {
         if (role.doesUserHaveIt) { // Meaning they either have it or want it
           if (!utils.doesUserContainRoles(rolesTheUserHas, [role.role])) {
             con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [userID, role.role]).then(() => {
