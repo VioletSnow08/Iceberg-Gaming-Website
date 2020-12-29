@@ -88,6 +88,12 @@
       <span v-show="!verticalNavMenuItemsMin" class="truncate">{{ channel.name }}</span>
     </v-nav-menu-item>
 
+    <v-nav-menu-item
+      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[CGS] Owner', '[CGS] Officer'].includes(role))"
+      to="/admin/cgs/users" icon="SettingsIcon">
+      <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
+    </v-nav-menu-item>
+
 
     <span v-if="!verticalNavMenuItemsMin && currentUser.roles.includes('[ICE] Webmaster')"
           class="navigation-header truncate">Developers</span>
