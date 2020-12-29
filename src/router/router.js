@@ -45,6 +45,7 @@ router.beforeEach(async (to, from, next) => {
   await store.dispatch('fetchCurrentUser');
   await store.dispatch('fetchLOAs');
   const currentUser = store.getters.currentUser;
+  const NAVIGATIONAL_OVERRIDES = ["[ICE] Owner", "[ICE] Admin", "[ICE] Webmaster"];
   if (to.matched.some(record => record.meta.requiresAuth)) { // If the page requires authentication
     if (!currentUser) { // If the user is not signed in
       await logView(to.path, from.path, "notice", utils.commonMessages.restrictedPage)
@@ -55,16 +56,7 @@ router.beforeEach(async (to, from, next) => {
         }
       })
     } else { // If they are logged in
-      if (to.meta.roles.includes("CHANNEL_VAR")) { // If the route is for channels
-        // await firebase.firestore().collection("channels").get().then(async channels => {
-        //   await channels.forEach(channel => {
-        //     if(channel.id === to.params.channelID) {
-        //       checkAndRedirect(to, from, next, channel.data().requiredRoles);
-        //     }
-        //   })
-        // })
-        // TODO: Get Channels
-      } else if (utils.doesUserContainRoles(currentUser.roles, to.meta.roles)) { // Since the route is not for channels, check if they have valid roles
+      if (utils.doesUserContainRoles(currentUser.roles, to.meta.roles) || utils.doesUserContainRoles(currentUser.roles, NAVIGATIONAL_OVERRIDES)) { // Since the route is not for channels, check if they have valid roles (or if they have the OVERRIDABLE ROLES)
         await logView(to.path, from.path, "info", utils.commonMessages.accessPage, null, currentUser.id);
         next();
       } else {
@@ -77,15 +69,15 @@ router.beforeEach(async (to, from, next) => {
         })
       }
     }
-  } else if(to.matched.some(record => record.meta.requiresGuest)) { // If the page requires guest
-    if(currentUser) {
+  } else if (to.matched.some(record => record.meta.requiresGuest)) { // If the page requires guest
+    if (currentUser) {
       await logView(to.path, from.path, "notice", utils.commonMessages.restrictedPage, null, currentUser.id)
     } else {
       await logView(to.path, from.path, "info", utils.commonMessages.accessPage);
       next();
     }
   } else { // If the page is open to anybody
-    await logView(to.path, from.path, "info", utils.commonMessages.accessPage, null,currentUser ? currentUser.id : null);
+    await logView(to.path, from.path, "info", utils.commonMessages.accessPage, null, currentUser ? currentUser.id : null);
     next();
   }
 })
