@@ -25,7 +25,8 @@ const actions = {
   async remove17thUser({rootGetters}, userID) {
     axios.post(`${utils.base_url}/user-management/17th/remove-user`, {
       userID,
-      accessToken: await rootGetters.currentUser.accessToken
+      accessToken: await rootGetters.currentUser.accessToken,
+      division: "17th"
     }).catch(error => {
       if(error) {
         utils.alertGeneral();
@@ -33,9 +34,10 @@ const actions = {
     })
   },
   async removeIcebergUser({rootGetters}, userID) {
-    axios.post(`${utils.base_url}/user-management/iceberg/remove-user`, {
+    axios.post(`${utils.base_url}/user-management/remove-user`, {
       userID,
-      accessToken: await rootGetters.currentUser.accessToken
+      accessToken: await rootGetters.currentUser.accessToken,
+      division: "Iceberg"
     }).catch(error => {
       if(error) {
         utils.alertGeneral();

@@ -50,8 +50,8 @@ function canUserChangeRoleCGS(currentRoles, role) {
   return isValid
 }
 
-const displayed17thRoles = ["[17th] Member", "[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"]; // Roles that are displayed to the admin when editing a user's roles
-const displayedCGSRoles = ["[CGS] Owner", "[CGS Officer]", "[CGS] Member"]; // Roles that are displayed to the admin when editing a user's roles
+const displayed17thRoles = ["[17th] Member", "[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"]; // Roles that are displayed to the admin when editing a user's roles(in order)
+const displayedCGSRoles = ["[CGS] Member", "[CGS] Officer", "[CGS] Owner"]; // Roles that are displayed to the admin when editing a user's roles(in order)
 const WHO_CAN_REMOVE_ICEBERG_USERS = ["[ICE] Owner", "[ICE] Admin", "[ICE] Webmaster"]; // Roles that can remove an iceberg user
 const WHO_CAN_REMOVE_17th_USERS = ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster", "[ICE] Admin"]; // Roles that can remove a 17th User
 
@@ -65,7 +65,7 @@ router.post('/get-editable-roles', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/user-management/get-editable-roles"
   if (!accessToken || !userID || !division) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
-  if(division.toLowerCase() !== "17th" && division.toLowerCase() !== "cgs") return res.sendStatus(400);
+  if (division.toLowerCase() !== "17th" && division.toLowerCase() !== "cgs") return res.sendStatus(400);
   const currentRoles = req.user.roles;
   let returnedRoles = [];
   con.query(`SELECT * FROM user_roles WHERE userID = ?`, [userID]).then(rows => {
@@ -73,7 +73,7 @@ router.post('/get-editable-roles', async (req, res) => {
     rows.forEach(row => {
       roles.push(row.role);
     })
-    if(division.toLowerCase() === "17th") {
+    if (division.toLowerCase() === "17th") {
       displayed17thRoles.forEach(role => {
         returnedRoles.push({
           role,
@@ -81,7 +81,7 @@ router.post('/get-editable-roles', async (req, res) => {
           isDisabled: !canUserChangeRole17th(currentRoles, role)
         })
       })
-    } else if(division.toLowerCase() === "cgs") {
+    } else if (division.toLowerCase() === "cgs") {
       displayedCGSRoles.forEach(role => {
         returnedRoles.push({
           role,
@@ -116,20 +116,18 @@ router.post('/change-roles', async (req, res) => {
   const api = "/api/v1/user-management/change-roles"
   if (!accessToken || !roles || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken, roles, and a userID.");
   let currentRoles = req.user.roles;
-  let wasReturned = false;
   con.query(`SELECT * FROM user_roles WHERE userID = ?`, [userID]).then(rows => {
     let rolesTheUserHas = [];
     rows.forEach(row => {
       rolesTheUserHas.push(row.role);
     })
     roles.forEach(role => {
-      if (canUserChangeRole17th(currentRoles, role.role) || canUserChangeRoleCGS(currentRoles, role.role)) {
+      if (canUserChangeRole17th(currentRoles, role.role) || canUserChangeRoleCGS(currentRoles, role.role)) { // Instead of me checking for a division, it checks for the role, which is defined in the beginning of the file.
         if (role.doesUserHaveIt) { // Meaning they either have it or want it
-          if (!utils.doesUserContainRoles(rolesTheUserHas, [role.role])) {
+          if (!utils.doesUserContainRoles(rolesTheUserHas, [role.role])) { // If they don't *have* the role, then give it to them...
             con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [userID, role.role]).then(() => {
-              if (!wasReturned) {
+              if (!res.headersSent) {
                 res.sendStatus(200);
-                wasReturned = true;
               }
               utils.logger.log({
                 level: "info",
@@ -143,9 +141,8 @@ router.post('/change-roles', async (req, res) => {
               })
             }).catch(error => {
               if (error) {
-                if (!wasReturned) {
+                if (!res.headersSent) {
                   res.sendStatus(500);
-                  wasReturned = true;
                 }
                 utils.logger.log({
                   level: "error",
@@ -161,11 +158,10 @@ router.post('/change-roles', async (req, res) => {
               }
             })
           }
-        } else if (!role.doesUserHaveIt) {
+        } else if (!role.doesUserHaveIt) { // Otherwise if they don't have it or want it delete the role...
           con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [userID, role.role]).then(() => {
-            if (!wasReturned) {
+            if (!res.headersSent) {
               res.sendStatus(200);
-              wasReturned = true;
             }
             utils.logger.log({
               level: "info",
@@ -179,9 +175,8 @@ router.post('/change-roles', async (req, res) => {
             })
           }).catch(error => {
             if (error) {
-              if (!wasReturned) {
+              if (!res.headersSent) {
                 res.sendStatus(500);
-                wasReturned = true;
               }
               utils.logger.log({
                 level: "error",
@@ -198,9 +193,8 @@ router.post('/change-roles', async (req, res) => {
           })
         }
       } else {
-        if (!wasReturned) {
+        if (!res.headersSent) {
           res.sendStatus(200);
-          wasReturned = true;
         }
         utils.logger.log({
           level: "notice",
@@ -213,13 +207,11 @@ router.post('/change-roles', async (req, res) => {
           accessToken
         })
       }
-
     })
   }).catch(error => {
     if (error) {
-      if (!wasReturned) {
+      if (!res.headersSent) {
         res.sendStatus(500);
-        wasReturned = true;
       }
       utils.logger.log({
         level: "error",
@@ -235,91 +227,80 @@ router.post('/change-roles', async (req, res) => {
   })
 })
 
-// POST: /api/v1/user-management/17th/remove-user
+// POST: /api/v1/user-management/remove-user
 // Params: none
-// Body: accessToken, userID
+// Body: accessToken, userID, division
 // Return: <status_code>
-router.post('/17th/remove-user', async (req, res) => {
-  let {accessToken, userID} = req.body;
+router.post('/remove-user', async (req, res) => {
+  let {accessToken, userID, division} = req.body;
   const con = req.app.get('con');
-  const api = "/api/v1/user-management/17th/change-roles"
-  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
+  const api = "/api/v1/user-management/change-roles"
+  if (!accessToken || !userID || !division) return res.status(400).send("Bad Request! Please pass in an accessToken, userID, and a division!");
   let currentRoles = req.user.roles;
-
-  if (utils.doesUserContainRoles(currentRoles, WHO_CAN_REMOVE_17th_USERS)) {
-    con.query(`DELETE FROM 17th_members WHERE userID = ?`, [userID])
-      .then(() => {
-        return con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [userID, "[17th] Member"])
+  if (division.toLowerCase() === "17th") {
+    if (utils.doesUserContainRoles(currentRoles, WHO_CAN_REMOVE_17th_USERS)) {
+      con.query(`DELETE FROM 17th_members WHERE userID = ?`, [userID])
+        .then(() => {
+          return con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [userID, "[17th] Member"])
+        }).then(() => {
+        utils.logger.log({
+          level: "info",
+          message: "17th Member Deleted",
+          isLoggedIn: true,
+          userID: req.user.id,
+          removedUser: userID,
+          accessToken,
+          api
+        })
+        res.sendStatus(200);
+      }).catch(error => {
+        if (error) {
+          utils.logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            userID: req.user.id,
+            removedUser: userID,
+            accessToken,
+            api
+          })
+          res.sendStatus(400);
+        }
+      })
+    } else res.sendStatus(401);
+  } else if (division.toLowerCase() === "iceberg") {
+    if (utils.doesUserContainRoles(currentRoles, WHO_CAN_REMOVE_ICEBERG_USERS)) {
+      con.query(`DELETE FROM user_roles WHERE userID = ?`, [userID]).then(() => {
+        utils.logger.log({
+          level: "info",
+          message: "Iceberg Member Deleted",
+          isLoggedIn: true,
+          userID: req.user.id,
+          removedUser: userID,
+          accessToken,
+          api
+        })
+        return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [userID, '[ICE] Applicant'])
       }).then(() => {
-      utils.logger.log({
-        level: "info",
-        message: "17th Member Deleted",
-        isLoggedIn: true,
-        userID: req.user.id,
-        removedUser: userID,
-        accessToken,
-        api
+        res.sendStatus(200);
+      }).catch(error => {
+        if (error) {
+          utils.logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            userID: req.user.id,
+            removedUser: userID,
+            accessToken,
+            api
+          })
+          res.sendStatus(400);
+        }
       })
-      res.sendStatus(200);
-    }).catch(error => {
-      if (error) {
-        utils.logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          isLoggedIn: true,
-          userID: req.user.id,
-          removedUser: userID,
-          accessToken,
-          api
-        })
-        res.sendStatus(400);
-      }
-    })
-  } else res.sendStatus(401);
-})
-
-// POST: /api/v1/user-management/iceberg/remove-user
-// Params: none
-// Body: accessToken, userID
-// Return: <status_code>
-router.post('/iceberg/remove-user', async (req, res) => {
-  const {accessToken, userID} = req.body;
-  const con = req.app.get('con');
-  const api = "/api/v1/user-management/17th/change-roles"
-
-  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
-  const currentRoles = req.user.roles;
-  if (utils.doesUserContainRoles(currentRoles, WHO_CAN_REMOVE_ICEBERG_USERS)) {
-    con.query(`DELETE FROM user_roles WHERE userID = ?`, [userID]).then(() => {
-      utils.logger.log({
-        level: "info",
-        message: "Iceberg Member Deleted",
-        isLoggedIn: true,
-        userID: req.user.id,
-        removedUser: userID,
-        accessToken,
-        api
-      })
-      return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [userID, '[ICE] Applicant'])
-    }).then(() => {
-      res.sendStatus(200);
-    }).catch(error => {
-      if (error) {
-        utils.logger.log({
-          level: "error",
-          message: error.message,
-          stack: error.stack,
-          isLoggedIn: true,
-          userID: req.user.id,
-          removedUser: userID,
-          accessToken,
-          api
-        })
-        res.sendStatus(400);
-      }
-    })
-  } else res.sendStatus(401);
+    } else res.sendStatus(401);
+  }
 })
 
 module.exports = {

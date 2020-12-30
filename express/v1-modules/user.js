@@ -138,7 +138,7 @@ router.post('/login', async (req, res) => {
   })
 })
 
-// POST: Current User / Fetch Current User
+// POST: /api/v1/user/
 // Params: none
 // Body: refreshToken
 // Return: user
@@ -165,7 +165,7 @@ router.post('/', async (req, res, next) => {
             userID,
             isLoggedIn: true
           })
-        }
+        } else res.sendStatus(400);
       })
     } else {
       res.sendStatus(401);
