@@ -17,7 +17,6 @@ router.post('/', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/settings/applications"
   if (!accessToken) return res.status(400).send("Bad Request! Please pass in an accessToken.");
-  if(!utils.doesUserContainRoles(req.user.roles, ['[ICE] Recruiter', '[ICE] Owner', '[ICE] Webmaster'])) return res.sendStatus(401);
   let initialQueries = {
     applications: [],
     bctApplications: [],
