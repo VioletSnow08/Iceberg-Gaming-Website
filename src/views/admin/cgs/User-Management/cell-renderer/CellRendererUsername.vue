@@ -26,7 +26,7 @@
       <vs-popup title="Are you sure you want to remove this user?" :active.sync="isRemoveUserPopupOpen">
         <vs-alert :active="removeUserAlert" color="success">User Removed!</vs-alert>
         <br v-if="removeUserAlert">
-        <vs-button color="danger" @click="removeUserAlert=true; remove17thUser(params.data.id)">Remove User</vs-button>
+        <vs-button color="danger" @click="removeUserAlert=true; removeCGSUser(params.data.id)">Remove User</vs-button>
       </vs-popup>
 
 
@@ -52,10 +52,10 @@ export default {
     ...mapGetters(["currentUser"]),
   },
   async mounted() {
-    this.displayedRoles = await this.getEditableRoles([this.params.data.id, "17th"])
+    this.displayedRoles = await this.getEditableRoles([this.params.data.id, "cgs"])
   },
   methods: {
-    ...mapActions(["toggleRoles", "remove17thUser", "getEditableRoles"]),
+    ...mapActions(["toggleRoles", "removeCGSUser", "getEditableRoles"]),
   },
   data() {
     return {

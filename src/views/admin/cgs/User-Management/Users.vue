@@ -38,7 +38,6 @@
 import {AgGridVue} from 'ag-grid-vue'
 import CellRendererLink from './cell-renderer/CellRendererUsername.vue'
 import CellRendererLOA from './cell-renderer/CellRendererLOA.vue'
-import CellRendererPromotionDemotion from './cell-renderer/CellRendererPromotionDemotion.vue'
 import CellRendererVerified from './cell-renderer/CellRendererVerified.vue'
 import CellRendererActions from './cell-renderer/CellRendererActions.vue'
 import vSelect from 'vue-select'
@@ -52,7 +51,6 @@ export default {
     CellRendererLOA,
     CellRendererActions,
     CellRendererVerified,
-    CellRendererPromotionDemotion,
     vSelect
   },
   data() {
@@ -69,7 +67,6 @@ export default {
       columnDefs: [
         {headerName: 'Username', field: 'username', cellRendererFramework: 'CellRendererLink'},
         {headerName: 'Discord ID', field: 'discord'},
-        {headerName: 'Points', field: 'points'},
         {headerName: "LOA Status", field: 'loa_status', cellRendererFramework: 'CellRendererLOA'}
       ],
       usersData: null
@@ -79,7 +76,7 @@ export default {
     this.gridApi = this.gridOptions.api;
   },
   computed: {
-    ...mapGetters(["users", "isUserOnLOA", "mostRecent17thApplication", "applications"]),
+    ...mapGetters(["users", "isUserOnLOA", "applications"]),
   },
   methods: {
     updateSearchQuery(val) {
