@@ -44,10 +44,9 @@ const actions = {
       }
     })
   },
-  async getEditableRoles({rootGetters}, [userID, division]) {
+  async getEditableRoles({rootGetters}, [userID]) {
     return axios.post(`${utils.base_url}/user-management/get-editable-roles`, {
       userID,
-      division,
       accessToken: await rootGetters.currentUser.accessToken
     }).then(response => {
       return response.data;

@@ -58,14 +58,13 @@ const WHO_CAN_REMOVE_CGS_USERS = ["[CGS] Owner", "[CGS] Officer", "[ICE] Owner",
 
 // POST: /api/v1/user-management/get-editable-roles
 // Params: none
-// Body: accessToken, userID, division
+// Body: accessToken, userID
 // Return: roles
 router.post('/get-editable-roles', async (req, res) => {
-  let {accessToken, userID, division} = req.body;
+  let {accessToken, userID} = req.body;
   const con = req.app.get('con');
   const api = "/api/v1/user-management/get-editable-roles"
-  if (!accessToken || !userID || !division) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
-  if (division.toLowerCase() !== "17th" && division.toLowerCase() !== "cgs") return res.sendStatus(400);
+  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
   const currentRoles = req.user.roles;
   let returnedRoles = [];
   con.query(`SELECT * FROM user_roles WHERE userID = ?`, [userID]).then(rows => {
