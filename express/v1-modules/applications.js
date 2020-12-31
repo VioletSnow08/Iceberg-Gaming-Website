@@ -1,3 +1,4 @@
+const axios = require("axios");
 const express = require('express')
 const router = express.Router();
 const base_api = "/api/v1";
@@ -116,8 +117,29 @@ router.post('/create/:division', async (req, res) => {
   const con = req.app.get('con');
   const api = "/api/v1/settings/applications/create"
   division = division.toLowerCase();
+  let fullDivision;
   if (!accessToken || !division) return res.status(400).send("Bad Request! Please provide an accessToken and a division(17th, Iceberg, or CGS)");
+  if(division === "17th") fullDivision = "17th Brigade Combat Team"
+  if(division === "iceberg") fullDivision = "Iceberg Gaming"
+  if(division === "cgs") fullDivision = "Chryse Guard Security";
   let createdAt = DateTime.local().setZone('America/Chicago').toISO();
+  async function postWebhook() {
+    return axios.post(`https://discord.com/api/webhooks/794063253646606347/fW3OQJ-xw1h_YrCEr2sWiKE8te6UjdDqmmH8IZo0UWkCH3g8kkLpFh61UNZ1e2h1NBM8`, {
+      embeds: [
+        {
+          title: 'New Application Submitted',
+          description: 'The user, ' + req.user.username + ', has submitted a new application!',
+          color: 60159,
+          fields: [
+            {
+              name: 'Division',
+              value: fullDivision
+            }
+          ]
+        }
+      ]
+    })
+  }
   if (division === "17th" && !utils.doesUserContainRoles(req.user.roles, "[17th] Member")) {
     let {
       steamURL,
@@ -140,6 +162,8 @@ router.post('/create/:division', async (req, res) => {
     con.query(`INSERT INTO 17th_applications (userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]).then(row => {
       let rowID = row.insertId;
       return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "17th", rowID])
+    }).then(() => {
+      return postWebhook();
     }).then(() => {
       res.sendStatus(200);
       utils.logger.log({
@@ -179,6 +203,8 @@ router.post('/create/:division', async (req, res) => {
       let rowID = row.insertId;
       return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "Iceberg", rowID])
     }).then(() => {
+      return postWebhook();
+    }).then(() => {
       res.sendStatus(200);
       utils.logger.log({
         level: "info",
@@ -216,6 +242,8 @@ router.post('/create/:division', async (req, res) => {
       let rowID = row.insertId;
       return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "CGS", rowID])
     }).then(() => {
+      return postWebhook();
+    }).then(() => {
       res.sendStatus(200);
       utils.logger.log({
         level: "info",
@@ -225,6 +253,7 @@ router.post('/create/:division', async (req, res) => {
         api,
         division
       })
+
     }).catch(error => {
       if (error) {
         utils.logger.log({
@@ -242,6 +271,8 @@ router.post('/create/:division', async (req, res) => {
   } else {
     res.status(400).send("Bad Request! Invalid Division or in-proper roles.");
   }
+
+
 })
 
 // POST: /api/v1/applications/<action>/<id>
