@@ -25,30 +25,12 @@ export default [
       },
       // USER MANAGEMENT
       {
-        path: '/admin/17th/users',
-        name: 'Admin17thUsers',
-        component: () => import('@/views/admin/17th/User-Management/Users.vue'),
-        meta: {
-          requiresAuth: true,
-          roles: ['[17th] NCO', '[17th] Alpha Company HQ', "[17th] Officer"]
-        },
-      },
-      {
         path: '/admin/iceberg/users',
         name: 'AdminIcebergUsers',
         component: () => import('@/views/admin/iceberg/User-Management/Users.vue'),
         meta: {
           requiresAuth: true,
           roles: ['[ICE] Recruiter', '[17th] Alpha Company HQ', "[17th] Officer", "[CGS] Owner"]
-        },
-      },
-      {
-        path: '/admin/cgs/users',
-        name: 'AdminCGSUsers',
-        component: () => import('@/views/admin/cgs/User-Management/Users.vue'),
-        meta: {
-          requiresAuth: true,
-          roles: ["[CGS] Owner", "[CGS] Officer"]
         },
       },
       // CHANNELS

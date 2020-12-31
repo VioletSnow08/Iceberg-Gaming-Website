@@ -20,8 +20,10 @@ const VALID_CHANGE_ROLES = { // Combined with canUserChangeRole17th, this is a "
   CGS_OWNER: ["[CGS] Owner"]
 }
 
-function canUserChangeRole17th(currentRoles, role) {
+
+function canUserChangeRole(currentRoles, role) {
   let isValid = false;
+  // 17th BCT
   if (utils.doesUserContainRoles(currentRoles, ["[17th] NCO"]) && VALID_CHANGE_ROLES.BCT_NCO.includes(role)) {
     isValid = true;
   }
@@ -34,26 +36,24 @@ function canUserChangeRole17th(currentRoles, role) {
   if (utils.doesUserContainRoles(currentRoles, ["[ICE] Owner", "[ICE] Admin"]) && VALID_CHANGE_ROLES.BCT_ICE_OWNER.includes(role)) {
     isValid = true;
   }
-  if (utils.doesUserContainRoles(currentRoles, ["[ICE] Webmaster"])) isValid = true;
-  return isValid
-}
-
-function canUserChangeRoleCGS(currentRoles, role) {
-  let isValid = false;
+//  CGS
   if (utils.doesUserContainRoles(currentRoles, ["[CGS] Officer"]) && VALID_CHANGE_ROLES.CGS_OFFICER.includes(role)) {
     isValid = true;
   }
   if (utils.doesUserContainRoles(currentRoles, ["[CGS] Owner"]) && VALID_CHANGE_ROLES.CGS_OWNER.includes(role)) {
     isValid = true;
   }
+//  Overrides
   if (utils.doesUserContainRoles(currentRoles, ["[ICE] Webmaster"])) isValid = true;
-  return isValid
+  return isValid;
 }
 
 const displayed17thRoles = ["[17th] Member", "[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"]; // Roles that are displayed to the admin when editing a user's roles(in order)
 const displayedCGSRoles = ["[CGS] Member", "[CGS] Officer", "[CGS] Owner"]; // Roles that are displayed to the admin when editing a user's roles(in order)
+const displayedEditableRoles = [...displayed17thRoles, ...displayedCGSRoles];
 const WHO_CAN_REMOVE_ICEBERG_USERS = ["[ICE] Owner", "[ICE] Admin", "[ICE] Webmaster"]; // Roles that can remove an iceberg user
-const WHO_CAN_REMOVE_17th_USERS = ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster", "[ICE] Admin"]; // Roles that can remove a 17th User
+const WHO_CAN_REMOVE_17th_USERS = ["[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster", "[ICE] Admin"]; // Roles that can remove a 17th user
+const WHO_CAN_REMOVE_CGS_USERS = ["[CGS] Owner", "[CGS] Officer", "[ICE] Owner", "[ICE] Admin", "[ICE] Webmaster"] // Roles that can remove a CGS user
 
 
 // POST: /api/v1/user-management/get-editable-roles
@@ -73,23 +73,30 @@ router.post('/get-editable-roles', async (req, res) => {
     rows.forEach(row => {
       roles.push(row.role);
     })
-    if (division.toLowerCase() === "17th") {
-      displayed17thRoles.forEach(role => {
-        returnedRoles.push({
-          role,
-          doesUserHaveIt: utils.doesUserContainRoles(roles, role),
-          isDisabled: !canUserChangeRole17th(currentRoles, role)
-        })
+    // if (division.toLowerCase() === "17th") {
+    //   displayed17thRoles.forEach(role => {
+    //     returnedRoles.push({
+    //       role,
+    //       doesUserHaveIt: utils.doesUserContainRoles(roles, role),
+    //       isDisabled: !canUserChangeRole17th(currentRoles, role)
+    //     })
+    //   })
+    // } else if (division.toLowerCase() === "cgs") {
+    //   displayedCGSRoles.forEach(role => {
+    //     returnedRoles.push({
+    //       role,
+    //       doesUserHaveIt: utils.doesUserContainRoles(roles, role),
+    //       isDisabled: !canUserChangeRole17th(currentRoles, role)
+    //     })
+    //   })
+    // }
+    displayedEditableRoles.forEach(role => {
+      returnedRoles.push({
+        role,
+        doseUserHaveIt: utils.doesUserContainRoles(roles, role),
+        isDisabled: !canUserChangeRole(currentRoles, role)
       })
-    } else if (division.toLowerCase() === "cgs") {
-      displayedCGSRoles.forEach(role => {
-        returnedRoles.push({
-          role,
-          doesUserHaveIt: utils.doesUserContainRoles(roles, role),
-          isDisabled: !canUserChangeRole17th(currentRoles, role)
-        })
-      })
-    }
+    })
 
     utils.logger.log({
       level: "info",
@@ -110,6 +117,7 @@ router.post('/get-editable-roles', async (req, res) => {
 // Params: none
 // Body: accessToken, role, newRoleStatus, id, userID
 // Return: <status_code>
+// role: {role: '[ICE] Member', doesUserHaveIt: true, isDisabled: true}
 router.post('/change-roles', async (req, res) => {
   let {accessToken, roles, userID} = req.body;
   const con = req.app.get('con');
@@ -122,8 +130,8 @@ router.post('/change-roles', async (req, res) => {
       rolesTheUserHas.push(row.role);
     })
     roles.forEach(role => {
-      if (canUserChangeRole17th(currentRoles, role.role) || canUserChangeRoleCGS(currentRoles, role.role)) { // Instead of me checking for a division, it checks for the role, which is defined in the beginning of the file.
-        if (role.doesUserHaveIt) { // Meaning they either have it or want it
+      if (canUserChangeRole(currentRoles, role.role)) { // Instead of me checking for a division, it checks for the role, which is defined in the beginning of the file.
+        if (role.doesUserHaveIt) { // Meaning they either have it or want it(this is passed in by the front end)
           if (!utils.doesUserContainRoles(rolesTheUserHas, [role.role])) { // If they don't *have* the role, then give it to them...
             con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [userID, role.role]).then(() => {
               if (!res.headersSent) {
@@ -300,7 +308,36 @@ router.post('/remove-user', async (req, res) => {
         }
       })
     } else res.sendStatus(401);
-  }
+  } else if (division.toLowerCase() === "cgs") {
+    if (utils.doesUserContainRoles(currentRoles, WHO_CAN_REMOVE_CGS_USERS)) {
+      con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [userID, "[CGS] Member"]).then(() => {
+        utils.logger.log({
+          level: "info",
+          message: "CGS Member Deleted",
+          isLoggedIn: true,
+          userID: req.user.id,
+          removedUser: userID,
+          accessToken,
+          api
+        })
+        res.sendStatus(200);
+      }).catch(error => {
+        if (error) {
+          utils.logger.log({
+            level: "error",
+            message: error.message,
+            stack: error.stack,
+            isLoggedIn: true,
+            userID: req.user.id,
+            removedUser: userID,
+            accessToken,
+            api
+          })
+          res.sendStatus(400);
+        }
+      })
+    } else res.sendStatus(401); // Unauthorized; Can't remove that specific role...
+  } else res.sendStatus(400) // Bad Request; Invalid division
 })
 
 module.exports = {

@@ -11,7 +11,7 @@
       <span v-show="!verticalNavMenuItemsMin" class="truncate">The Hub</span>
     </v-nav-menu-item>
     <v-nav-menu-item
-      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster'].includes(role))"
+      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[17th] NCO', '[17th] Officer', '[17th] Alpha Company HQ', '[CGS] Owner', '[CGS] Officer'].includes(role))"
       to="/admin/iceberg/users" icon="SettingsIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
     </v-nav-menu-item>
@@ -61,11 +61,6 @@
                      icon="FilePlusIcon">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">Application</span>
     </v-nav-menu-item>
-    <v-nav-menu-item
-      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[ICE] Admin', '[17th] NCO', '[17th] Alpha Company HQ', '[17th] Officer', '[ICE] Webmaster'].includes(role))"
-      to="/admin/17th/users" icon="SettingsIcon">
-      <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
-    </v-nav-menu-item>
 
     <v-nav-menu-item
       v-if="channels && currentUser.roles.includes('[17th] Member') && channel.division.toLowerCase() === '17th'"
@@ -86,12 +81,6 @@
       v-if="channels && currentUser.roles.includes('[CGS] Member') && channel.division.toLowerCase() === 'cgs'"
       v-for="channel in channels" :to="'/channels/' + channel.id" :icon="getChannelIcon(channel.type)">
       <span v-show="!verticalNavMenuItemsMin" class="truncate">{{ channel.name }}</span>
-    </v-nav-menu-item>
-
-    <v-nav-menu-item
-      v-if="currentUser.roles.some(role => ['[ICE] Owner', '[ICE] Admin', '[ICE] Webmaster', '[CGS] Owner', '[CGS] Officer'].includes(role))"
-      to="/admin/cgs/users" icon="SettingsIcon">
-      <span v-show="!verticalNavMenuItemsMin" class="truncate">User Management</span>
     </v-nav-menu-item>
 
 
