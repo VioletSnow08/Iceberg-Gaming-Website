@@ -1,9 +1,9 @@
 const express = require('express')
 const router = express.Router();
 const base_api = "/api/v1";
-const utils = require("../../utils.js");
+const utils = require("../../../utils.js");
 const {DateTime} = require("luxon");
-const {requiresAuth} = require("../middleware/auth");
+const {requiresAuth} = require("../../middleware/auth");
 const REQUIRED_ROLES = ["[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Webmaster"];
 router.use(requiresAuth);
 // POST: /api/v1/administrative/disciplinary-action
