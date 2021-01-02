@@ -85,28 +85,7 @@ router.post('/get-editable-roles', async (req, res) => {
 // Body: accessToken
 // Return: removableDivisions
 router.post('/get-removable-divisions', async (req, res) => {
-  let {accessToken, userID} = req.body;
-  const api = "/api/v1/user-management/get-removable-divisions"
-  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken and a userID.");
-  const currentRoles = req.user.roles;
-  let removableDivisions = [
-    {
-      division: "Iceberg",
-      removable: false
-    },
-    {
-      division: "17th",
-      removable: false
-    },
-    {
-      division: "CGS",
-      removable: false
-    }
-  ];
-  if (utils.doesUserContainRoles(currentRoles, VALID_REMOVE_ROLES.ICEBERG)) removableDivisions[0].removable = true;
-  if (utils.doesUserContainRoles(currentRoles, VALID_REMOVE_ROLES.BCT)) removableDivisions[1].removable = true;
-  if (utils.doesUserContainRoles(currentRoles, VALID_REMOVE_ROLES.CGS)) removableDivisions[2].removable = true;
-  res.json(removableDivisions);
+  require("./get-removable-divisions").index(req, res, VALID_REMOVE_ROLES)
 })
 
 // POST: /api/v1/user-management/change-roles
