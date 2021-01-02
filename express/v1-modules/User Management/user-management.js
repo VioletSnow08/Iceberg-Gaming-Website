@@ -1,14 +1,7 @@
 const express = require('express')
 const router = express.Router();
-const port = 3000
-const {jwt_secret, jwt_refresh_secret} = require("../../../credentials");
-const base_api = "/api/v1";
-const md5 = require("md5");
-const jwt = require("jsonwebtoken");
-const chalk = require('chalk');
 const utils = require("../../../utils.js");
 const {requiresAuth} = require("../../middleware/auth");
-const {DateTime} = require("luxon");
 router.use(requiresAuth);
 const displayedEditableRoles = ["[ICE] Member", "[ICE] Recruiter", "[ICE] Admin", "[ICE] Owner", "[ICE] Webmaster", "[CGS] Member", "[CGS] Officer", "[CGS] Owner", "[17th] Member", "[17th] Ranger",
   "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ"];
