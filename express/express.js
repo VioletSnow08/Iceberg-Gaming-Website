@@ -27,7 +27,7 @@ MYSQL.createConnection({
 // API Modules
   app.use('/api/v1/user', require('./v1-modules/user').router);
   app.use('/api/v1/settings', require('./v1-modules/settings').router);
-  app.use('/api/v1/applications', require('./v1-modules/applications').router);
+  app.use('/api/v1/applications', require('./v1-modules/Applications/applications').router);
   app.use('/api/v1/user-management', require('./v1-modules/User Management/user-management').router);
   app.use('/api/v1/administrative', require('./v1-modules/Administrative/administrative').router);
   app.use('/api/v1/channels', require('./v1-modules/channels').router);

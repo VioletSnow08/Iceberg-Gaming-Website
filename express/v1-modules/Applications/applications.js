@@ -2,9 +2,9 @@ const axios = require("axios");
 const express = require('express')
 const router = express.Router();
 const base_api = "/api/v1";
-const utils = require("../../utils.js");
+const utils = require("../../../utils.js");
 const {DateTime} = require("luxon");
-const {requiresAuth} = require("../middleware/auth");
+const {requiresAuth} = require("../../middleware/auth");
 
 router.use(requiresAuth);
 
@@ -13,97 +13,7 @@ router.use(requiresAuth);
 // Body: accessToken
 // Return: loa
 router.post('/', async (req, res) => {
-  let {accessToken} = req.body;
-  const userID = req.user.id;
-  const con = req.app.get('con');
-  const api = "/api/v1/settings/applications"
-  if (!accessToken) return res.status(400).send("Bad Request! Please pass in an accessToken.");
-  let initialQueries = {
-    applications: [],
-    bctApplications: [],
-    icebergApplications: [],
-    cgsApplications: []
-  }
-  con.query(`SELECT * FROM applications`).then(rows => {
-    initialQueries.applications = rows;
-    utils.logger.log({
-      level: "info",
-      message: "Applications Fetched",
-      isLoggedIn: true,
-      userID,
-      accessToken,
-      api
-    })
-    return con.query(`SELECT * FROM 17th_applications`)
-  }).then(rows => {
-    utils.logger.log({
-      level: "info",
-      message: "17th Applications Fetched",
-      isLoggedIn: true,
-      userID,
-      accessToken,
-      api
-    })
-    rows.forEach(row => {
-      row.division = "17th";
-      initialQueries.bctApplications.push(row);
-    })
-    return con.query(`SELECT * FROM iceberg_applications`)
-  }).then(rows => {
-    utils.logger.log({
-      level: "info",
-      message: "Iceberg Applications Fetched",
-      isLoggedIn: true,
-      userID,
-      accessToken,
-      api
-    })
-    rows.forEach(row => {
-      row.division = "Iceberg";
-      initialQueries.icebergApplications.push(row);
-    })
-    return con.query(`SELECT * FROM cgs_applications`)
-  }).then(rows => {
-    utils.logger.log({
-      level: "info",
-      message: "CGS Applications Fetched",
-      isLoggedIn: true,
-      userID,
-      accessToken,
-      api
-    })
-    rows.forEach(row => {
-      row.division = "CGS";
-      initialQueries.cgsApplications.push(row);
-    })
-    res.json({
-      applications: initialQueries.applications,
-      bct_applications: initialQueries.bctApplications,
-      iceberg_applications: initialQueries.icebergApplications,
-      cgs_applications: initialQueries.cgsApplications
-    })
-    utils.logger.log({
-      level: "info",
-      message: "Applications Completed",
-      isLoggedIn: true,
-      userID,
-      accessToken,
-      api
-    })
-  }).catch(error => {
-    if (error) {
-      utils.logger.log({
-        level: "error",
-        message: error.message,
-        stack: error.stack,
-        isLoggedIn: true,
-        userID,
-        accessToken,
-        api
-      })
-      res.sendStatus(500);
-    }
-  })
+  require("./index").index(req, res);
 })
 
 // POST: /api/v1/applications/create/<division>
