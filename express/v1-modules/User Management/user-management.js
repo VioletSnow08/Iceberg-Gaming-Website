@@ -74,6 +74,11 @@ function canUserChangeRole(currentRoles, role) {
   return isValid;
 }
 
+// Params: currentRoles, division, rolesOfUserBeingRemoved
+// currentRoles: roles of the admin
+// division: division of the user being removed
+// rolesOfUserBeingRemoved: the roles of the user being removed
+
 function canUserRemoveUser(currentRoles, division, rolesOfUserBeingRemoved) { // Example: If the Admin's roles contains a VALID_REMOVE_ROLE but the user they are trying to remove contains an INVALID_REMOVE_ROLE, then return 401.
   division = division.toLowerCase();
   let isValid = false;

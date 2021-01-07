@@ -22,22 +22,11 @@ const actions = {
       if(error) alert("Error: Unauthorized or Server Error! Please make sure you are only selecting roles that you can apply.");
     })
   },
-  async remove17thUser({rootGetters}, userID) {
-    axios.post(`${utils.base_url}/user-management/17th/remove-user`, {
-      userID,
-      accessToken: await rootGetters.currentUser.accessToken,
-      division: "17th"
-    }).catch(error => {
-      if(error) {
-        utils.alertGeneral();
-      }
-    })
-  },
-  async removeIcebergUser({rootGetters}, userID) {
+  async removeUser({rootGetters}, [userID, division]) {
     axios.post(`${utils.base_url}/user-management/remove-user`, {
       userID,
       accessToken: await rootGetters.currentUser.accessToken,
-      division: "Iceberg"
+      division
     }).catch(error => {
       if(error) {
         utils.alertGeneral();
