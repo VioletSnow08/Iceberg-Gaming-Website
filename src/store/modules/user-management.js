@@ -27,6 +27,8 @@ const actions = {
       userID,
       accessToken: await rootGetters.currentUser.accessToken,
       division
+    }).then(() => {
+      this.dispatch('fetchUsers');
     }).catch(error => {
       if(error) {
         utils.alertGeneral();
