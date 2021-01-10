@@ -757,15 +757,15 @@ router.post('/forums/topics/replies/create', async (req, res) => {
 
 // POST: /api/v1/channels/topics/replies/delete
 // Params: none
-// Body: accessToken, channelID, topicID
+// Body: accessToken, channelID, topicID, replyID
 // Return: <status_code>
 router.post('/forums/topics/replies/delete', async (req, res) => {
-  let {accessToken, channelID, topicID} = req.body;
+  let {accessToken, channelID, topicID, replyID} = req.body;
   const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/forums/topics/replies/delete";
-  if (!channelID || !topicID) return res.sendStatus(400);
-  con.query(`DELETE FROM channels_forums_replies WHERE userID = ? AND channelID = ? AND topicID = ?`, [userID, channelID, topicID]).then(() => {
+  if (!channelID || !topicID || !replyID) return res.sendStatus(400);
+  con.query(`DELETE FROM channels_forums_replies WHERE userID = ? AND channelID = ? AND topicID = ? and id = ?`, [userID, channelID, topicID, replyID]).then(() => {
     res.sendStatus(200);
     utils.logger.log({
       level: "info",
@@ -773,7 +773,8 @@ router.post('/forums/topics/replies/delete', async (req, res) => {
       isLoggedIn: true,
       userID,
       api,
-      channelID
+      channelID,
+      replyID
     })
   }).catch(error => {
     if(error) {
@@ -784,7 +785,8 @@ router.post('/forums/topics/replies/delete', async (req, res) => {
         isLoggedIn: true,
         userID,
         api,
-        channelID
+        channelID,
+        replyID
       })
       res.sendStatus(500);
     }

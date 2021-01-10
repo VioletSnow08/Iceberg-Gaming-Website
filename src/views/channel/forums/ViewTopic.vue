@@ -10,7 +10,8 @@
     <h1>Title: {{topic($route.params.channelID, $route.params.topicID).title}}</h1>
     <h3>Created By: {{user(topic($route.params.channelID, $route.params.topicID).userID).username}}</h3>
     <h3>Created At: {{new Date(topic($route.params.channelID, $route.params.topicID).createdAt).toDateString() + ' ' + new Date(topic($route.params.channelID, $route.params.topicID).createdAt).toTimeString()}}</h3>
-    <vs-button @click="createReplyPopup=true" color="primary">Reply</vs-button>
+    <vs-button style="margin-right: 15px;" @click="createReplyPopup=true" color="primary">Reply</vs-button>
+    <vs-button :disabled="topic($route.params.channelID, $route.params.topicID).userID !== currentUser.id" @click="deleteTopic($route.params.channelID, $route.params.topicID)" color="danger">Delete Topic</vs-button>
     <vs-divider></vs-divider>
     <h1>Body</h1>
     <div v-html="topic($route.params.channelID, $route.params.topicID).body"></div>
@@ -22,7 +23,7 @@
       <h5>Created At: {{new Date(reply.createdAt).toDateString() + ' ' + new Date(reply.createdAt).toTimeString()}}</h5>
       <br>
       <vs-textarea disabled v-model="reply.body"></vs-textarea>
-      <vs-button @click="deleteReply([$route.params.channelID, $route.params.topicID])" :disabled="reply.userID !== currentUser.id" color="danger">Delete</vs-button>
+      <vs-button @click="deleteReply([$route.params.channelID, $route.params.topicID, reply.id])" :disabled="reply.userID !== currentUser.id" color="danger">Delete</vs-button>
       <vs-divider></vs-divider>
     </div>
 
@@ -52,7 +53,7 @@ export default {
     }
   },
   methods: {
-    ...mapActions(["createReply", "deleteReply"])
+    ...mapActions(["createReply", "deleteReply", "deleteTopic"])
   },
   computed: {
     ...mapGetters(["channels", "channel", "topics", "topic", "users", "user", "currentUser", "replies"])

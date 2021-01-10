@@ -229,8 +229,22 @@ const actions = {
       }
     })
   },
-  async deleteReply({rootGetters}, [channelID, topicID]) {
+  async deleteReply({rootGetters}, [channelID, topicID, replyID]) {
     axios.post(`${utils.base_url}/channels/forums/topics/replies/delete`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      topicID,
+      replyID
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
+  async deleteTopic({rootGetters}, [channelID, topicID]) {
+    axios.post(`${utils.base_url}/channels/forums/topics/delete`, {
       accessToken: await rootGetters.currentUser.accessToken,
       channelID,
       topicID,
