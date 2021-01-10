@@ -108,7 +108,7 @@ export default [{
       props: true
     },
     {
-      path: '/channels/:channelID/forums/:forumID',
+      path: '/channels/:channelID/topics/:topicID',
       name: 'ViewTopics',
       component: () => import('@/views/channel/forums/ViewTopic.vue'),
       meta: {

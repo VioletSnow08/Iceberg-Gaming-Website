@@ -10,7 +10,7 @@
     <div class="vx-col w-full lg:w-4/12 sm:w-1/2 mb-base" v-for="t in topics($route.params.channelID)" :key="topic.id">
       <vx-card :title="t.title" :subtitle="'Created By: ' + user(t.userID).username" class="p-2">
         <div class="text-center">
-          <vs-button type="gradient" class="w-full mt-6" color="#F3DE2C" gradient-color-secondary="#493240">View Thread</vs-button>
+          <vs-button @click="viewTopic(t.id)" type="gradient" class="w-full mt-6" color="#F3DE2C" gradient-color-secondary="#493240">View Topic</vs-button>
         </div>
       </vx-card>
     </div>
@@ -39,8 +39,8 @@ export default {
     FileUpload
   },
   methods: {
-    viewDocument(documentID) {
-      this.$router.push('/channels/' + this.$route.params.channelID + '/forums/' + documentID);
+    viewTopic(topicID) {
+      this.$router.push('/channels/' + this.$route.params.channelID + '/topics/' + topicID);
     },
     ...mapActions(["createTopic"])
   },
