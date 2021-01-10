@@ -36,7 +36,7 @@ const getters = {
   },
   topic: (state) => (channelID, topicID) => {
     return state.channels.find(c => c.id == channelID).topics.find(t => t.id == topicID);
-  }
+  },
 }
 
 const actions = {

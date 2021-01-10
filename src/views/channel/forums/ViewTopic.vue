@@ -1,12 +1,50 @@
 <template>
 <div>
+  <div v-if="!channels || !users">
+    <h1>{{ this.$vs.loading({type: "sound", text: "Loading Topic..."}) }}</h1>
+  </div>
 
+  <div v-else-if="channel($route.params.channelID) && topics && topic($route.params.channelID, $route.params.topicID)">
+    {{ this.$vs.loading.close() }}
+    <h1>Title: {{topic($route.params.channelID, $route.params.topicID).title}}</h1>
+    <h3>Created By: {{user(topic($route.params.channelID, $route.params.topicID).userID).username}}</h3>
+    <h3>Created At: {{new Date(topic($route.params.channelID, $route.params.topicID).createdAt).toDateString() + ' ' + new Date(topic($route.params.channelID, $route.params.topicID).createdAt).toTimeString()}}</h3>
+    <vs-divider></vs-divider>
+    <h1>Body</h1>
+    <div v-html="topic($route.params.channelID, $route.params.topicID).body"></div>
+    <vs-divider></vs-divider>
+    <h1>Replies</h1>
+    <vs-divider></vs-divider>
+    <div v-for="reply in topic($route.params.channelID, $route.params.topicID).replies">
+      <h4>From: {{user(reply.userID).username}}</h4>
+      <h5>Created At: {{new Date(reply.createdAt).toDateString() + ' ' + new Date(reply.createdAt).toTimeString()}}</h5>
+      <br>
+      <vs-textarea disabled v-model="reply.body"></vs-textarea>
+      <vs-divider></vs-divider>
+    </div>
+  </div>
+
+  <div v-else>
+    {{ this.$vs.loading.close() }}
+    <vs-alert color="danger">Error: Channel/Topic not found!</vs-alert>
+  </div>
 </div>
 </template>
 
 <script>
+import {mapGetters} from "vuex";
+
 export default {
-  name: "ViewThreads"
+  name: "ViewThreads",
+  computed: {
+    ...mapGetters(["channels", "channel", "topics", "topic", "users", "user", "currentUser"])
+  },
+  async created() {
+    await Promise.all([
+      this.$store.dispatch('fetchChannels'),
+      this.$store.dispatch('fetchUsers')
+    ])
+  },
 }
 </script>
 
