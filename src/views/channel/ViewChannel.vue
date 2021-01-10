@@ -11,6 +11,7 @@
         </div>
       <CalendarBP v-if="channel($route.params.channelID).type === 'calendar'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></CalendarBP>
       <DocumentsBP v-if="channel($route.params.channelID).type === 'documents'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></DocumentsBP>
+      <ForumsBP v-if="channel($route.params.channelID).type === 'forum'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></ForumsBP>
     </div>
     <div v-else-if="channel($route.params.channelID) && channel($route.params.channelID).division.toLowerCase() === '17th' && currentUser.roles.includes('[17th] Member')">
       {{ this.$vs.loading.close() }}
@@ -20,6 +21,7 @@
       </div>
       <CalendarBP v-if="channel($route.params.channelID).type === 'calendar'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></CalendarBP>
       <DocumentsBP v-if="channel($route.params.channelID).type === 'documents'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></DocumentsBP>
+      <ForumsBP v-if="channel($route.params.channelID).type === 'forum'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></ForumsBP>
     </div>
     <div v-else-if="channel($route.params.channelID) && channel($route.params.channelID).division.toLowerCase() === 'cgs' && currentUser.roles.includes('[CGS] Member')">
       {{ this.$vs.loading.close() }}
@@ -29,6 +31,7 @@
       </div>
       <CalendarBP v-if="channel($route.params.channelID).type === 'calendar'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></CalendarBP>
       <DocumentsBP v-if="channel($route.params.channelID).type === 'documents'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></DocumentsBP>
+      <ForumsBP v-if="channel($route.params.channelID).type === 'forum'" v-bind:channelID="$route.params.channelID" :key="$route.params.channelID"></ForumsBP>
     </div>
     <div v-else>
       {{ this.$vs.loading.close() }}
@@ -41,6 +44,7 @@
 import {mapGetters} from "vuex";
 import CalendarBP from "@/views/channel/calendar/Calendar"
 import DocumentsBP from "@/views/channel/documents/Documents";
+import ForumsBP from "@/views/channel/forums/Forums";
 
 
 export default {
@@ -50,7 +54,8 @@ export default {
   },
   components: {
     CalendarBP,
-    DocumentsBP
+    DocumentsBP,
+    ForumsBP
   },
   async created() {
     await Promise.all([
