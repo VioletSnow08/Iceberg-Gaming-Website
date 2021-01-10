@@ -107,6 +107,16 @@ export default [{
       },
       props: true
     },
+    {
+      path: '/channels/:channelID/forums/:forumID',
+      name: 'ViewDocument',
+      component: () => import('@/views/channel/forums/ViewThreads.vue'),
+      meta: {
+        requiresAuth: true,
+        roles: ['[ICE] Member']
+      },
+      props: true
+    },
     // {
     //   path: '/profile/:userID',
     //   name: 'Profile',
