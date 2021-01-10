@@ -701,6 +701,46 @@ router.post('/forums/topics/create', async (req, res) => {
       title
     })
   }).catch(error => {
+    if(error) {
+      utils.logger.log({
+        level: "info",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
+        userID,
+        api,
+        channelID,
+        title
+      })
+      res.sendStatus(500);
+    }
+
+  })
+})
+
+// POST: /api/v1/channels/topics/replies/create
+// Params: none
+// Body: accessToken, channelID, body, topicID
+// Return: <status_code>
+router.post('/forums/topics/replies/create', async (req, res) => {
+  let {accessToken, channelID, body, topicID} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/forums/topics/replies/create";
+  if (!channelID || !body || !topicID) return res.sendStatus(400);
+  let createdAt = DateTime.local().setZone('America/Chicago').toISO();
+  con.query(`INSERT INTO channels_forums_replies (userID, body, channelID, topicID, createdAt) VALUES (?, ?, ?, ?, ?)`, [userID, body, channelID, topicID, createdAt]).then(() => {
+    res.sendStatus(200);
+    utils.logger.log({
+      level: "info",
+      message: "Reply Created",
+      isLoggedIn: true,
+      userID,
+      api,
+      channelID
+    })
+  }).catch(error => {
+    if(error) {
     utils.logger.log({
       level: "info",
       message: error.message,
@@ -708,12 +748,47 @@ router.post('/forums/topics/create', async (req, res) => {
       isLoggedIn: true,
       userID,
       api,
-      channelID,
-      title
+      channelID
     })
     res.sendStatus(500);
+    }
   })
+})
 
+// POST: /api/v1/channels/topics/replies/delete
+// Params: none
+// Body: accessToken, channelID, topicID
+// Return: <status_code>
+router.post('/forums/topics/replies/delete', async (req, res) => {
+  let {accessToken, channelID, topicID} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/forums/topics/replies/delete";
+  if (!channelID || !topicID) return res.sendStatus(400);
+  con.query(`DELETE FROM channels_forums_replies WHERE userID = ? AND channelID = ? AND topicID = ?`, [userID, channelID, topicID]).then(() => {
+    res.sendStatus(200);
+    utils.logger.log({
+      level: "info",
+      message: "Reply Deleted",
+      isLoggedIn: true,
+      userID,
+      api,
+      channelID
+    })
+  }).catch(error => {
+    if(error) {
+      utils.logger.log({
+        level: "info",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
+        userID,
+        api,
+        channelID
+      })
+      res.sendStatus(500);
+    }
+  })
 })
 module.exports = {
   router

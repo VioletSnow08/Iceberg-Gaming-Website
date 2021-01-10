@@ -37,6 +37,9 @@ const getters = {
   topic: (state) => (channelID, topicID) => {
     return state.channels.find(c => c.id == channelID).topics.find(t => t.id == topicID);
   },
+  replies: (state) => (channelID, topicID) => {
+    return state.channels.find(c => c.id == channelID).topics.find(t => t.id == topicID).replies;
+  },
 }
 
 const actions = {
@@ -204,6 +207,33 @@ const actions = {
       channelID,
       title,
       body
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
+  async createReply({rootGetters}, [channelID, topicID, body]) {
+    axios.post(`${utils.base_url}/channels/forums/topics/replies/create`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      topicID,
+      body
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
+  async deleteReply({rootGetters}, [channelID, topicID]) {
+    axios.post(`${utils.base_url}/channels/forums/topics/replies/delete`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      topicID,
     }).then(() => {
       this.dispatch('fetchChannels');
     }).catch(error => {
