@@ -197,6 +197,20 @@ const actions = {
         utils.alertGeneral();
       }
     })
+  },
+  async createTopic({rootGetters}, [channelID, title, body]) {
+    axios.post(`${utils.base_url}/channels/forums/topics/create`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      title,
+      body
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
   }
 }
 
