@@ -30,6 +30,12 @@ const getters = {
   },
   document: (state) => (channelID, documentID) => {
     return state.channels.find(c => c.id == channelID).documents.find(d => d.id == documentID);
+  },
+  topics: (state) => (channelID) => {
+    return state.channels.find(c => c.id == channelID).topics;
+  },
+  topic: (state) => (channelID, topicID) => {
+    return state.channels.find(c => c.id == channelID).topics.find(t => t.id == topicID);
   }
 }
 

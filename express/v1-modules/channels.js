@@ -677,6 +677,41 @@ router.post('/documents/delete', async (req, res) => {
     })
   })
 })
+
+// POST: /api/v1/channels/topics/create
+// Params: none
+// Body: accessToken, channelID, name, body
+// Return: <status_code>
+router.post('/forums/topics/create', async (req, res) => {
+  let {accessToken, channelID, name, body} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/forums/topics/create";
+  if (!channelID || !name || !body) return res.sendStatus(400);
+  con.query(`INSERT INTO channels_forums_topics (userID, title, body, channelID) VALUES (?, ?, ?, ?)`, [userID, name, body, channelID]).then(() => {
+    res.sendStatus(200);
+    utils.logger.log({
+      level: "info",
+      message: "Topic Created",
+      isLoggedIn: true,
+      userID,
+      api,
+      channelID
+    })
+  }).catch(error => {
+    utils.logger.log({
+      level: "info",
+      message: error.message,
+      stack: error.stack,
+      isLoggedIn: true,
+      userID,
+      api,
+      channelID
+    })
+    res.sendStatus(500);
+  })
+
+})
 module.exports = {
   router
 };
