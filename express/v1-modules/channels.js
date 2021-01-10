@@ -701,7 +701,7 @@ router.post('/forums/topics/create', async (req, res) => {
       title
     })
   }).catch(error => {
-    if(error) {
+    if (error) {
       utils.logger.log({
         level: "info",
         message: error.message,
@@ -715,6 +715,43 @@ router.post('/forums/topics/create', async (req, res) => {
       res.sendStatus(500);
     }
 
+  })
+})
+// POST: /api/v1/channels/topics/delete
+// Params: none
+// Body: accessToken, channelID, topicID
+// Return: <status_code>
+router.post('/forums/topics/delete', async (req, res) => {
+  let {accessToken, channelID, topicID} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/forums/topics/delete";
+  if (!channelID || !topicID) return res.sendStatus(400);
+  con.query(`DELETE FROM channels_forums_replies WHERE channelID = ? AND topicID = ? AND userID = ?`, [channelID, topicID, userID]).then(() => {
+    return con.query(`DELETE FROM channels_forums_topics WHERE channelID = ? AND id = ? AND userID = ?`, [channelID, topicID, userID])
+  }).then(() => {
+    utils.logger.log({
+      level: "info",
+      message: "Topic Deleted",
+      isLoggedIn: true,
+      userID,
+      api,
+      channelID
+    })
+    res.sendStatus(200);
+  }).catch(error => {
+    if (error) {
+      utils.logger.log({
+        level: "info",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
+        userID,
+        api,
+        channelID
+      })
+      res.sendStatus(500);
+    }
   })
 })
 
@@ -740,17 +777,17 @@ router.post('/forums/topics/replies/create', async (req, res) => {
       channelID
     })
   }).catch(error => {
-    if(error) {
-    utils.logger.log({
-      level: "info",
-      message: error.message,
-      stack: error.stack,
-      isLoggedIn: true,
-      userID,
-      api,
-      channelID
-    })
-    res.sendStatus(500);
+    if (error) {
+      utils.logger.log({
+        level: "info",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
+        userID,
+        api,
+        channelID
+      })
+      res.sendStatus(500);
     }
   })
 })
@@ -777,7 +814,7 @@ router.post('/forums/topics/replies/delete', async (req, res) => {
       replyID
     })
   }).catch(error => {
-    if(error) {
+    if (error) {
       utils.logger.log({
         level: "info",
         message: error.message,

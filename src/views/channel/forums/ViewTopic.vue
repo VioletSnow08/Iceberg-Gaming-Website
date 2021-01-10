@@ -11,7 +11,7 @@
     <h3>Created By: {{user(topic($route.params.channelID, $route.params.topicID).userID).username}}</h3>
     <h3>Created At: {{new Date(topic($route.params.channelID, $route.params.topicID).createdAt).toDateString() + ' ' + new Date(topic($route.params.channelID, $route.params.topicID).createdAt).toTimeString()}}</h3>
     <vs-button style="margin-right: 15px;" @click="createReplyPopup=true" color="primary">Reply</vs-button>
-    <vs-button :disabled="topic($route.params.channelID, $route.params.topicID).userID !== currentUser.id" @click="deleteTopic($route.params.channelID, $route.params.topicID)" color="danger">Delete Topic</vs-button>
+    <vs-button :disabled="topic($route.params.channelID, $route.params.topicID).userID !== currentUser.id" @click="deleteTopic([$route.params.channelID, $route.params.topicID])" color="danger">Delete Topic</vs-button>
     <vs-divider></vs-divider>
     <h1>Body</h1>
     <div v-html="topic($route.params.channelID, $route.params.topicID).body"></div>
