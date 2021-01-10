@@ -15,20 +15,34 @@
       <div v-if="!displayedRoles" style="color: red; font-weight: bold">Fetching Roles!</div>
       <br>
       <div v-for="role in displayedRoles">
-        <vs-checkbox style="padding-bottom: 10px;" :disabled="role.isDisabled" v-model="role.doesUserHaveIt">{{ role.role }}</vs-checkbox>
+        <vs-checkbox style="padding-bottom: 10px;" :disabled="role.isDisabled" v-model="role.doesUserHaveIt">
+          {{ role.role }}
+        </vs-checkbox>
       </div>
 
       <div class="vs-row">
-        <vs-button style="margin-right: 5px" @click="alertPopup=true; toggleRoles([displayedRoles, params.data.id])">Save Roles</vs-button>
+        <vs-button style="margin-right: 5px" @click="alertPopup=true; toggleRoles([displayedRoles, params.data.id])">
+          Save Roles
+        </vs-button>
         <vs-button color="warning" @click="isRemoveUserPopupOpen=true">Remove User</vs-button>
       </div>
 
       <vs-popup title="Are you sure you want to remove this user?" :active.sync="isRemoveUserPopupOpen">
         <vs-alert :active="removeUserAlert" color="success">User Removed!</vs-alert>
         <br v-if="removeUserAlert">
-        <vs-button color="danger" @click="removeUserAlert=true; remove17thUser(params.data.id)">Remove User</vs-button>
+        <vs-button :disabled="isRemoveButtonDisabled('Iceberg')" color="danger"
+                   @click="removeUserAlert=true; removeUser([params.data.id, 'Iceberg'])">Remove User from Iceberg
+          Gaming
+        </vs-button>
+        <vs-button :disabled="isRemoveButtonDisabled('17th')" color="danger"
+                   @click="removeUserAlert=true; removeUser([params.data.id, '17th'])">Remove User from 17th Brigade
+          Combat Team
+        </vs-button>
+        <vs-button :disabled="isRemoveButtonDisabled('CGS')" color="danger"
+                   @click="removeUserAlert=true; removeUser([params.data.id, 'CGS'])">Remove User from Chryse Guard
+          Security
+        </vs-button>
       </vs-popup>
-
 
 
     </vs-popup>
@@ -53,9 +67,16 @@ export default {
   },
   async mounted() {
     this.displayedRoles = await this.getEditableRoles([this.params.data.id])
+    this.removableDivisions = await this.getRemovableDivisions([this.params.data.id])
   },
   methods: {
-    ...mapActions(["toggleRoles", "removeIcebergUser", "getEditableRoles"]),
+    ...mapActions(["toggleRoles", "removeUser", "getEditableRoles", "getRemovableDivisions"]),
+    isRemoveButtonDisabled(div) {
+      if (this.removableDivisions) {
+        let object = this.removableDivisions.find(obj => obj.division.toLowerCase() === div.toLowerCase());
+        return !object.removable
+      }
+    }
   },
   data() {
     return {
@@ -64,7 +85,8 @@ export default {
       isChangePasswordPopupOpen: false,
       alertPopup: false,
       displayedRoles: null,
-      isRemoveUserPopupOpen: false
+      isRemoveUserPopupOpen: false,
+      removableDivisions: null
     }
   }
 }

@@ -46,6 +46,18 @@ const actions = {
         utils.alertGeneral();
       }
     })
+  },
+  async getRemovableDivisions({rootGetters}, [userID]) {
+    return axios.post(`${utils.base_url}/user-management/get-removable-divisions`, {
+      userID,
+      accessToken: await rootGetters.currentUser.accessToken
+    }).then(response => {
+      return response.data;
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral();
+      }
+    })
   }
 }
 const mutations = {

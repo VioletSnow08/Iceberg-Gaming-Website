@@ -136,7 +136,7 @@ router.post('/get-editable-roles', async (req, res) => {
 // Body: accessToken
 // Return: removableDivisions
 router.post('/get-removable-divisions', async (req, res) => {
-  require("./get-removable-divisions").index(req, res, VALID_REMOVE_ROLES)
+  require("./get-removable-divisions").index(req, res, canUserRemoveUser)
 })
 
 // POST: /api/v1/user-management/change-roles
