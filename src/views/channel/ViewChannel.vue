@@ -44,7 +44,7 @@
 import {mapGetters} from "vuex";
 import CalendarBP from "@/views/channel/calendar/Calendar"
 import DocumentsBP from "@/views/channel/documents/Documents";
-import ForumsBP from "@/views/channel/forums/Forums";
+import ForumsBP from "@/views/channel/forums/ViewTopics";
 
 
 export default {

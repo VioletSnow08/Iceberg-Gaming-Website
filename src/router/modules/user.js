@@ -110,7 +110,7 @@ export default [{
     {
       path: '/channels/:channelID/forums/:forumID',
       name: 'ViewTopics',
-      component: () => import('@/views/channel/forums/ViewTopics.vue'),
+      component: () => import('@/views/channel/forums/ViewTopic.vue'),
       meta: {
         requiresAuth: true,
         roles: ['[ICE] Member']
