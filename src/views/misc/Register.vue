@@ -44,7 +44,7 @@
                   </div>
                   <div class="vx-row mb-6">
                     <div class="vx-col w-full">
-                      <vs-input type="text" class="w-full" icon-pack="feather" icon="icon-hash" icon-no-border label="Discord Username & Tag" v-model="discord" />
+                      <vs-input type="text" class="w-full" icon-pack="feather" icon="icon-hash" icon-no-border label="Discord Username & Tag(leave blank if none)" v-model="discord" />
                     </div>
                   </div>
                   <div class="vx-row">
@@ -81,7 +81,9 @@ export default {
   methods: {
     ...mapActions(['registerUser']),
     register () {
-      if (this.password !== this.password2) {
+      if(this.password === '' || this.password2 === '' || this.username === '' || this.email === '') {
+        alert("Please provide all required fields!");
+      } else if (this.password !== this.password2) {
         alert('Passwords do not match!')
       } else {
         this.registerUser([this.username, this.email, this.password, this.discord])
