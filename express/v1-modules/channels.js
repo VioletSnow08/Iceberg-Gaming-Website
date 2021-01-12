@@ -35,31 +35,31 @@ router.post('/', async (req, res) => {
     replies: [], // Basically comments or responses,
     documents: [] // PDFs
   }
-  con.query(`SELECT * FROM channels`).then(rows => {
+  con.query(`SELECT * FROM channels ORDER BY createdAt DESC`).then(rows => {
     rows.forEach(row => {
       iq.channels.push(row);
     })
-    return con.query(`SELECT * FROM channels_calendar_events`)
+    return con.query(`SELECT * FROM channels_calendar_events ORDER BY createdAt DESC`)
   }).then(rows => {
     rows.forEach(row => {
       iq.events.push(row);
     })
-    return con.query(`SELECT * FROM channels_calendar_attendance`)
+    return con.query(`SELECT * FROM channels_calendar_attendance ORDER by userID DESC`)
   }).then(rows => {
     rows.forEach(row => {
       iq.attendance.push(row);
     })
-    return con.query(`SELECT * FROM channels_forums_topics`)
+    return con.query(`SELECT * FROM channels_forums_topics ORDER BY createdAt DESC`)
   }).then(rows => {
     rows.forEach(row => {
       iq.topics.push(row);
     })
-    return con.query(`SELECT * FROM channels_forums_replies`)
+    return con.query(`SELECT * FROM channels_forums_replies ORDER BY createdAt ASC`) // This is because replies are a chain in a topic
   }).then(rows => {
     rows.forEach(row => {
       iq.replies.push(row);
     })
-    return con.query(`SELECT * FROM channels_documents_pdfs`)
+    return con.query(`SELECT * FROM channels_documents_pdfs ORDER BY createdAt DESC`)
   }).then(rows => {
     rows.forEach(row => {
       iq.documents.push(row);
@@ -154,9 +154,9 @@ router.post('/create', async (req, res) => {
   type = type.toLowerCase();
   if (division !== "17th" && division !== "cgs" && division !== "iceberg") return res.sendStatus(400);
   if (type !== "calendar" && type !== "forum" && type !== "documents") return res.sendStatus(400);
-
+  let createdAt = utils.getCurrentDateISO();
   if ((division === "iceberg" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.iceberg)) || (division === "17th" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.bct)) || (division === "cgs" && utils.doesUserContainRoles(req.user.roles, CHANNEL_EDIT_ROLES.cgs))) {
-    con.query(`INSERT INTO channels (name, division, type) VALUES (?, ?, ?)`, [name, oldDivision, type]).then(() => {
+    con.query(`INSERT INTO channels (name, division, type, createdAt) VALUES (?, ?, ?, ?)`, [name, oldDivision, type, createdAt]).then(() => {
       res.sendStatus(200);
     }).catch(error => {
       if (error) {
@@ -505,6 +505,7 @@ router.post('/documents/create', async (req, res) => {
   const userID = req.user.id;
   const con = req.app.get('con');
   const api = "/api/v1/channels/documents/create";
+  let createdAt = DateTime.local().setZone('America/Chicago').toISO();
   if (!name || !channelID) return res.sendStatus(400);
   if (!req.files) {
     return res.status(500).send({msg: "File Not Found!"})
@@ -520,7 +521,7 @@ router.post('/documents/create', async (req, res) => {
     }
   }).then(() => {
     if (!res.headersSent) {
-      return con.query(`INSERT INTO channels_documents_pdfs (userID, filename, name, channelID) VALUES (?, ?, ?, ?)`, [userID, file.name, name, channelID])
+      return con.query(`INSERT INTO channels_documents_pdfs (userID, filename, name, channelID, createdAt) VALUES (?, ?, ?, ?, ?)`, [userID, file.name, name, channelID, createdAt])
     }
   }).then(() => {
     if (!res.headersSent) {
@@ -715,6 +716,43 @@ router.post('/forums/topics/create', async (req, res) => {
       res.sendStatus(500);
     }
 
+  })
+})
+// POST: /api/v1/channels/topics/edit
+// Params: none
+// Body: accessToken, channelID, title, body, topicID
+// Return: <status_code>
+router.post('/forums/topics/edit', async (req, res) => {
+  let {accessToken, channelID, title, body, topicID} = req.body;
+  const userID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/channels/forums/topics/edit";
+  if (!channelID || !title || !body || !topicID) return res.sendStatus(400);
+  con.query(`UPDATE channels_forums_topics SET title = ?, body = ? WHERE userID = ? AND channelID = ? AND id = ?`, [title, body, userID, channelID, topicID]).then(() => {
+    res.sendStatus(200);
+    utils.logger.log({
+      level: "info",
+      message: "Topic Edited",
+      isLoggedIn: true,
+      userID,
+      api,
+      channelID,
+      title
+    })
+  }).catch(error => {
+    if (error) {
+      utils.logger.log({
+        level: "info",
+        message: error.message,
+        stack: error.stack,
+        isLoggedIn: true,
+        userID,
+        api,
+        channelID,
+        title
+      })
+      res.sendStatus(500);
+    }
   })
 })
 // POST: /api/v1/channels/topics/delete

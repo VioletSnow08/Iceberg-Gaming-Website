@@ -255,7 +255,22 @@ const actions = {
         utils.alertGeneral();
       }
     })
-  }
+  },
+  async editTopic({rootGetters}, [channelID, topicID, title, body]) {
+    axios.post(`${utils.base_url}/channels/forums/topics/edit`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      channelID,
+      topicID,
+      title,
+      body
+    }).then(() => {
+      this.dispatch('fetchChannels');
+    }).catch(error => {
+      if (error) {
+        utils.alertGeneral();
+      }
+    })
+  },
 }
 
 const mutations = {
