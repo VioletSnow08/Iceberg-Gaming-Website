@@ -20,10 +20,6 @@ router.post('/register', async (req, res) => {
   const con = req.app.get('con');
   let hasReturned = false;
   if (!discord) discord = '';
-  let initialRole = "[ICE] Applicant";
-  if (email.toLowerCase() === "vinniehat@gmail.com") {
-    initialRole = "[ICE] Webmaster"
-  }
   if (!email || !password || !username) {
     return res.status(400).send("Please provide an email, password, username, and Discord Username and Tag!")
   }
@@ -45,7 +41,11 @@ router.post('/register', async (req, res) => {
     }
   }).then(async row => {
     if (hasReturned === false) {
-      return await con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, initialRole])
+      await con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Member"]).then(() => {
+        if (email.toLowerCase() === "vinniehat@gmail.com") {
+          con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Webmaster"])
+        }
+      })
     }
   }).catch(error => {
     if (error) {
@@ -76,6 +76,8 @@ router.post('/register', async (req, res) => {
       api
     })
   }
+
+
 })
 // POST: /api/v1/user/login
 // Params: none
