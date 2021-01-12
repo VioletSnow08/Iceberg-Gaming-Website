@@ -292,6 +292,74 @@ router.post('/discord', async (req, res) => {
   } else res.sendStatus(401);
 })
 
+// POST: /api/v1/settings/username
+// Params: none
+// Body: accessToken, userID, username
+// Return: <status_code>
+router.post('/username', async (req, res) => {
+  let {accessToken, userID, username} = req.body;
+  const loggedInUserID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/settings/username";
+  if (!accessToken || !userID || !username) return res.status(400).send("Bad Request! Please pass in an accessToken, userID, and a username.")
+
+  if(userID === loggedInUserID) {
+    con.query(`UPDATE users SET username = ? WHERE id = ?`, [username, loggedInUserID]).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "User changed Username",
+        userID: loggedInUserID,
+        username,
+        isLoggedIn: true,
+        api
+      })
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: loggedInUserID,
+          username,
+          api,
+          accessToken
+        })
+        res.sendStatus(500);
+      }
+    })
+  } else if(utils.doesUserContainRoles(req.user.roles, ["[17th] NCO", "[17th] Alpha Company HQ", "[ICE] Owner", "[ICE] Admin", "[ICE] Webmaster"])) {
+    con.query(`UPDATE users SET username = ? WHERE id = ?`, [username, userID]).then(() => {
+      res.sendStatus(200);
+      utils.logger.log({
+        level: "info",
+        message: "Admin changed Username",
+        userID: loggedInUserID,
+        victim: userID,
+        username,
+        isLoggedIn: true,
+        api
+      })
+    }).catch(error => {
+      if (error) {
+        utils.logger.log({
+          level: "error",
+          message: error.message,
+          stack: error.stack,
+          isLoggedIn: true,
+          userID: loggedInUserID,
+          victim: userID,
+          username,
+          api,
+          accessToken
+        })
+        res.sendStatus(500);
+      }
+    })
+  } else res.sendStatus(401);
+})
+
 
 
 module.exports = {
