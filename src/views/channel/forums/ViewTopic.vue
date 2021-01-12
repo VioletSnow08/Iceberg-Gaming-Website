@@ -14,6 +14,7 @@
     <vs-button :disabled="topic($route.params.channelID, $route.params.topicID).userID !== currentUser.id" @click="deleteTopic([$route.params.channelID, $route.params.topicID])" color="danger">Delete Topic</vs-button>
     <vs-divider></vs-divider>
     <h1>Body</h1>
+    <vs-divider></vs-divider>
     <div v-html="topic($route.params.channelID, $route.params.topicID).body"></div>
     <vs-divider></vs-divider>
     <h1>Replies</h1>
