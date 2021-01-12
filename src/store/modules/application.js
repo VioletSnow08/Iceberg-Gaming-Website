@@ -78,7 +78,7 @@ const actions = {
       accessToken: await rootGetters.currentUser.accessToken
     }).then(async response => {
       await this.dispatch('fetchCurrentUser');
-      await router.push('/user/applications');
+      await router.push('/applications');
     }).catch(error => {
       if (error) {
         utils.alertGeneral();
@@ -102,7 +102,7 @@ const actions = {
       accessToken: await rootGetters.currentUser.accessToken
     }).then(async response => {
       await this.dispatch('fetchApplications');
-      await router.push('/user/applications');
+      await router.push('/applications');
     }).catch(error => {
       if (error) {
         utils.alertGeneral();
@@ -124,7 +124,7 @@ const actions = {
       accessToken: await rootGetters.currentUser.accessToken
     }).then(async response => {
       await this.dispatch('fetchApplications');
-      await router.push('/user/applications');
+      await router.push('/applications');
     }).catch(error => {
       if (error) {
         utils.alertGeneral();
