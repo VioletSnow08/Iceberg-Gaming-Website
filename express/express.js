@@ -6,10 +6,10 @@ const jwt = require('jsonwebtoken');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const fs = require("fs")
+require( 'trace-unhandled/register' )
 
 const app = express()
 const port = 3001
-
 
 MYSQL.createConnection({
   ...mysql

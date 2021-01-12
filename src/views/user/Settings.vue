@@ -49,7 +49,15 @@
             />
             <vs-button @click="saveChanges_UserInfo()" class="input-spacing" color="success" type="relief">Save Changes
             </vs-button>
+
+            <vs-button @click="deleteAccountPrompt=true" class="input-spacing" color="danger" type="relief">DELETE ACCOUNT</vs-button>
           </div>
+
+
+          <vs-popup :active.sync="deleteAccountPrompt" title="Are you sure you want to delete your account?">
+            <vs-button @click="deleteAccount([currentUser.id])" color="danger">Yes, I do.</vs-button>
+          </vs-popup>
+
         </vs-tab>
 
 
@@ -97,7 +105,6 @@
           </div>
         </vs-tab>
       </vs-tabs>
-
     </div>
   </div>
 
@@ -132,14 +139,15 @@ export default {
       newDiscordID: "",
       newUsername: "",
       isDiscord_Invalid: false,
-      showConfirmationAlert_UserInfo: false
+      showConfirmationAlert_UserInfo: false,
+      deleteAccountPrompt: false
     }
   },
   components: {
     Datepicker
   },
   methods: {
-    ...mapActions(["submitLOA", "endLOA", "changeDiscord", "changeStatus", "changeIsEmailPublic", "changeUsername"]),
+    ...mapActions(["submitLOA", "endLOA", "changeDiscord", "changeStatus", "changeIsEmailPublic", "changeUsername", "deleteAccount"]),
     verifyLOA() {
       if (!this.date) {
         this.endDateAlert = true;

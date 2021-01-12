@@ -360,6 +360,69 @@ router.post('/username', async (req, res) => {
   } else res.sendStatus(401);
 })
 
+// POST: /api/v1/settings/delete_account
+// Params: none
+// Body: accessToken, userID
+// Return: <status_code>
+router.post('/delete_account', async (req, res) => {
+  let {accessToken, userID} = req.body;
+  const loggedInUserID = req.user.id;
+  const con = req.app.get('con');
+  const api = "/api/v1/settings/delete_account";
+  if (!accessToken || !userID) return res.status(400).send("Bad Request! Please pass in an accessToken, userID.")
+
+  if(userID !== loggedInUserID) return res.sendStatus(400);
+
+  con.query(`DELETE FROM 17th_applications WHERE userID = ?`, [userID]).then(() => {
+    return con.query(`DELETE FROM cgs_applications WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM iceberg_applications WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM channels_documents_pdfs WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM channels_forums_replies WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM channels_forums_topics WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM channels_calendar_attendance WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM channels_calendar_events WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM disciplinary_action_forms WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM loas WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM iceberg_applications WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM user_roles WHERE userID = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM tokens WHERE id = ?`, [userID])
+  }).then(() => {
+    return con.query(`DELETE FROM users WHERE id = ?`, [userID])
+  }).then(() => {
+    res.sendStatus(200);
+    utils.logger.log({
+      level: "info",
+      message: "User Deleted Account",
+      userID,
+      api,
+      isLoggedIn: true
+    })
+  }).catch(error => {
+    if(error) {
+      utils.logger.log({
+        level: "error",
+        message: error.message,
+        stack: error.stack,
+        userID,
+        api,
+        isLoggedIn: true
+      })
+    }
+    res.sendStatus(500)
+  })
+})
+
 
 
 module.exports = {

@@ -55,7 +55,6 @@ async function requiresAuth(req, res, next) {
 
 async function getUser(con, userID) {
   let user;
-  let apps = [];
   let roles = [];
   let loas = [];
   let bctMemberRows = [];
@@ -70,7 +69,7 @@ async function getUser(con, userID) {
       hasReturned = true;
     }
   }).then(async rows => {
-    if (!hasReturned && rows[0]) { // If the user has roles... (required)
+    if (!hasReturned && rows) { // If the user has roles... (required)
       rows.forEach(row => {
         roles.push(row.role);
       })
@@ -79,37 +78,6 @@ async function getUser(con, userID) {
     } else {
       hasReturned = true;
     }
-  // }).then(async rows => {
-  //   if (!hasReturned && rows[0]) { // If the user has any 17th Member Rows (not required)
-  //     rows.forEach(row => {
-  //       bctMemberRows.push(row);
-  //     })
-  //     user.bct = bctMemberRows;
-  //   }
-  //   return await con.query(`SELECT * FROM iceberg_applications WHERE userID = ? ORDER BY createdAt desc`, [userID])
-  // }).then(async rows => {
-  //   if (!hasReturned && rows[0]) { // If the user has any Iceberg Applications (not required)
-  //     rows.forEach(row => {
-  //       apps.push(row);
-  //     })
-  //     // Is not added to the user because we have the 17th Applications to add to the array still...
-  //   }
-  //   return await con.query(`SELECT * FROM 17th_applications WHERE userID = ? ORDER BY createdAt desc`, [userID])
-  // }).then(async rows => {
-  //   if (!hasReturned && rows[0]) { // If the user has any 17th BCT Applications (not required)
-  //     rows.forEach(row => {
-  //       apps.push(row);
-  //     })
-  //     user.applications = apps;
-  //   }
-  //   return await con.query(`SELECT * FROM loas WHERE userID = ? ORDER BY startDate desc`, [userID])
-  // }).then(async rows => {
-  //   if (!hasReturned && rows[0]) {
-  //     rows.forEach(row => {
-  //       loas.push(row);
-  //     })
-  //     user.loas = loas;
-  //   }
   }).catch(error => {
     if (error) {
       caughtError = error;
@@ -138,9 +106,8 @@ async function getUser(con, userID) {
       }
       resolve(safeUser);
     } else {
-      reject(caughtError);
+      reject();
     }
-    ;
   });
 }
 

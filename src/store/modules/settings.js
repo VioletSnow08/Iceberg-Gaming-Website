@@ -2,6 +2,7 @@ import * as firebase from 'firebase/app'
 import 'firebase/auth'
 import axios from "axios";
 import store from '../store';
+import router from "@/router/router";
 const utils = require("../../../utils");
 axios.defaults.headers = {
   'Content-Type': 'application/json'
@@ -136,6 +137,16 @@ const actions = {
     if(!rootGetters.currentUser) return;
     axios.post(`${utils.base_url}/settings/loas`, {accessToken: await rootGetters.currentUser.accessToken}).then(response => {
       commit('setLOAs', response.data);
+    })
+  },
+  async deleteAccount({commit, rootGetters}, [userID]) {
+    if(!rootGetters.currentUser) return;
+    axios.post(`${utils.base_url}/settings/delete_account`, {accessToken: await rootGetters.currentUser.accessToken, userID}).then(response => {
+      localStorage.removeItem('refreshToken');
+      commit('logoutUser');
+      router.push('/').catch(()=>{});
+    }).catch(error => {
+      if(error) utils.alertGeneral();
     })
   }
 }
