@@ -19,7 +19,7 @@
     <vs-divider></vs-divider>
     <h1>Replies</h1>
     <vs-divider></vs-divider>
-    <div v-for="reply in replies($route.params.channelID, $route.params.topicID)">
+    <div v-for="reply in replies($route.params.channelID, $route.params.topicID)" :key="reply.id">
       <h4>From: {{user(reply.userID).username}}</h4>
       <h5>Created At: {{new Date(reply.createdAt).toDateString() + ' ' + new Date(reply.createdAt).toTimeString()}}</h5>
       <br>
