@@ -60,6 +60,22 @@ const actions = {
       }
     })
   },
+  async changeUsername({dispatch, rootGetters}, [username, userID]) {
+    await axios.post(`${utils.base_url}/settings/username`, {
+      accessToken: await rootGetters.currentUser.accessToken,
+      userID,
+      username
+    }).then(async () => {
+      await dispatch("fetchCurrentUser");
+      if(userID !== rootGetters.currentUser.id) { // To prevent too many queries ~ Meaning an admin ran this function.
+        await dispatch("fetchUsers");
+      }
+    }).catch(error => {
+      if(error) {
+        utils.alertGeneral()
+      }
+    })
+  },
   async changeDiscord({dispatch, rootGetters}, [discord, userID]) {
     await axios.post(`${utils.base_url}/settings/discord`, {
       accessToken: await rootGetters.currentUser.accessToken,
