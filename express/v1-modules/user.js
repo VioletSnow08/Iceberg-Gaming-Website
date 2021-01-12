@@ -15,11 +15,12 @@ const {getUser} = require("../middleware/auth");
 // Body: email, password, username, discord
 // Return: <status code>
 router.post('/register', async (req, res) => {
-  const {email, password, username, discord} = req.body;
+  let {email, password, username, discord} = req.body;
   const api = "/api/v1/user/register";
   const con = req.app.get('con');
   let hasReturned = false;
-  if (!email || !password || !username || !discord) {
+  if(!discord) discord = '';
+  if (!email || !password || !username) {
     return res.status(400).send("Please provide an email, password, username, and Discord Username and Tag!")
   }
   const hash = md5(password);
