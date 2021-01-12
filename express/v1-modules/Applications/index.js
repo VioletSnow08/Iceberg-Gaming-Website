@@ -11,7 +11,7 @@ module.exports.index = function(req, res) {
     icebergApplications: [],
     cgsApplications: []
   }
-  con.query(`SELECT * FROM applications`).then(rows => {
+  con.query(`SELECT * FROM applications ORDER BY createdAt DESC`).then(rows => {
     initialQueries.applications = rows;
     utils.logger.log({
       level: "info",
@@ -21,7 +21,7 @@ module.exports.index = function(req, res) {
       accessToken,
       api
     })
-    return con.query(`SELECT * FROM 17th_applications`)
+    return con.query(`SELECT * FROM 17th_applications ORDER BY createdAt DESC`)
   }).then(rows => {
     utils.logger.log({
       level: "info",
@@ -35,7 +35,7 @@ module.exports.index = function(req, res) {
       row.division = "17th";
       initialQueries.bctApplications.push(row);
     })
-    return con.query(`SELECT * FROM iceberg_applications`)
+    return con.query(`SELECT * FROM iceberg_applications ORDER BY createdAt DESC`)
   }).then(rows => {
     utils.logger.log({
       level: "info",
@@ -49,7 +49,7 @@ module.exports.index = function(req, res) {
       row.division = "Iceberg";
       initialQueries.icebergApplications.push(row);
     })
-    return con.query(`SELECT * FROM cgs_applications`)
+    return con.query(`SELECT * FROM cgs_applications ORDER BY createdAt DESC`)
   }).then(rows => {
     utils.logger.log({
       level: "info",

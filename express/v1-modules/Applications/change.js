@@ -1,5 +1,5 @@
 const utils = require("../../../utils");
-module.exports.index = function(req, res, bctMessageApprove, bctMessageDeny, bctMessageProcess, icebergMessageApprove, icebergMessageProcess, icebergMessageDeny) {
+module.exports.index = function(req, res, bctMessageApprove, bctMessageDeny, bctMessageProcess, icebergMessageApprove, icebergMessageProcess, icebergMessageDeny, cgsMessageApprove, cgsMessageProcess, cgsMessageDeny) {
   let {accessToken} = req.body;
   let {action, id, division} = req.body;
   const userID = req.user.id;
@@ -292,6 +292,108 @@ module.exports.index = function(req, res, bctMessageApprove, bctMessageDeny, bct
               division,
               id,
               subApplicationID,
+              api
+            })
+          }
+        })
+      } else if(division === "cgs" && action === "approve") {
+        comment = cgsMessageApprove(req);
+        status = "Approved";
+        con.query(`UPDATE cgs_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID]).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
+          res.sendStatus(200);
+        }).catch(error => {
+          if (error) {
+            res.sendStatus(500);
+            utils.logger.log({
+              level: "error",
+              message: error.message,
+              stack: error.stack,
+              isLoggedIn: true,
+              userID,
+              applicantID,
+              subApplicationID,
+              division,
+              id,
+              action,
+              api
+            })
+          }
+        })
+      } else if(division === "cgs" && action === "process") {
+        comment = cgsMessageProcess(req);
+        status = "Processed";
+        con.query(`UPDATE cgs_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID]).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
+          res.sendStatus(200);
+        }).catch(error => {
+          if (error) {
+            res.sendStatus(500);
+            utils.logger.log({
+              level: "error",
+              message: error.message,
+              stack: error.stack,
+              isLoggedIn: true,
+              userID,
+              applicantID,
+              subApplicationID,
+              division,
+              id,
+              action,
+              api
+            })
+          }
+        })
+      } else if(division === "cgs" && action === "deny") {
+        comment = cgsMessageDeny(req);
+        status = "Denied";
+        con.query(`UPDATE cgs_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID]).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Updated Application",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
+          res.sendStatus(200);
+        }).catch(error => {
+          if (error) {
+            res.sendStatus(500);
+            utils.logger.log({
+              level: "error",
+              message: error.message,
+              stack: error.stack,
+              isLoggedIn: true,
+              userID,
+              applicantID,
+              subApplicationID,
+              division,
+              id,
+              action,
               api
             })
           }

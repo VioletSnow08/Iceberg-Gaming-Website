@@ -52,7 +52,7 @@ module.exports.index = function(req, res) {
     if ((ranger || medic || sapper || pilot || tank_crew || idf || attendOps) !== (true || false)) return res.status(400).send("Bad Request! Please provide ALL questions in the body.");
     con.query(`INSERT INTO 17th_applications (userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, createdAt, steamURL, timezone, age, arma3Hours, hobbies, whyJoin, attractmilsim, ranger, medic, sapper, pilot, tank_crew, idf, attendOps]).then(row => {
       let rowID = row.insertId;
-      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "17th", rowID])
+      return con.query(`INSERT INTO applications (userID, division, applicationID, createdAt) VALUES (?, ?, ?, ?)`, [userID, "17th", rowID, createdAt])
     }).then(() => {
       return postWebhook();
     }).then(() => {
@@ -92,7 +92,7 @@ module.exports.index = function(req, res) {
     } = req.body;
     con.query(`INSERT INTO iceberg_applications (userID, createdAt, steamURL, age, hobbies, gamesTheyJoinFor, hoursInGamesTheyJoinFor, areYouInAnyCommunities, whyJoin, whereDidYouHearUsFrom) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`, [userID, createdAt, steamURL, age, hobbies, gamesTheyJoinFor, hoursInGamesTheyJoinFor, areYouInAnyCommunities, whyJoin, whereDidYouHearUsFrom]).then(row => {
       let rowID = row.insertId;
-      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "Iceberg", rowID])
+      return con.query(`INSERT INTO applications (userID, division, applicationID, createdAt) VALUES (?, ?, ?, ?)`, [userID, "Iceberg", rowID, createdAt])
     }).then(() => {
       return postWebhook();
     }).then(() => {
@@ -131,7 +131,7 @@ module.exports.index = function(req, res) {
     if ((steamURL || age || whyJoin || playstyle || squadron || whereDidYouHearAboutUs) === undefined) return res.status(400).send("Bad Request! Please provide ALL questions in the body.");
     con.query(`INSERT INTO cgs_applications (userID, steamURL, age, whyJoin, playstyle, squadron, whereDidYouHearAboutUs, createdAt) VALUES (?, ?, ?, ?, ?, ?, ?, ?)`, [userID, steamURL, age, whyJoin, playstyle, squadron, whereDidYouHearAboutUs, createdAt]).then(row => {
       let rowID = row.insertId;
-      return con.query(`INSERT INTO applications (userID, division, applicationID) VALUES (?, ?, ?)`, [userID, "CGS", rowID])
+      return con.query(`INSERT INTO applications (userID, division, applicationID, createdAt) VALUES (?, ?, ?, ?)`, [userID, "CGS", rowID, createdAt])
     }).then(() => {
       return postWebhook();
     }).then(() => {
