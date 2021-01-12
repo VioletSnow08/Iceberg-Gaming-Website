@@ -39,11 +39,14 @@
               v-model="newDiscordID"
 
             />
+            <vs-input
+              class="input-spacing"
+              label="Change Username"
+              style="resize: none; width: 350px !important"
+              :placeholder="currentUser.username"
+              v-model="newUsername"
 
-            <vs-switch class="input-spacing" v-model="newIsEmailPublic">
-              <span slot="on" color="success">Show Email</span>
-              <span slot="off" color="danger">Hide Email</span>
-            </vs-switch>
+            />
             <vs-button @click="saveChanges_UserInfo()" class="input-spacing" color="success" type="relief">Save Changes
             </vs-button>
           </div>
@@ -127,6 +130,7 @@ export default {
       newIsEmailPublic: null,
       newStatus: "",
       newDiscordID: "",
+      newUsername: "",
       isDiscord_Invalid: false,
       showConfirmationAlert_UserInfo: false
     }
@@ -135,7 +139,7 @@ export default {
     Datepicker
   },
   methods: {
-    ...mapActions(["submitLOA", "endLOA", "changeDiscord", "changeStatus", "changeIsEmailPublic"]),
+    ...mapActions(["submitLOA", "endLOA", "changeDiscord", "changeStatus", "changeIsEmailPublic", "changeUsername"]),
     verifyLOA() {
       if (!this.date) {
         this.endDateAlert = true;
@@ -156,9 +160,9 @@ export default {
         this.isDiscord_Invalid = true;
       }
       else{
-        if(this.newDiscordID !== ""){this.changeDiscord([this.newDiscordID, this.currentUser.id])}
-        if(this.newStatus !== ""){this.changeStatus([this.newStatus, this.currentUser.id])}
-        this.changeIsEmailPublic(this.newIsEmailPublic);
+        if(this.newDiscordID !== "") this.changeDiscord([this.newDiscordID, this.currentUser.id])
+        if(this.newStatus !== "") this.changeStatus([this.newStatus, this.currentUser.id])
+        if(this.newUsername !== "") this.changeUsername([this.newUsername, this.currentUser.id]);
         this.showConfirmationAlert_UserInfo = true;
         this.isDiscord_Invalid = false;
       }
