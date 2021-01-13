@@ -11,7 +11,7 @@ router.use(requiresAuth);
 // Body: accessToken
 // Return: <status_code>
 router.post('/disciplinary-action', async (req, res) => {
-  require("./Disciplinary Action/index").index(res, res, REQUIRED_ROLES);
+  require("./Disciplinary Action/index").index(req, res, REQUIRED_ROLES);
 })
 
 // POST: /api/v1/administrative/disciplinary-action/submit
