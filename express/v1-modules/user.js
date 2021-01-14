@@ -41,11 +41,12 @@ router.post('/register', async (req, res) => {
     }
   }).then(async row => {
     if (hasReturned === false) {
-      await con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Member"]).then(() => {
-        if (email.toLowerCase() === "vinniehat@gmail.com") {
-          con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Webmaster"])
-        }
-      })
+      if (email.toLowerCase() === "vinniehat@gmail.com") {
+        con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Member"])
+        con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Webmaster"])
+      } else {
+        await con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [row.insertId, "[ICE] Applicant"])
+      }
     }
   }).catch(error => {
     if (error) {
