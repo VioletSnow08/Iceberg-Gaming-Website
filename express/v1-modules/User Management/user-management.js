@@ -20,8 +20,8 @@ const VALID_CHANGE_ROLES = { // What roles each role can toggle
   BCT_ALPHA_COMPANY_HQ: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer"],
   ICE_OWNER: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Admin", "[ICE] Recruiter"],
   ICE_ADMIN: ["[17th] Ranger", "[17th] 32nd LSG", "[17th] NCO", "[17th] Officer", "[17th] Alpha Company HQ", "[ICE] Recruiter"],
-  CGS_OFFICER: [memberRoles.cgs],
-  CGS_OWNER: ["[CGS] Owner"],
+  CGS_OFFICER: [],
+  CGS_OWNER: ["[CGS] Owner", "[CGS] Officer"],
 }
 const INVALID_REMOVE_ROLES = { // What roles a certain role cannot remove if a user contains them
   ICE_OWNER: ["[ICE] Owner", "[ICE] Webmaster"],
