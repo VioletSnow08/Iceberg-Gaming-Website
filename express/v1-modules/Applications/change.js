@@ -296,10 +296,49 @@ module.exports.index = function(req, res, bctMessageApprove, bctMessageDeny, bct
             })
           }
         })
-      } else if(division === "cgs" && action === "approve") {
+      } else if (division === "cgs" && action === "approve") {
         comment = cgsMessageApprove(req);
         status = "Approved";
-        con.query(`UPDATE cgs_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID]).then(() => {
+        con.query(`DELETE FROM user_roles WHERE userID = ? AND role = ?`, [applicantID, '[ICE] Applicant']).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Deleted Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
+          return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [applicantID, '[ICE] Member'])
+        }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Created Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
+          return con.query(`INSERT INTO user_roles (userID, role) VALUES (?, ?)`, [applicantID, '[CGS] Member'])
+        }).then(() => {
+          utils.logger.log({
+            level: "info",
+            message: "Created Role",
+            isLoggedIn: true,
+            userID,
+            applicantID,
+            accessToken,
+            division,
+            action,
+            api
+          })
+          return con.query(`UPDATE 17th_applications SET comment = ?, status = ? WHERE userID = ? AND id = ?`, [comment, status, applicantID, subApplicationID])
+        }).then(() => {
           utils.logger.log({
             level: "info",
             message: "Updated Application",
@@ -319,14 +358,14 @@ module.exports.index = function(req, res, bctMessageApprove, bctMessageDeny, bct
               level: "error",
               message: error.message,
               stack: error.stack,
-              isLoggedIn: true,
+              api,
               userID,
+              accessToken,
+              division,
               applicantID,
               subApplicationID,
-              division,
-              id,
               action,
-              api
+              isLoggedIn: true
             })
           }
         })
