@@ -41,6 +41,9 @@ const commonMessages = {
 function alertGeneral() {
   alert("Oops! An error has occurred. Please try again later. If this problem continues, please contact Vinniehat.");
 }
+function alertApplication() {
+  alert("Oops! An error has occurred. Please make sure all fields that are required were filled in. If they were, you may have an application already waiting a response.");
+}
 const doesUserContainRoles = (userRoles, containsRoles) => {
   return userRoles.some(role => containsRoles.includes(role))
 }
@@ -74,5 +77,6 @@ module.exports = {
   doesUserContainRoles,
   applicationDivisionDisplay,
   data,
-  getCurrentDateISO
+  getCurrentDateISO,
+  alertApplication
 }

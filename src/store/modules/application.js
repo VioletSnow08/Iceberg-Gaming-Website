@@ -81,7 +81,7 @@ const actions = {
       await router.push('/applications');
     }).catch(error => {
       if (error) {
-        utils.alertGeneral();
+        utils.alertApplication();
       }
     })
   },
@@ -105,7 +105,7 @@ const actions = {
       await router.push('/applications');
     }).catch(error => {
       if (error) {
-        utils.alertGeneral();
+        utils.alertApplication();
       }
     })
   },
@@ -127,7 +127,7 @@ const actions = {
       await router.push('/applications');
     }).catch(error => {
       if (error) {
-        utils.alertGeneral();
+        utils.alertApplication();
       }
     })
   },
