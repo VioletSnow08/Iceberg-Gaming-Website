@@ -46,9 +46,10 @@ const doesUserContainRoles = (userRoles, containsRoles) => {
 }
 
 function applicationDivisionDisplay(division) {
-  if(division === "CGS") {
+  division = division.toLowerCase();
+  if(division === "cgs") {
     return "Chryse Guard Security"
-  } else if(division === "Iceberg") {
+  } else if(division === "iceberg") {
     return "Iceberg Gaming"
   } else if(division === "17th") {
     return "17th Brigade Combat Team";
