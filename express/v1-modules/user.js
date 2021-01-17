@@ -23,6 +23,8 @@ router.post('/register', async (req, res) => {
   if (!email || !password || !username) {
     return res.status(400).send("Please provide an email, password, username, and Discord Username and Tag!")
   }
+  const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+  if(!regex.test(email)) return res.sendStatus(400);
   const hash = md5(password);
   await con.query(`SELECT * FROM users WHERE email = ?`, [email]).then(async rows => {
     utils.logger.log({
