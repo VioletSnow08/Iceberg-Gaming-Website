@@ -81,12 +81,15 @@ export default {
   methods: {
     ...mapActions(['registerUser']),
     register () {
+      const regex = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
       if(this.password === '' || this.password2 === '' || this.username === '' || this.email === '') {
         alert("Please provide all required fields!");
       } else if (this.password !== this.password2) {
         alert('Passwords do not match!')
+      } else if(!regex.test(this.email)) {
+        alert("Invalid Email! Please format it as such: test@domain.com");
       } else {
-        this.registerUser([this.username, this.email, this.password, this.discord])
+        this.registerUser([this.username, this.email, this.password, this.discord]);
       }
     }
   },
