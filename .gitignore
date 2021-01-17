@@ -19,4 +19,4 @@ src/firebaseConfig.js
 
 credentials.js
 
-express/documents/
+express/documents/*
