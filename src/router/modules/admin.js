@@ -50,7 +50,7 @@ export default [
         component: () => import('@/views/developer/RolesPage'),
         meta: {
           requiresAuth: true,
-          roles: []
+          roles: ['[ICE] Webmaster']
         },
       },
       {
@@ -59,7 +59,7 @@ export default [
         component: () => import('@/views/developer/UserLookup/UserLookup'),
         meta: {
           requiresAuth: true,
-          roles: []
+          roles: ['[ICE] Webmaster']
         },
       },
       // MISC.
@@ -69,7 +69,7 @@ export default [
         component: () => import('@/views/admin/iceberg/Disciplinary-Action/ViewDisciplinaryActions.vue'),
         meta: {
           requiresAuth: true,
-          roles: ['[17th] Alpha Company HQ', '[CGS] Owner']
+          roles: ['[ICE] Owner', '[17th] Alpha Company HQ', '[CGS] Owner', '[ICE] Webmaster']
         },
       },
       {
@@ -79,7 +79,7 @@ export default [
         params: true,
         meta: {
           requiresAuth: true,
-          roles: []
+          roles: ['[ICE] Owner', '[17th] Alpha Company HQ', '[CGS] Owner', '[ICE] Webmaster']
         },
       },
     ]
