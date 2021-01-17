@@ -59,14 +59,8 @@ function applicationDivisionDisplay(division) {
   }
 }
 
-const data = {
-  discord: "https://discord.gg/7hDQCEb",
-  teamspeak: "ts3server://ts.iceberg-gaming.com/?port=9987",
-  bct_modpack: "https://steamcommunity.com/sharedfiles/filedetails/?id=1501538330"
-}
 function getCurrentDateISO() {
-  let createdAt = DateTime.local().setZone('America/Chicago').toISO();
-  return createdAt;
+  return DateTime.local().setZone('America/Chicago').toISO();
 }
 
 module.exports = {
@@ -76,7 +70,6 @@ module.exports = {
   alertGeneral,
   doesUserContainRoles,
   applicationDivisionDisplay,
-  data,
   getCurrentDateISO,
   alertApplication
 }

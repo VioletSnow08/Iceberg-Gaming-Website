@@ -14,6 +14,14 @@
         <div v-else-if="channel($route.params.channelID).division.toLowerCase() === '17th'">
           <vs-select-item value="#72A0C1" text="Gray"></vs-select-item>
           <vs-select-item value="#D40000" text="Red"></vs-select-item>
+          <vs-select-item value="#014421" text="Green"></vs-select-item>
+          <vs-select-item value="#EEE600" text="Yellow"></vs-select-item>
+          <vs-select-item value="#1164B4" text="Blue"></vs-select-item>
+          <vs-select-item value="#4C2882" text="Purple"></vs-select-item>
+        </div>
+        <div v-else-if="channel($route.params.channelID).division.toLowerCase() === 'CGS'">
+          <vs-select-item value="#72A0C1" text="Gray"></vs-select-item>
+          <vs-select-item value="#D40000" text="Red"></vs-select-item>
           <vs-select-item value="#014421" text="Dark Green"></vs-select-item>
           <vs-select-item value="#EEE600" text="Yellow"></vs-select-item>
           <vs-select-item value="#1164B4" text="Blue"></vs-select-item>

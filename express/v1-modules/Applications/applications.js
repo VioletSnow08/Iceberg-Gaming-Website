@@ -3,6 +3,7 @@ const express = require('express')
 const router = express.Router();
 const base_api = "/api/v1";
 const utils = require("../../../utils.js");
+const config = require("../../../config");
 const {DateTime} = require("luxon");
 const {requiresAuth} = require("../../middleware/auth");
 
@@ -47,12 +48,12 @@ function bctMessageApprove(req) {
     "\n" +
     "First, you need to obtain the modpack that we use on our private server. It can take a little while to download everything, so try to get it started as soon as possible. The following link will take you to our \"shadow mod\" which acts as a dependency node for all of the mods we use. In order to get the mod pack, simply subscribe to the Shadow Mod, and when it asks if you want to download all mods associated, say yes.\n" +
     "\n" +
-    `${utils.data.bct_modpack}\n` +
+    `${config.commonData.bct_modpack}\n` +
     "\n" +
     "Second, once you have your modpack, look for anybody that is Corporal or above on TeamSpeak or make a post on the Discord and someone will get you set up. \n" +
     "\n" +
-    `TS: ${utils.data.teamspeak}\n` +
-    `Discord: ${utils.data.discord}\n` +
+    `TS: ${config.commonData.teamspeak}\n` +
+    `Discord: ${config.commonData.discord}\n` +
     "\n" +
     "They will be able to help you or find someone to help you with initial assessments and/or training. Basic Training is held weekly on Tuesdays, but don't let that stop you from jumping in during the week and Saturday op to play with us!\n" +
     "\n" +
@@ -77,7 +78,7 @@ function bctMessageDeny(req) {
 function bctMessageProcess(req) {
   return "Hello,\n" +
     "\n" +
-    `Your application has been processed and the recruiter has requested an interview. When you're able to, hop on to the TeamSpeak (${utils.data.teamspeak}) and reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.\n` +
+    `Your application has been processed and the recruiter has requested an interview. When you're able to, hop on to the TeamSpeak (${config.commonData.teamspeak}) and reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.\n` +
     "\n" +
     "Thanks,\n" +
     "\n" +
@@ -87,7 +88,7 @@ function bctMessageProcess(req) {
 function icebergMessageApprove(req) {
   return "Welcome to Iceberg Gaming! We're glad to have you aboard our community and hope you can feel at home in our community. \n" +
     "\n" +
-    `If you haven't already, we highly recommend you join our Teamspeak (${utils.data.teamspeak}) and Discord (${utils.data.discord}) so you can play with the rest of the community. Feel free to chat in any of the channels with all the members of the community, and don't be afraid to explore some of the other games that we play in Iceberg Gaming. Keep yourself updated on the Website Calendar for any Iceberg events and don't be afraid to gather some people and schedule something of your own.\n` +
+    `If you haven't already, we highly recommend you join our Teamspeak (${config.commonData.teamspeak}) and Discord (${config.commonData.discord}) so you can play with the rest of the community. Feel free to chat in any of the channels with all the members of the community, and don't be afraid to explore some of the other games that we play in Iceberg Gaming. Keep yourself updated on the Website Calendar for any Iceberg events and don't be afraid to gather some people and schedule something of your own.\n` +
     "\n" +
     "Lastly, be sure to read up on the Community Code of Conduct so you make sure you can continue to have a good time in the community.\n" +
     "If you have any further questions or issues, you are more than welcome to ask anyone on Teamspeak, Discord, or even Website and we will help out as best as we can!\n" +
@@ -97,7 +98,7 @@ function icebergMessageApprove(req) {
 function icebergMessageProcess(req) {
   return "Hello,\n" +
     "\n" +
-    `Your application has been processed and the recruiter has requested an interview. When you're able to, hop on to the TeamSpeak (${utils.data.teamspeak}) and reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.\n` +
+    `Your application has been processed and the recruiter has requested an interview. When you're able to, hop on to the TeamSpeak (${config.commonData.teamspeak}) and reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.\n` +
     "\n" +
     "Thanks,\n" +
     "\n" +
@@ -116,7 +117,7 @@ function cgsMessageApprove(req) {
 function cgsMessageProcess(req) {
   return "Hello,\n" +
     "\n" +
-    `Your application has been processed and the recruiter has requested an interview. When you're able to, hop on to the TeamSpeak (${utils.data.teamspeak}) and reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.\n` +
+    `Your application has been processed and the recruiter has requested an interview. When you're able to, hop on to the TeamSpeak (${config.commonData.teamspeak}) and reach out to a recruiter! They'll be able to answer your questions and fill you in how things work here.\n` +
     "\n" +
     "Thanks,\n" +
     "\n" +
