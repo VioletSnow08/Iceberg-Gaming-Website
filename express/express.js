@@ -11,8 +11,9 @@ require( 'trace-unhandled/register' )
 const app = express()
 const port = 3001
 
-MYSQL.createConnection({
-  ...mysql
+MYSQL.createPool({
+  ...mysql,
+  connectionLimit : 10
 }).then(function (con) {
 
 
